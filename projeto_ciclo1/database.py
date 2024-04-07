@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, VARCHAR, INTEGER, TEXT, TIMESTAMP, ARRAY, ForeignKey, func
+from sqlalchemy import create_engine, VARCHAR, INTEGER, TEXT, TIMESTAMP, ARRAY, ForeignKey, func, Table
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column, Session, relationship
 import dotenv
 import os
@@ -30,9 +30,10 @@ class User(Base):
     password: Mapped[str] = mapped_column(VARCHAR(20))
     acess_level: Mapped[int] = mapped_column(INTEGER)
 
-    documents = relationship('Document', back_populates='users', cascade='all, delete')
-    log_documents = relationship('LogDocument', back_populates='users', cascade='all, delete')
-    log_users = relationship('LogUser', back_populates='users', cascade='all, delete')
+    document = relationship('Document', back_populates='user', cascade='all, delete')
+    log_document = relationship('LogDocument', back_populates='user', cascade='all, delete')
+    log_user_modifier = relationship('LogUser', back_populates='user_modifier', foreign_keys='LogUser.id_user_modifier', cascade='all, delete')
+    log_user_modified = relationship('LogUser', back_populates='user_modified', foreign_keys='LogUser.id_user_modified', cascade='all, delete')
     
     def __repr__(self):
         return f'{self.id} | {self.name} | {self.email} | {self.cpf} | {self.acess_level}'
@@ -48,11 +49,9 @@ class Document(Base):
     img: Mapped[str] = mapped_column(VARCHAR(255))
     tags: Mapped[list] = mapped_column(ARRAY(VARCHAR))
     content: Mapped[str] = mapped_column(TEXT)
-    last_modify: Mapped[str] = mapped_column(TIMESTAMP, default=None)
-    id_last_modify_user: Mapped[int] = mapped_column(INTEGER, ForeignKey('users.id'), default=None)
     
-    users = relationship('User', back_populates='documents')
-    log_documents = relationship('LogDocument', back_populates='documents')
+    user = relationship('User', back_populates='document')
+    log_document = relationship('LogDocument', back_populates='document', cascade='all, delete')
     
     def __repr__(self):
         return f'{self.id} | {self.type} | {self.id_register_user} | {self.register_date} | {self.img} | {self.tags} | {self.content}| {self.last_modify}| {self.id_last_modify_user}'
@@ -67,8 +66,9 @@ class LogUser(Base):
     log_date: Mapped[str] = mapped_column(TIMESTAMP, server_default=func.now())
     log_txt: Mapped[str] = mapped_column(TEXT)
     
-    users = relationship('User', back_populates='log_users')
-
+    user_modifier = relationship('User', back_populates='log_user_modifier', foreign_keys=[id_user_modifier])
+    user_modified = relationship('User', back_populates='log_user_modified', foreign_keys=[id_user_modified])
+    
     def __repr__(self):
         return f'{self.id} | {self.id_user_modifier} | {self.id_user_modified} | {self.log_date} | {self.log_txt}'
     
@@ -82,8 +82,8 @@ class LogDocument(Base):
     log_date: Mapped[str] = mapped_column(TIMESTAMP, server_default=func.now())
     log_txt: Mapped[str] = mapped_column(TEXT)
 
-    users = relationship('User', back_populates='log_documents')
-    documents = relationship('Documents', back_populates='log_documents')
+    user = relationship('User', back_populates='log_document')
+    document = relationship('Document', back_populates='log_document')
 
     def __repr__(self):
         return f'{self.id} | {self.id_user_modifier} | {self.id_document_modified} | {self.log_date} | {self.log_txt}'
@@ -101,7 +101,6 @@ class LogSystem(Base):
         return f'{self.id} | {self.error_type} | {self.log_date} | {self.log_txt}'
 
 
-
-
+# Create tables on postgre
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
