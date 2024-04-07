@@ -30,7 +30,8 @@ class User(Base):
     password: Mapped[str] = mapped_column(VARCHAR(20))
     acess_level: Mapped[int] = mapped_column(INTEGER)
 
-    document = relationship('Document', back_populates='user', cascade='all, delete')
+    document_register = relationship('Document', back_populates='user_register', foreign_keys='Document.id_register_user', cascade='all, delete')
+    document_modifier = relationship('Document', back_populates='user_modifier', foreign_keys='Document.id_last_modify_user', cascade='all, delete')
     log_document = relationship('LogDocument', back_populates='user', cascade='all, delete')
     log_user_modifier = relationship('LogUser', back_populates='user_modifier', foreign_keys='LogUser.id_user_modifier', cascade='all, delete')
     log_user_modified = relationship('LogUser', back_populates='user_modified', foreign_keys='LogUser.id_user_modified', cascade='all, delete')
@@ -49,8 +50,11 @@ class Document(Base):
     img: Mapped[str] = mapped_column(VARCHAR(255))
     tags: Mapped[list] = mapped_column(ARRAY(VARCHAR))
     content: Mapped[str] = mapped_column(TEXT)
+    id_last_modify_user: Mapped[int] = mapped_column(INTEGER, ForeignKey('users.id'))
+    date_last_modify: Mapped[str] = mapped_column(TIMESTAMP, server_default=func.now())
     
-    user = relationship('User', back_populates='document')
+    user_register = relationship('User', back_populates='document_register', foreign_keys=[id_register_user])
+    user_modifier = relationship('User', back_populates='document_modifier', foreign_keys=[id_last_modify_user])
     log_document = relationship('LogDocument', back_populates='document', cascade='all, delete')
     
     def __repr__(self):
