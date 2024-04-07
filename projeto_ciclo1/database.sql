@@ -23,7 +23,7 @@ CREATE TABLE log_usuarios (
 	id SERIAL PRIMARY KEY UNIQUE,
 	id_usuario_modificador INTEGER REFERENCES Usuarios(id),
 	id_usuario_modificado INTEGER REFERENCES Usuarios(id),
-  horario TIMESTAMP,
+  	horario TIMESTAMP,
 	mensagem_log TEXT
 );
 
@@ -31,13 +31,13 @@ CREATE TABLE log_documentos (
 	id SERIAL PRIMARY KEY UNIQUE,
 	id_usuario_modificador INTEGER REFERENCES Usuarios(id),
 	id_documento_modificado INTEGER REFERENCES Documentos(id),
-  horario TIMESTAMP,
-	mensagem_log INTEGER
+  	horario TIMESTAMP,
+	mensagem_log TEXT
 );
 
 CREATE TABLE log_sistema (
 	id SERIAL PRIMARY KEY UNIQUE,
 	type_error VARCHAR,
-  horario TIMESTAMP,
+ 	horario TIMESTAMP,
 	mensagem_log TEXT
 );
