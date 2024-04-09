@@ -6,10 +6,10 @@ import os
 dotenv.load_dotenv(dotenv.find_dotenv())
 
 # Database info for connection
-user = os.getenv('USER')
-password = os.getenv('PASSWORD')
-host = os.getenv('HOST')
-db = os.getenv('DB')
+user = os.getenv('DB_USER')
+password = os.getenv('DB_PASSWORD')
+host = os.getenv('DB_HOST')
+db = os.getenv('DB_NAME')
 
 # Conection
 url = f'postgresql://{user}:{password}@{host}/{db}'
@@ -27,8 +27,8 @@ class User(Base):
     name: Mapped[str] = mapped_column(VARCHAR(255))
     email: Mapped[str] = mapped_column(VARCHAR(255), unique=True)
     cpf: Mapped[str] = mapped_column(VARCHAR(11), unique=True)
-    password: Mapped[str] = mapped_column(VARCHAR(20))
-    acess_level: Mapped[int] = mapped_column(INTEGER)
+    password: Mapped[str] = mapped_column(VARCHAR(255))
+    access_level: Mapped[int] = mapped_column(INTEGER)
 
     document_register = relationship('Document', back_populates='user_register', foreign_keys='Document.id_register_user', cascade='all, delete')
     document_modifier = relationship('Document', back_populates='user_modifier', foreign_keys='Document.id_last_modify_user', cascade='all, delete')
