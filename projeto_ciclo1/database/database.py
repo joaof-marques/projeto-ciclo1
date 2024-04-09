@@ -37,7 +37,7 @@ class User(Base):
     log_user_modified = relationship('LogUser', back_populates='user_modified', foreign_keys='LogUser.id_user_modified', cascade='all, delete')
     
     def __repr__(self):
-        return f'{self.id} | {self.name} | {self.email} | {self.cpf} | {self.acess_level}'
+        return f'{self.id} | {self.name} | {self.email} | {self.cpf} | {self.access_level}'
 
 # Doc table
 class Document(Base):
