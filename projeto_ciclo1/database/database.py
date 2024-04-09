@@ -27,7 +27,7 @@ class User(Base):
     name: Mapped[str] = mapped_column(VARCHAR(255))
     email: Mapped[str] = mapped_column(VARCHAR(255), unique=True)
     cpf: Mapped[str] = mapped_column(VARCHAR(11), unique=True)
-    password: Mapped[str] = mapped_column(VARCHAR(20))
+    password: Mapped[str] = mapped_column(VARCHAR(255))
     access_level: Mapped[int] = mapped_column(INTEGER)
 
     document_register = relationship('Document', back_populates='user_register', foreign_keys='Document.id_register_user', cascade='all, delete')
