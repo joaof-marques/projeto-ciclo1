@@ -6,10 +6,10 @@ import os
 dotenv.load_dotenv(dotenv.find_dotenv())
 
 # Database info for connection
-user = os.getenv('USER')
-password = os.getenv('PASSWORD')
-host = os.getenv('HOST')
-db = os.getenv('DB')
+user = os.getenv('DB_USER')
+password = os.getenv('DB_PASSWORD')
+host = os.getenv('DB_HOST')
+db = os.getenv('DB_NAME')
 
 # Conection
 url = f'postgresql://{user}:{password}@{host}/{db}'
