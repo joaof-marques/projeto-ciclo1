@@ -8,8 +8,7 @@ def create_user(name, email, cpf, password, access_level):
     with Session(bind=engine) as session:        
         try:
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-            
-            novo_usuario = User(name = name, email = email, cpf = cpf, password=hashed_password, access_level = access_level)
+            novo_usuario = User(name = name, email = email, cpf = cpf, password=str(hashed_password.decode('utf-8')), access_level = access_level)
             
             session.add(novo_usuario)
             session.commit()
@@ -18,4 +17,5 @@ def create_user(name, email, cpf, password, access_level):
             session.rollback()
             log_insert_status, log_insert_message = insert_system_log(error)            
             return False, None
+        
         
