@@ -6,8 +6,10 @@ authors = ["João Marques <joaofmarques.dev@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
-bcrypt = "^4.1.2"
+python = "3.10"
+bcrypt = "4.1.2"
+streamlit = "1.33.0"
+pandas = "2.2.1"
 
 
 [build-system]
