@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, VARCHAR, INTEGER, TEXT, TIMESTAMP, ARRAY, BOOLEAN, ForeignKey, func, Table
+from sqlalchemy import create_engine, VARCHAR, INTEGER, TEXT, TIMESTAMP, ARRAY, ForeignKey, func, Table
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column, Session, relationship
 import dotenv
 import os
@@ -29,9 +29,9 @@ class User(Base):
     cpf: Mapped[str] = mapped_column(VARCHAR(11), unique=True)
     password: Mapped[str] = mapped_column(VARCHAR(20))
     acess_level: Mapped[int] = mapped_column(INTEGER)
-    deleted: Mapped[bool] = mapped_column(BOOLEAN, default=False)
 
-    document_register = relationship('Document', back_populates='user_register', cascade='all, delete')
+    document_register = relationship('Document', back_populates='user_register', foreign_keys='Document.id_register_user', cascade='all, delete')
+    document_modifier = relationship('Document', back_populates='user_modifier', foreign_keys='Document.id_last_modify_user', cascade='all, delete')
     log_document = relationship('LogDocument', back_populates='user', cascade='all, delete')
     log_user_modifier = relationship('LogUser', back_populates='user_modifier', foreign_keys='LogUser.id_user_modifier', cascade='all, delete')
     log_user_modified = relationship('LogUser', back_populates='user_modified', foreign_keys='LogUser.id_user_modified', cascade='all, delete')
@@ -50,13 +50,13 @@ class Document(Base):
     img: Mapped[str] = mapped_column(VARCHAR(255))
     tags: Mapped[list] = mapped_column(ARRAY(VARCHAR))
     content: Mapped[str] = mapped_column(TEXT)
-    deleted: Mapped[bool] = mapped_column(BOOLEAN, default=False)
-    
-    user_register = relationship('User', back_populates='document_register')
+   
+    user_register = relationship('User', back_populates='document_register', foreign_keys=[id_register_user])
+    user_modifier = relationship('User', back_populates='document_modifier', foreign_keys=[id_last_modify_user])
     log_document = relationship('LogDocument', back_populates='document', cascade='all, delete')
     
     def __repr__(self):
-        return f'{self.id} | {self.type} | {self.id_register_user} | {self.register_date} | {self.img} | {self.tags} | {self.content}'
+        return f'{self.id} | {self.type} | {self.id_register_user} | {self.register_date} | {self.img} | {self.tags} | {self.content}| {self.last_modify}| {self.id_last_modify_user}'
     
 # Logs tables
 class LogUser(Base):
