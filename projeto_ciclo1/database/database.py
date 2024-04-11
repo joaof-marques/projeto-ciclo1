@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, VARCHAR, INTEGER, TEXT, TIMESTAMP, ARRAY, ForeignKey, func, Table
+from sqlalchemy import create_engine, VARCHAR, INTEGER, TEXT, TIMESTAMP, ARRAY, ForeignKey, BOOLEAN, func, Table
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column, Session, relationship
 import dotenv
 import os
@@ -9,7 +9,7 @@ dotenv.load_dotenv(dotenv.find_dotenv())
 user = os.getenv('DB_USER')
 password = os.getenv('DB_PASSWORD')
 host = os.getenv('DB_HOST')
-db = os.getenv('DB_NAME')
+db = os.getenv('DB')
 
 # Conection
 url = f'postgresql://{user}:{password}@{host}/{db}'
@@ -28,16 +28,16 @@ class User(Base):
     email: Mapped[str] = mapped_column(VARCHAR(255), unique=True)
     cpf: Mapped[str] = mapped_column(VARCHAR(11), unique=True)
     password: Mapped[str] = mapped_column(VARCHAR(255))
-    access_level: Mapped[int] = mapped_column(INTEGER)
-
-    document_register = relationship('Document', back_populates='user_register', foreign_keys='Document.id_register_user', cascade='all, delete')
-    document_modifier = relationship('Document', back_populates='user_modifier', foreign_keys='Document.id_last_modify_user', cascade='all, delete')
+    acess_level: Mapped[int] = mapped_column(INTEGER)
+    deleted: Mapped[bool] = mapped_column(BOOLEAN)
+    
+    document_register = relationship('Document', back_populates='user_register', cascade='all, delete')
     log_document = relationship('LogDocument', back_populates='user', cascade='all, delete')
     log_user_modifier = relationship('LogUser', back_populates='user_modifier', foreign_keys='LogUser.id_user_modifier', cascade='all, delete')
     log_user_modified = relationship('LogUser', back_populates='user_modified', foreign_keys='LogUser.id_user_modified', cascade='all, delete')
     
     def __repr__(self):
-        return f'{self.id} | {self.name} | {self.email} | {self.cpf} | {self.access_level}'
+        return f'{self.id} | {self.name} | {self.email} | {self.cpf} | {self.acess_level}'
 
 # Doc table
 class Document(Base):
@@ -50,11 +50,9 @@ class Document(Base):
     img: Mapped[str] = mapped_column(VARCHAR(255))
     tags: Mapped[list] = mapped_column(ARRAY(VARCHAR))
     content: Mapped[str] = mapped_column(TEXT)
-    id_last_modify_user: Mapped[int] = mapped_column(INTEGER, ForeignKey('users.id'))
-    date_last_modify: Mapped[str] = mapped_column(TIMESTAMP, server_default=func.now())
-    
-    user_register = relationship('User', back_populates='document_register', foreign_keys=[id_register_user])
-    user_modifier = relationship('User', back_populates='document_modifier', foreign_keys=[id_last_modify_user])
+    deleted: Mapped[bool] = mapped_column(BOOLEAN)
+   
+    user_register = relationship('User', back_populates='document_register')
     log_document = relationship('LogDocument', back_populates='document', cascade='all, delete')
     
     def __repr__(self):
