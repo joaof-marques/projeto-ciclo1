@@ -6,26 +6,13 @@ import yaml
 from yaml.loader import SafeLoader
 
 
-with open('config.yaml') as file:
-    config = yaml.load(file, Loader=SafeLoader)
-
-authenticator = stauth.Authenticate(
-    config['credentials'],
-    config['cookie']['name'],
-    config['cookie']['key'],
-    config['cookie']['expiry_days'],
-    config['pre-authorized']
-)
-
-name, authentication_status, username = authenticator.login()
-
-
 def doc_page():
     with tab_documentos:
         st.write('')
         st.subheader('Documentos')
 
         tab1, tab2, tab3, tab4, tab5 = st.tabs(['Encontrar', 'Anexar', 'Histórico','Editar', 'Deletar'])
+
 
         with tab1:
             st.subheader("Localizar arquivo")
@@ -103,6 +90,7 @@ def profile_page():
         col1, col2, col3 = st.columns(spec=[0.2, 0.1, 0.7])
         
         with col1:
+
             st.image('foto_homem.jpg')
             st.write('"Nome da pessoa"')
 
@@ -201,7 +189,35 @@ def main_page():
     elif st.session_state["authentication_status"] is None:
         st.warning('Please enter your username and password')
 
+## Authenticator user
+with open('config.yaml') as file:
+    config = yaml.load(file, Loader=SafeLoader)
+
+authenticator = stauth.Authenticate(
+    config['credentials'],
+    config['cookie']['name'],
+    config['cookie']['key'],
+    config['cookie']['expiry_days'],
+    config['pre-authorized']
+)
+
+name, authentication_status, username = authenticator.login()
+
 ## Body
-tab_home, tab_documentos, tab_perfil, tab_cadastro = st.tabs(['Home', 'Documentos', 'Perfil', 'Cadastro'])
-main_page()
-authenticator.logout()
+if st.session_state["authentication_status"]:
+    col1, col2 = st.columns(2)
+    with col1:
+        authenticator.logout()
+    with col2:
+        st.write(f'Bem vindo *{st.session_state["name"]}*')
+
+    st.title('Gerenciador de documentos')
+    tab_home, tab_documentos, tab_perfil, tab_cadastro = st.tabs(['Home', 'Documentos', 'Perfil', 'Cadastro'])
+    main_page()
+
+elif st.session_state["authentication_status"] is False:
+    st.error('Username/password is incorrect')
+
+elif st.session_state["authentication_status"] is None:
+    st.warning('Please enter your username and password')
+
