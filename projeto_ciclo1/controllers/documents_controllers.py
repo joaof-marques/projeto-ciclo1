@@ -13,7 +13,7 @@ def create_document(new_file, user_id, tags:list=[]):
 
     with Session(bind=engine) as session:
         try:           
-            new_document = Document(type=new_file.type, id_register_user=user_id, img=relative_path, tags=tags, content=content, deleted=False)
+            new_document = Document(name=new_file.name, type=new_file.type, id_register_user=user_id, img=relative_path, tags=tags, content=content, deleted=False)
             
             session.add(new_document)
             session.commit()
