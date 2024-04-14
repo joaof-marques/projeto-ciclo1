@@ -5,15 +5,24 @@ from time import time
 import os
 
 def create_document(new_file, user_id, tags:list=[]):
-    
+    print(new_file)
     relative_path = save_document_get_path(new_file)
     
-    # change this to the OCR method when done
-    content = new_file.read()    
-        
+    # change this to the OCR method when ready
+    content = new_file.getvalue().decode("utf-8")
+
     with Session(bind=engine) as session:
+        try:           
+            new_document = Document(type=new_file.type, id_register_user=user_id, img=relative_path, tags=tags, content=content, deleted=False)
+            
+            session.add(new_document)
+            session.commit()
+            
+            return True, new_document
+        except Exception as error:
+            session.rollback()
+            insert_system_log(error)
         
-        new_document = Document(type=new_file.type, id_register_user=user_id, register_date=time(), img=relative_path, tags=tags, content=content)
         
 def save_document_get_path(new_file):
     
