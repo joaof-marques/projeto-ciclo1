@@ -28,7 +28,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(VARCHAR(255), unique=True)
     cpf: Mapped[str] = mapped_column(VARCHAR(11), unique=True)
     password: Mapped[str] = mapped_column(VARCHAR(255))
-    acess_level: Mapped[int] = mapped_column(INTEGER)
+    access_level: Mapped[int] = mapped_column(INTEGER)
     deleted: Mapped[bool] = mapped_column(BOOLEAN)
     
     document_register = relationship('Document', back_populates='user_register', cascade='all, delete')
@@ -37,13 +37,14 @@ class User(Base):
     log_user_modified = relationship('LogUser', back_populates='user_modified', foreign_keys='LogUser.id_user_modified', cascade='all, delete')
     
     def __repr__(self):
-        return f'{self.id} | {self.name} | {self.email} | {self.cpf} | {self.acess_level}'
+        return f'{self.id} | {self.name} | {self.email} | {self.cpf} | {self.access_level}'
 
 # Doc table
 class Document(Base):
     __tablename__ = 'documents'
     
     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(VARCHAR(255))
     type: Mapped[str] = mapped_column(VARCHAR(255))
     id_register_user: Mapped[int] = mapped_column(INTEGER, ForeignKey('users.id'))
     register_date: Mapped[str] = mapped_column(TIMESTAMP, server_default=func.now())
