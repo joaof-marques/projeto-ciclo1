@@ -1111,6 +1111,20 @@ PyYAML = ">=5.3.1"
 streamlit = ">=1.25.0"
 
 [[package]]
+name = "streamlit-option-menu"
+version = "0.3.12"
+description = "streamlit-option-menu is a simple Streamlit component that allows users to select a single item from a list of options in a menu."
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "streamlit-option-menu-0.3.12.tar.gz", hash = "sha256:a954241cf188691f17072cf3ceb59e97f106f7492ddb5b79c4d42906758a5af2"},
+    {file = "streamlit_option_menu-0.3.12-py3-none-any.whl", hash = "sha256:f83045da205f83464e6606a80facfec2cde49fe750e1148eb275c88ddcca35b9"},
+]
+
+[package.dependencies]
+streamlit = ">=0.63"
+
+[[package]]
 name = "tenacity"
 version = "8.2.3"
 description = "Retry code until it succeeds"
@@ -1249,4 +1263,4 @@ watchmedo = ["PyYAML (>=3.10)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "ef2289c487816a919222af9c1a21801fcc0e6511a52d218cf5a3fb7e31e5809c"
+content-hash = "c2a20e690d32213e4e1c9c62a30d83c7976579280ce54a0cbfbd6fb90b3db6aa"
