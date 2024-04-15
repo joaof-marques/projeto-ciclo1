@@ -1,4 +1,4 @@
-from database.database import Document, engine
+from database.database import Document, LogDocument, engine
 from sqlalchemy.orm import Session
 from controllers.system_log_controllers import insert_system_log
 from time import time
@@ -15,7 +15,14 @@ def create_document(new_file, user_id, tags:list=[]):
         try:           
             new_document = Document(name=new_file.name, type=new_file.type, id_register_user=user_id, img=relative_path, tags=tags, content=content, deleted=False)
             
+            
+            
             session.add(new_document)
+            session.commit()
+            
+            new_log = LogDocument(id_user_modifier=user_id, id_document_modified=new_document.id, log_txt='Document created.')
+            
+            session.add(new_log)
             session.commit()
             
             return True, new_document
