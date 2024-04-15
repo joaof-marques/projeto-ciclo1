@@ -9,7 +9,7 @@ dotenv.load_dotenv(dotenv.find_dotenv())
 user = os.getenv('DB_USER')
 password = os.getenv('DB_PASSWORD')
 host = os.getenv('DB_HOST')
-db = os.getenv('DB')
+db = os.getenv('DB_NAME')
 
 # Conection
 url = f'postgresql://{user}:{password}@{host}/{db}'
