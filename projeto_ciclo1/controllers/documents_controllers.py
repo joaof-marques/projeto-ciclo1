@@ -3,10 +3,8 @@ from sqlalchemy.orm import Session
 from controllers.system_log_controllers import insert_system_log
 from time import time
 import os
-from pprint import pprint
 
 def create_document(new_file, user_id, tags:list=[]):
-    print(new_file)
     relative_path = save_document_get_path(new_file)
     
     # change this to the OCR method when ready
