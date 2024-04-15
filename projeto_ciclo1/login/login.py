@@ -2,7 +2,7 @@ import streamlit as st
 import streamlit_authenticator as stauth
 from controllers.system_log_controllers import insert_system_log
 from fetch_users import fetch_users
-
+from pages_library.main import main
 
 try:
     _, users = fetch_users()
@@ -28,6 +28,8 @@ try:
             if authentication_status:
                 st.sidebar.subheader(f'Welcome {username}')
                 # Implementar paginas
+                main()
+
                 Authenticator.logout()
             else:
                 st.warning('Usuario não existe')
