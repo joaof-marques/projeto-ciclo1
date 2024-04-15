@@ -4,8 +4,8 @@ credentials:
       email: adm@admim.com
       failed_login_attempts: 0 # Will be managed automatically
       logged_in: False # Will be managed automatically
-      name: Admin Admin
-      password: abc123 # Will be hashed automatically
+      name: Nome Sobrenome
+      password: adm123 # Will be hashed automatically
     rbriggs:
       email: rbriggs@gmail.com
       failed_login_attempts: 0 # Will be managed automatically
