@@ -1,5 +1,6 @@
 import streamlit as st
 import streamlit_authenticator as stauth
+from controllers.system_log_controllers import insert_system_log
 from fetch_users import fetch_users
 
 
@@ -31,5 +32,7 @@ try:
             else:
                 st.warning('Usuario não existe')
 
-except:
-    pass
+except Exception as error:
+    st.warning('Erro no sistema')
+    insert_system_log(error)
+
