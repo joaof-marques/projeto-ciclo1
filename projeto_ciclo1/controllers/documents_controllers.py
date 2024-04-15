@@ -46,9 +46,7 @@ def get_document_from_database(name):
     
     with Session(bind=engine) as session:
         
-        # query_result = session.query(Document).filter(Document.name.like(f'%{name}%')).where(Document.deleted == False).order_by(Document.id).all()
-                
-        query_result = session.query(Document).filter(Document.name == name).where(Document.deleted == False).order_by(Document.id).all()
+        query_result = session.query(Document).filter(Document.name.like(f'%{name}%')).where(Document.deleted == False).order_by(Document.id).all()
         
         commom_objects_result = [{'id': document.id, 'name': document.name, 'type': document.type, 'id_register_user': document.id_register_user, 'img': document.img, 'tags':document.tags, 'content': document.content, 'doc_history':document.log_document} for document in query_result]
         
