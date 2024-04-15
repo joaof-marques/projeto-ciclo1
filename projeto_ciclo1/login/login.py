@@ -1,51 +1,35 @@
 import streamlit as st
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from database import User
-import bcrypt
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
-
-DB_USER, DB_PASSWORD, DB_HOST, DB_NAME = os.getenv('DB_USER'), os.getenv('DB_PASSWORD'), os.getenv('DB_HOST'), os.getenv('DB_NAME')
+import streamlit_authenticator as stauth
+from fetch_users import fetch_users
 
 
-URL = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
+try:
+    _, users = fetch_users()
+    emails = []
+    usernames = []
+    passwords = []
+    for user in users:
+        emails.append(user.email)
+        usernames.append(user.name)
+        passwords.append(user.password)
 
+    credentials = {'usernames': {}}
 
-def authenticate(email, password):
-   
-    engine = create_engine(URL)  
-    Session = sessionmaker(bind=engine)
-    session = Session()
-    user = session.query(User).filter_by(email=email).first()
-    session.close()
+    for index in range(len(emails)):
+        credentials['usernames'][usernames[index]] = {'name': emails[index], 'password': passwords[index]}
 
-    if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
-        return True, user
-    else:
-        return False, None
+    Authenticator = stauth.Authenticate(credentials, cookie_name='StreamLit', cookie_key='abcdef', cookie_expiry_days=1)
 
-def login_auth():
-    st.write('Cadastro')
-        
-    email = st.text_input('Email')
-    password = st.text_input('Senha', type='password')
+    email, authentication_status, username = Authenticator.login()
 
-    if st.button('Enviar'):
-        _, user = authenticate(email, password)
-        print(user)
-        if user:
-            st.success(f'Logged in as {user.name}')
-            return True, user
-        else:
-            st.error('Invalid email or password')
-            return False, None
+    if username:
+        if username in usernames:
+            if authentication_status:
+                st.sidebar.subheader(f'Welcome {username}')
+                # Implementar paginas
+                Authenticator.logout()
+            else:
+                st.warning('Usuario não existe')
 
-
-def main():
-    login_auth()
-
-if __name__ == '__main__':
-    main()
+except:
+    pass
