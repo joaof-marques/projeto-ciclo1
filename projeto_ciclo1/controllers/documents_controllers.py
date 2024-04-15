@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from controllers.system_log_controllers import insert_system_log
 from time import time
 import os
+from pprint import pprint
 
 def create_document(new_file, user_id, tags:list=[]):
     print(new_file)
@@ -42,6 +43,20 @@ def save_document_get_path(new_file):
     
     
     return os.path.relpath(file_path, src_path)
+
+def get_document_from_database(name):
+    
+    with Session(bind=engine) as session:
+        
+        query_result = session.query(Document).filter(Document.name.like(f'%{name}%')).where(Document.deleted == False).order_by(Document.id).all()
+                
+        # query_result = session.query(Document).filter(Document.name == name).where(Document.deleted == False).order_by(Document.id).all()
+        
+        commom_objects_result = [{'id': document.id, 'name': document.name, 'type': document.type, 'id_register_user': document.id_register_user, 'img': document.img, 'tags':document.tags, 'content': document.content} for document in query_result]
+        
+        return commom_objects_result
+        
+        
 
 if __name__ == '__main__':
     pass
