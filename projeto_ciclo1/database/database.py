@@ -9,7 +9,7 @@ dotenv.load_dotenv(dotenv.find_dotenv())
 user = os.getenv('DB_USER')
 password = os.getenv('DB_PASSWORD')
 host = os.getenv('DB_HOST')
-db = os.getenv('DB')
+db = os.getenv('DB_NAME')
 
 # Conection
 url = f'postgresql://{user}:{password}@{host}/{db}'
@@ -57,7 +57,7 @@ class Document(Base):
     log_document = relationship('LogDocument', back_populates='document', cascade='all, delete')
     
     def __repr__(self):
-        return f'{self.id} | {self.type} | {self.id_register_user} | {self.register_date} | {self.img} | {self.tags} | {self.content}| {self.last_modify}| {self.id_last_modify_user}'
+        return f'{self.id} | {self.type} | {self.id_register_user} | {self.register_date} | {self.img} | {self.tags} | {self.content}'
     
 # Logs tables
 class LogUser(Base):
