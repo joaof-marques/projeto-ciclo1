@@ -30,6 +30,7 @@ class User(Base):
     password: Mapped[str] = mapped_column(VARCHAR(255))
     access_level: Mapped[int] = mapped_column(INTEGER)
     deleted: Mapped[bool] = mapped_column(BOOLEAN, default=False)
+
     
     document_register = relationship('Document', back_populates='user_register', cascade='all, delete')
     log_document = relationship('LogDocument', back_populates='user', cascade='all, delete')
@@ -37,13 +38,14 @@ class User(Base):
     log_user_modified = relationship('LogUser', back_populates='user_modified', foreign_keys='LogUser.id_user_modified', cascade='all, delete')
     
     def __repr__(self):
-        return f'{self.id} | {self.name} | {self.email} | {self.cpf} | {self.acess_level}'
+        return f'{self.id} | {self.name} | {self.email} | {self.cpf} | {self.access_level}'
 
 # Doc table
 class Document(Base):
     __tablename__ = 'documents'
     
     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(VARCHAR(255))
     type: Mapped[str] = mapped_column(VARCHAR(255))
     id_register_user: Mapped[int] = mapped_column(INTEGER, ForeignKey('users.id'))
     register_date: Mapped[str] = mapped_column(TIMESTAMP, server_default=func.now())
@@ -56,7 +58,7 @@ class Document(Base):
     log_document = relationship('LogDocument', back_populates='document', cascade='all, delete')
     
     def __repr__(self):
-        return f'{self.id} | {self.type} | {self.id_register_user} | {self.register_date} | {self.img} | {self.tags} | {self.content}| {self.last_modify}| {self.id_last_modify_user}'
+        return f'{self.id} | {self.type} | {self.id_register_user} | {self.register_date} | {self.img} | {self.tags} | {self.content}'
     
 # Logs tables
 class LogUser(Base):

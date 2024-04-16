@@ -5,15 +5,23 @@ from time import time
 import os
 
 def create_document(new_file, user_id, tags:list=[]):
-    
     relative_path = save_document_get_path(new_file)
     
-    # change this to the OCR method when done
-    content = new_file.read()    
-        
+    # change this to the OCR method when ready
+    content = new_file.getvalue().decode("utf-8")
+
     with Session(bind=engine) as session:
+        try:           
+            new_document = Document(name=new_file.name, type=new_file.type, id_register_user=user_id, img=relative_path, tags=tags, content=content, deleted=False)
+            
+            session.add(new_document)
+            session.commit()
+            
+            return True, new_document
+        except Exception as error:
+            session.rollback()
+            insert_system_log(error)
         
-        new_document = Document(type=new_file.type, id_register_user=user_id, register_date=time(), img=relative_path, tags=tags, content=content)
         
 def save_document_get_path(new_file):
     
@@ -33,6 +41,18 @@ def save_document_get_path(new_file):
     
     
     return os.path.relpath(file_path, src_path)
+
+def get_document_from_database(name):
+    
+    with Session(bind=engine) as session:
+        
+        query_result = session.query(Document).filter(Document.name.like(f'%{name}%')).where(Document.deleted == False).order_by(Document.id).all()
+        
+        commom_objects_result = [{'id': document.id, 'name': document.name, 'type': document.type, 'id_register_user': document.id_register_user, 'img': document.img, 'tags':document.tags, 'content': document.content, 'doc_history':document.log_document} for document in query_result]
+        
+        return commom_objects_result
+        
+        
 
 if __name__ == '__main__':
     pass
