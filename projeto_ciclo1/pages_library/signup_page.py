@@ -1,7 +1,7 @@
 import streamlit as st
 import re
-from projeto_ciclo1.controllers.user_controllers import create_user
-from projeto_ciclo1.database.database import User, engine
+from controllers.user_controllers import create_user
+from database.database import User, engine
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv, find_dotenv
 import os
@@ -94,32 +94,25 @@ def sign_up():
         access_level = st.number_input('Nivel de Acesso', key='create_user_access_level', min_value=1, max_value=4, step=1)
         
         if st.form_submit_button('Enviar'):
-            if username:
-                if len(username) >= 4:
-                    if username not in get_usernames():
-                        if validate_username(username):
-                            if email:
-                                if validate_email(email):
-                                    if email not in get_user_emails():
-                                        if validate_cpf(cpf):
-                                            if len(password) >= 8:
-                                                create_user(username, email, cpf, password, access_level)
-                                                st.success('Usuario criado')
-                                            else:
-                                                st.warning('Senha muito curta')
-                                        else:
-                                            st.warning('CPF inválido')
-                                    else:
-                                        st.warning('Email já registrado')
-                                else:
-                                    st.warning('Email inválido')
-                            else:
-                                st.warning('Digite um email')
-                        else:
-                            st.warning('Caracteres não suportados')
-                    else:
-                        st.warning('Usuário já registrado')
-                else:
-                    st.warning('Nome de usuario muito curto')
-            else:
-                st.warning('Digite um nome de usuário')
+            if not username or len(username) <= 4:
+                st.warning('Nome de usuário inválido. Tamanho mínimo requerido: 4 caracteres').
+                return
+            if not validate_username(username):
+                st.warning('Caracteres não suportados.')
+                return
+            if not email:
+                st.warning('Email inválido.')
+                return
+            if email in get_user_emails():
+                st.warning('Email já registrado.')
+                return
+            if not validate_cpf(cpf):
+                st.warning('CPF inválido.')
+                return
+            if len(password)<8:
+                st.warning('Senha muito curta. Tamanho mínimo requerido: 8 caracteres.')
+                return
+            
+            create_user(username, email, cpf, password, access_level)
+            st.success('Usuario criado')
+            return True
