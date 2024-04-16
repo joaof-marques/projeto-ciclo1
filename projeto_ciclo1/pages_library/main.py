@@ -6,7 +6,7 @@ from streamlit_option_menu import option_menu
 from projeto_ciclo1.pages_library.home import home
 from projeto_ciclo1.pages_library.doc_page import doc_page
 from projeto_ciclo1.pages_library.profile_page import profile_page
-from projeto_ciclo1.pages_library.register_user_page import register_page
+from projeto_ciclo1.pages_library.signup_page import sign_up
 
 
 try:
@@ -51,7 +51,7 @@ try:
                         profile_page()
 
                     if selected == 'Cadastro':
-                        register_page()
+                        sign_up()
 
                     Authenticator.logout()
         else:

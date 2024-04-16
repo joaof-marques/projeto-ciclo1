@@ -1,7 +1,7 @@
 import streamlit as st
 import re
-from controllers.user_controllers import create_user
-from database.database import User, engine
+from projeto_ciclo1.controllers.user_controllers import create_user
+from projeto_ciclo1.database.database import User, engine
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv, find_dotenv
 import os
@@ -95,7 +95,7 @@ def sign_up():
         
         if st.form_submit_button('Enviar'):
             if not username or len(username) <= 4:
-                st.warning('Nome de usuário inválido. Tamanho mínimo requerido: 4 caracteres').
+                st.warning('Nome de usuário inválido. Tamanho mínimo requerido: 4 caracteres')
                 return
             if not validate_username(username):
                 st.warning('Caracteres não suportados.')
