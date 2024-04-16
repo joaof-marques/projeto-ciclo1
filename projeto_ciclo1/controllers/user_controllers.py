@@ -1,6 +1,6 @@
 from projeto_ciclo1.database.database import User, engine
 from sqlalchemy.orm import Session
-from controllers.system_log_controllers import insert_system_log
+from projeto_ciclo1.controllers.system_log_controllers import insert_system_log
 import bcrypt
 
 def create_user(name, email, cpf, password, access_level):

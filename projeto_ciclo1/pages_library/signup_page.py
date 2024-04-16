@@ -1,7 +1,7 @@
 import streamlit as st
 import re
-from controllers.user_controllers import create_user
-from database.database import User, engine
+from projeto_ciclo1.controllers.user_controllers import create_user
+from projeto_ciclo1.database.database import User, engine
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv, find_dotenv
 import os

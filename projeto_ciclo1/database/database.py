@@ -28,8 +28,8 @@ class User(Base):
     email: Mapped[str] = mapped_column(VARCHAR(255), unique=True)
     cpf: Mapped[str] = mapped_column(VARCHAR(11), unique=True)
     password: Mapped[str] = mapped_column(VARCHAR(255))
-    acess_level: Mapped[int] = mapped_column(INTEGER)
-    deleted: Mapped[bool] = mapped_column(BOOLEAN)
+    access_level: Mapped[int] = mapped_column(INTEGER)
+    deleted: Mapped[bool] = mapped_column(BOOLEAN, default=False)
     
     document_register = relationship('Document', back_populates='user_register', cascade='all, delete')
     log_document = relationship('LogDocument', back_populates='user', cascade='all, delete')
