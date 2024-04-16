@@ -28,7 +28,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(VARCHAR(255), unique=True)
     cpf: Mapped[str] = mapped_column(VARCHAR(11), unique=True)
     password: Mapped[str] = mapped_column(VARCHAR(255))
-    acess_level: Mapped[int] = mapped_column(INTEGER)
+    access_level: Mapped[int] = mapped_column(INTEGER)
     deleted: Mapped[bool] = mapped_column(BOOLEAN)
     
     document_register = relationship('Document', back_populates='user_register', cascade='all, delete')
@@ -103,6 +103,19 @@ class LogSystem(Base):
         return f'{self.id} | {self.error_type} | {self.log_date} | {self.log_txt}'
 
 
+class OcrConfig(Base):
+    tablename = 'ocr_config'
+
+    id: Mapped[int] = mapped_column(
+        INTEGER, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(VARCHAR(255))
+    img: Mapped[str] = mapped_column(VARCHAR(255))
+    rois: Mapped[list] = mapped_column(ARRAY(VARCHAR))
+
+    def repr(self):
+        return f'{self.id} | {self.name} | {self.img} | {self.rois}'
+    
+    
 # Create tables on postgre
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
