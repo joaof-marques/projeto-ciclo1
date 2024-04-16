@@ -1,8 +1,8 @@
 import streamlit as st
 import streamlit_authenticator as stauth
-from controllers.system_log_controllers import insert_system_log
-from fetch_users import fetch_users
-from pages_library.main import main
+from projeto_ciclo1.controllers.system_log_controllers import insert_system_log
+from projeto_ciclo1.login.fetch_users import fetch_users
+from projeto_ciclo1.pages_library.main import main
 
 try:
     _, users = fetch_users()
@@ -19,7 +19,7 @@ try:
     for index in range(len(emails)):
         credentials['usernames'][usernames[index]] = {'name': emails[index], 'password': passwords[index]}
 
-    Authenticator = stauth.Authenticate(credentials, cookie_name='StreamLit', cookie_key='abcdef', cookie_expiry_days=1)
+    Authenticator = stauth.Authenticate(credentials, cookie_name='StreamLit', cookie_key='abcdef', cookie_expiry_days=0)
 
     email, authentication_status, username = Authenticator.login()
 

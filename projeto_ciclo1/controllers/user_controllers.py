@@ -1,4 +1,4 @@
-from database.database import User, engine
+from projeto_ciclo1.database.database import User, engine
 from sqlalchemy.orm import Session
 from controllers.system_log_controllers import insert_system_log
 import bcrypt

@@ -1,8 +1,8 @@
 from streamlit_option_menu import option_menu
-from home import home
-from doc_page import doc_page
-from profile_page import profile_page
-from register_user_page import register_page
+from projeto_ciclo1.pages_library.home import home
+from projeto_ciclo1.pages_library.doc_page import doc_page
+from projeto_ciclo1.pages_library.profile_page import profile_page
+from projeto_ciclo1.pages_library.register_user_page import register_page
 
 # Horizontal menu
 def main():
