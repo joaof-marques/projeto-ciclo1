@@ -1,8 +1,10 @@
 import streamlit as st
-from page.utils import validate_cpf, validate_email, validate_username, get_user_emails, get_usernames, update_password, update_email, delete_user
+from pages_library.utils import validate_cpf, validate_email, validate_username, get_user_emails, get_usernames, update_password, update_email, delete_user, validate_name
 from controllers.user_controllers import create_user
 
 def register_store_user_credentials():
+    if 'name' not in st.session_state:
+         st.session_state.name = st.session_state.create_user_name
     if 'username' not in st.session_state:
         st.session_state.username = st.session_state.create_user_username
     if 'email' not in st.session_state:
@@ -40,7 +42,8 @@ def register_page():
 
             with st.form(key='signup', clear_on_submit=True):
                 st.subheader(':red[Cadastro]')
-                username = st.text_input('Usuario', key='create_user_username', placeholder='Usuario')
+                name = st.text_input('Nome', key='create_user_name', placeholder='Nome')
+                username = st.text_input('Usuario', key='create_user_username', placeholder='Nome de usuario')
                 email = st.text_input('Email', key='create_user_email', placeholder='Email')
                 cpf = st.text_input('CPF', key='create_user_cpf', placeholder='CPF')
                 password = st.text_input('Senha', key='create_user_password', placeholder='Senha', type='password')
@@ -48,12 +51,14 @@ def register_page():
  
                 
                 if st.form_submit_button('Enviar', type='primary', on_click=register_store_user_credentials):
-                    if not username or len(username) <= 4:
+                    if not username or len(username) < 4:
                         st.warning('Nome de usuário inválido. Tamanho mínimo requerido: 4 caracteres')
                         return
                     if not validate_username(username):
-                        st.warning('Caracteres não suportados.')
+                        st.warning('Caracteres não suportados no nome do usuário.')
                         return
+                    if not validate_name(name):
+                         st.warning('Digite um nome válido')
                     if not email:
                         st.warning('Email inválido.')
                         return
@@ -67,7 +72,7 @@ def register_page():
                         st.warning('Senha muito curta. Tamanho mínimo requerido: 8 caracteres.')
                         return
                     
-                    create_user(username, email, cpf, password, access_level)
+                    create_user(name, username, email, cpf, password, access_level)
                     st.success('Usuario criado')
                     return True
 

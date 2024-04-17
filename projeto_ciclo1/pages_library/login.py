@@ -18,7 +18,7 @@ def app():
         for user in users:
                 print(user.deleted, type(user.deleted))
                 emails.append(user.email)
-                usernames.append(user.name)
+                usernames.append(user.username)
                 passwords.append(user.password)
         
         credentials = {'usernames': {}}
