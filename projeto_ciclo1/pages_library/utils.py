@@ -121,3 +121,20 @@ def delete_user(email, cpf):
             insert_system_log(error)
             session.rollback()
             return False, None
+        
+def get_user_profile(username):
+    try:
+        with Session(bind=engine) as session:
+            user = session.query(User).filter_by(username = username).first()
+            user_credentials = {'id': user.id, 'name': user.name, 'cpf': user.cpf, 'email': user.email, 'access_level': user.access_level}
+            print('OK')
+            return True, user_credentials
+    except Exception as error:
+            print('FAIL')
+
+            insert_system_log(error)
+            session.rollback()
+            return False, None
+    
+
+    
