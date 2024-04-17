@@ -31,7 +31,6 @@ def app():
         usernames = []
         passwords = []
         for user in users:
-            id
             emails.append(user.email)
             usernames.append(user.username)
             passwords.append(user.password)
