@@ -6,7 +6,7 @@ from pages_library.home import home
 from pages_library.doc_page import doc_page
 from pages_library.profile_page import profile_page
 from pages_library.register_user_page import register_page
-from pages_library.fetch_users import fetch_users
+from pages_library.utils import fetch_users
 from pages_library.utils import get_user_profile
 
 
@@ -31,9 +31,9 @@ def app():
         usernames = []
         passwords = []
         for user in users:
-            emails.append(user.email)
-            usernames.append(user.username)
-            passwords.append(user.password)
+            emails.append(user['email'])
+            usernames.append(user['username'])
+            passwords.append(user['password'])
 
         
         credentials = {'usernames': {}}
@@ -45,11 +45,12 @@ def app():
 
 
         email, authentication_status, username = Authenticator.login(fields={'Form name':'Entrar', 'Username':'Usuário', 'Password':'Senha', 'Login':'Entrar'})
-        store_logged_user_credentials(username)
 
         if username:
             if username in usernames:
                 if authentication_status:
+                    store_logged_user_credentials(username)
+
                     with st.sidebar:          
                         selected = option_menu(None, ["Início", "Documentos", "Perfil", 'Cadastro'], 
                             icons=['house', 'cloud-upload', "list-task", 'gear'], 

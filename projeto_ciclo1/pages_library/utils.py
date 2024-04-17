@@ -28,11 +28,17 @@ def get_user_emails():
 def get_usernames():
 
     with Session(bind=engine) as session:
-        name = session.query(User.name).all()
+        name = session.query(User.username).all()
         usernames = []
         for item in name:
             usernames.append(item)
     return usernames
+
+def fetch_users():
+    with Session(bind=engine) as session:
+        users = session.query(User).all()
+        user_credentials = [{'email': user.email, 'username': user.username, 'password': user.password} for user in users]
+    return True, user_credentials
 
 
 def validate_email(email):
@@ -127,14 +133,12 @@ def get_user_profile(username):
         with Session(bind=engine) as session:
             user = session.query(User).filter_by(username = username).first()
             user_credentials = {'id': user.id, 'name': user.name, 'cpf': user.cpf, 'email': user.email, 'access_level': user.access_level}
-            print('OK')
+ 
             return True, user_credentials
     except Exception as error:
-            print('FAIL')
 
             insert_system_log(error)
             session.rollback()
             return False, None
-    
 
     
