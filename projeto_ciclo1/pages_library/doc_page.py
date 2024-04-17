@@ -1,13 +1,15 @@
 import streamlit as st
 import pandas as pd
 import random
+from model_config import model_config
+from attach import attach
 
 def doc_page():
+
     st.write('')
     st.subheader('Documentos')
 
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(['Encontrar', 'Anexar', 'Histórico','Editar', 'Deletar'])
-
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(['Encontrar', 'Anexar', 'Histórico','Editar', 'Deletar', 'Criar Modelo', 'Editar Modelo'])
 
     with tab1:
         st.subheader("Localizar arquivo")
@@ -61,20 +63,23 @@ def doc_page():
 
 
     with tab2:
-        st.title('Anexar arquivo')
+        attach()
+        # st.title('Anexar arquivo')
 
-        ## Botão para anexar
-        st.file_uploader("Escolha um arquivo:")
+        # ## Botão para anexar
+        # st.file_uploader("Escolha um arquivo:")
 
-        ## Seletor do tipo de arquivo
-        st.radio('Tipo do arquivo:', ['Contrato', 'Registro', 'Documento'])
+        # ## Seletor do tipo de arquivo
+        # st.radio('Tipo do arquivo:', ['Contrato', 'Registro', 'Documento'])
 
-        ## Selecionar TAG
-        st.multiselect('TAG', ['Contratos', 'Registros', 'Documentos'])
+        # ## Selecionar TAG
+        # st.multiselect('TAG', ['Contratos', 'Registros', 'Documentos'])
 
-        # Seletor da data do arquivo
-        st.date_input("Escolha a data do documento:", value=None)
+        # # Seletor da data do arquivo
+        # st.date_input("Escolha a data do documento:", value=None)
 
-        ## Botão de enviar
-        st.button('Enviar')
+        # ## Botão de enviar
+        # st.button('Enviar')
 
+    with tab6:
+        model_config()

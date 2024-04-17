@@ -35,7 +35,7 @@ def get_usernames():
 
 def validate_email(email):
 
-    pattern = "^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\.[a-z]{1,3}$"
+    pattern = r"^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\.[a-z]{1,3}$"
 
     if re.match(pattern, email):
         return True
@@ -44,7 +44,7 @@ def validate_email(email):
 
 def validate_username(username):
 
-    pattern = "^[a-zA-Z0-9]*$"
+    pattern = r"^[a-zA-Z0-9]*$"
     if re.match(pattern, username):
         return True
     return False
@@ -84,7 +84,7 @@ def store_user_credentials():
         st.session_state.access_level = st.session_state.create_user_access_level
 
 def sign_up():
-    
+   
     with st.form(key='signup', clear_on_submit=True):
         st.subheader(':red[Cadastro]')
         username = st.text_input('Usuario', key='create_user_username', placeholder='Usuario')
@@ -116,3 +116,6 @@ def sign_up():
             create_user(username, email, cpf, password, access_level)
             st.success('Usuario criado')
             return True
+        
+        
+# streamlit run projeto_ciclo1\pages_library\signup_page.py

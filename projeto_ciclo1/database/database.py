@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, VARCHAR, INTEGER, TEXT, TIMESTAMP, ARRAY, ForeignKey, BOOLEAN, func, Table
+from sqlalchemy import create_engine, VARCHAR, INTEGER, TEXT, TIMESTAMP, ARRAY, ForeignKey, BOOLEAN, func, Table, LargeBinary
 from sqlalchemy.orm import declarative_base, Mapped, mapped_column, Session, relationship
 import dotenv
 import os
@@ -13,7 +13,7 @@ db = os.getenv('DB_NAME')
 
 # Conection
 url = f'postgresql://{user}:{password}@{host}/{db}'
-engine = create_engine(url, echo=True)
+engine = create_engine(url)
 
 # base class for sqlachemy ORM
 Base = declarative_base()
@@ -49,10 +49,10 @@ class Document(Base):
     type: Mapped[str] = mapped_column(VARCHAR(255))
     id_register_user: Mapped[int] = mapped_column(INTEGER, ForeignKey('users.id'))
     register_date: Mapped[str] = mapped_column(TIMESTAMP, server_default=func.now())
-    img: Mapped[str] = mapped_column(VARCHAR(255))
+    img: Mapped[str] = mapped_column(LargeBinary)
     tags: Mapped[list] = mapped_column(ARRAY(VARCHAR))
     content: Mapped[str] = mapped_column(TEXT)
-    deleted: Mapped[bool] = mapped_column(BOOLEAN)
+    deleted: Mapped[bool] = mapped_column(BOOLEAN, default=False)
    
     user_register = relationship('User', back_populates='document_register')
     log_document = relationship('LogDocument', back_populates='document', cascade='all, delete')
@@ -105,6 +105,17 @@ class LogSystem(Base):
         return f'{self.id} | {self.error_type} | {self.log_date} | {self.log_txt}'
 
 
+class OcrConfig(Base):
+    __tablename__ = 'ocr_config'
+
+    id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(VARCHAR(255), unique=True)
+    img: Mapped[str] = mapped_column(LargeBinary)
+    rois: Mapped[list] = mapped_column(ARRAY(VARCHAR))
+
+    def __repr__(self):
+        return f'{self.id} | {self.name} | {self.img} | {self.rois}'
+    
 # Create tables on postgre
 if __name__ == '__main__':
     Base.metadata.create_all(engine)

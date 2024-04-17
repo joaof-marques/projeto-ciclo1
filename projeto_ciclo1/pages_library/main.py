@@ -10,6 +10,10 @@ from projeto_ciclo1.pages_library.signup_page import sign_up
 
 
 try:
+    st.set_page_config(
+        layout='wide'
+    )
+    #sign_up()
     _, users = fetch_users()
     emails = []
     usernames = []
@@ -60,3 +64,7 @@ try:
 except Exception as error:
     st.warning('Erro no sistema')
     insert_system_log(error)
+
+
+    
+# streamlit run projeto_ciclo1\pages_library\main.py
