@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from controllers.system_log_controllers import insert_system_log
 import bcrypt
 
-def create_user(name, username, email, cpf, password, access_level):
+def create_user(name, username, email, cpf, password, access_level, logged_user_id):
     
     with Session(bind=engine) as session:        
         try:
@@ -13,10 +13,10 @@ def create_user(name, username, email, cpf, password, access_level):
             session.add(new_user)
             session.commit()
             
-            # new_log = LogUser(id_user_modifier=logged_user_id, id_user_modified=new_user.id, log_txt="New User created.")
+            new_log = LogUser(id_user_modifier=logged_user_id, id_user_modified=new_user.id, log_txt="New User created.")
             
-            # session.add(new_log)
-            # session.commit()
+            session.add(new_log)
+            session.commit()
             return True, new_user
         except Exception as error:
             session.rollback()

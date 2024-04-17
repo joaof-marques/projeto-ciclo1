@@ -2,23 +2,12 @@ import streamlit as st
 from pages_library.utils import get_user_profile
 
 
-def store_logged_user_credentials(username):
-    _, credentials = get_user_profile(username)
-    if 'user_id' not in st.session_state:
-        st.session_state.user_id = credentials['id']
-    if 'user_name' not in st.session_state:
-        st.session_state.user_name = credentials['name']
-    if 'user_cpf' not in st.session_state:
-        st.session_state.user_cpf = credentials['cpf']
-    if 'user_email' not in st.session_state:
-        st.session_state.user_email = credentials['email']
-    if 'user_access_level' not in st.session_state:
-        st.session_state.user_access_level = credentials['access_level']
 
-def profile_page(username):
+
+def profile_page():
     st.write('')
     col1, col2, col3 = st.columns(spec=[0.2, 0.1, 0.7])
-    store_logged_user_credentials(username)
+ 
     with col1:
 
         #st.image('foto_homem.jpg')

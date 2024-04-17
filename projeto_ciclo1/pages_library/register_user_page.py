@@ -72,7 +72,7 @@ def register_page():
                         warning.warning('Senha muito curta. Tamanho mínimo requerido: 8 caracteres.')
                         return
                     
-                    create_user(name, username, email, cpf, password, access_level)
+                    create_user(name, username, email, cpf, password, access_level, st.session_state.user_id)
                     warning.empty()
                     st.success('Usuario criado')
                     return True

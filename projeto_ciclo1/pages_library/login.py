@@ -7,9 +7,21 @@ from pages_library.doc_page import doc_page
 from pages_library.profile_page import profile_page
 from pages_library.register_user_page import register_page
 from pages_library.fetch_users import fetch_users
+from pages_library.utils import get_user_profile
 
 
-
+def store_logged_user_credentials(username):
+    _, credentials = get_user_profile(username)
+    if 'user_id' not in st.session_state:
+        st.session_state.user_id = credentials['id']
+    if 'user_name' not in st.session_state:
+        st.session_state.user_name = credentials['name']
+    if 'user_cpf' not in st.session_state:
+        st.session_state.user_cpf = credentials['cpf']
+    if 'user_email' not in st.session_state:
+        st.session_state.user_email = credentials['email']
+    if 'user_access_level' not in st.session_state:
+        st.session_state.user_access_level = credentials['access_level']
 
 
 def app():
@@ -34,7 +46,7 @@ def app():
 
 
         email, authentication_status, username = Authenticator.login(fields={'Form name':'Entrar', 'Username':'Usuário', 'Password':'Senha', 'Login':'Entrar'})
-        
+        store_logged_user_credentials(username)
 
         if username:
             if username in usernames:
@@ -59,7 +71,7 @@ def app():
                         doc_page()
 
                     if selected == 'Perfil':
-                        profile_page(st.session_state.username)
+                        profile_page()
 
                     if selected == 'Cadastro':
                         register_page()
