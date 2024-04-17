@@ -38,7 +38,6 @@ def register_page():
     
 
     with tab_register:
-            
 
             with st.form(key='signup', clear_on_submit=True):
                 st.subheader(':red[Cadastro]')
@@ -48,31 +47,33 @@ def register_page():
                 cpf = st.text_input('CPF', key='create_user_cpf', placeholder='CPF')
                 password = st.text_input('Senha', key='create_user_password', placeholder='Senha', type='password')
                 access_level = st.number_input('Nivel de Acesso', key='create_user_access_level', min_value=1, max_value=4, step=1)
- 
+                warning = st.empty()
+
                 
                 if st.form_submit_button('Enviar', type='primary', on_click=register_store_user_credentials):
                     if not username or len(username) < 4:
-                        st.warning('Nome de usuário inválido. Tamanho mínimo requerido: 4 caracteres')
+                        warning.warning('Nome de usuário inválido. Tamanho mínimo requerido: 4 caracteres')
                         return
                     if not validate_username(username):
-                        st.warning('Caracteres não suportados no nome do usuário.')
+                        warning.warning('Caracteres não suportados no nome do usuário.')
                         return
                     if not validate_name(name):
-                         st.warning('Digite um nome válido')
+                        warning.warning('Digite um nome válido')
                     if not email:
-                        st.warning('Email inválido.')
+                        warning.warning('Email inválido.')
                         return
                     if email in get_user_emails():
-                        st.warning('Email já registrado.')
+                        warning.warning('Email já registrado.')
                         return
                     if not validate_cpf(cpf):
-                        st.warning('CPF inválido.')
+                        warning.warning('CPF inválido.')
                         return
                     if len(password)<8:
-                        st.warning('Senha muito curta. Tamanho mínimo requerido: 8 caracteres.')
+                        warning.warning('Senha muito curta. Tamanho mínimo requerido: 8 caracteres.')
                         return
                     
                     create_user(name, username, email, cpf, password, access_level)
+                    warning.empty()
                     st.success('Usuario criado')
                     return True
 
