@@ -4,15 +4,14 @@ from controllers.system_log_controllers import insert_system_log
 from time import time
 import os
 
-def create_document(new_file, user_id, tags:list=[]):
+def create_document(new_file, document_type,user_id, ocr_model,tags:list=[]):
     relative_path = save_document_get_path(new_file)
-    
     # change this to the OCR method when ready
-    content = new_file.getvalue().decode("utf-8")
+    content = new_file.getvalue()
 
     with Session(bind=engine) as session:
         try:           
-            new_document = Document(name=new_file.name, type=new_file.type, id_register_user=user_id, img=relative_path, tags=tags, content=content, deleted=False)
+            new_document = Document(name=new_file.name, type=document_type, id_register_user=user_id, img=relative_path, tags=tags, content=content, deleted=False)
             
             session.add(new_document)
             session.commit()
