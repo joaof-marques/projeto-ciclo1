@@ -4,8 +4,10 @@ from controllers.system_log_controllers import insert_system_log
 from time import time
 import os
 
-def create_document(new_file, document_type,user_id, ocr_model,tags:list=[]):
+def create_document(new_file, document_type,user_id, content, tags:list=[]):
     relative_path = save_document_get_path(new_file)
+    
+    #content will come from OCR reading when inserting a document on the front end page, so this will not be necessary
     # change this to the OCR method when ready
     content = new_file.getvalue()
 
