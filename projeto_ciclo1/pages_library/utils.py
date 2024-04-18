@@ -5,7 +5,7 @@ from controllers.system_log_controllers import insert_system_log
 from database.database import User, engine
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv, find_dotenv
-import os
+import os, pandas as pd
 import bcrypt
 
 load_dotenv(find_dotenv())
@@ -141,4 +141,28 @@ def get_user_profile(username):
             session.rollback()
             return False, None
 
+
+def show_document_search_results(files):
     
+    id_column, name_column, date_column, detail_column = st.columns([0.1, 0.5, 0.2, 0.2])
+    with id_column:
+        st.subheader('Id')
+    with name_column:
+        st.subheader('Nome do documento')
+    with date_column:
+        st.subheader('Data')
+    with detail_column:
+        st.subheader('Detalhes')
+        
+    for file in files:     
+        id_column, name_column, date_column, detail_column = st.columns([0.1, 0.5, 0.2, 0.2])  
+        with id_column:
+            st.write(file['id'])
+        with name_column:
+            st.write(file['name'])
+        with date_column:
+            st.write(file['register_date'].strftime("%d/%m/%Y"))
+        with detail_column:
+            st.button("Detalhes", on_click=print, args=[file['name']], key=file['id'])
+ 
+        
