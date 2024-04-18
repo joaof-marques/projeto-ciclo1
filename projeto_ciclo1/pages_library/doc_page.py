@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
 import random
-from controllers.documents_controllers import create_document
+from controllers.documents_controllers import create_document, get_document_from_database
+from pages_library.utils import show_document_search_results
 
 def doc_page():
     st.write('')
@@ -25,63 +26,37 @@ def doc_page():
             limit_date = st.date_input("Escolha a data final", value=None)
 
         ## Filtro funcionário
-        team = st.selectbox(
-        "Funcionário: ",
-        ('Fulano', 'Ciclano', 'Beltrano', 'Tiago', 'Joãos', 'Feliphe'),
-        index=None,
-        placeholder="Selecione o funcionário"
-        )
+        register_user = st.text_input("Nome do funcionário que registrou o documento")
 
         ## Filtro personalizado
         tag = st.multiselect('TAGs', ['Contratos', 'Registros', 'Documentos'])
 
         ## Botão localizar
-        st.button('Procurar', type='primary')
+        search_button = st.button('Procurar', type='primary')
+        
+        if search_button:
+            files = get_document_from_database(file_name, register_user)
+            show_document_search_results(files)
+            
         
         st.divider()
-
-        ## Exibidor dos arquivos
-        df = pd.DataFrame(
-            {
-                "Nome": ["Documento1", "Documento2", "Documento3"],
-                "url": ["https://roadmap.streamlit.app", "https://extras.streamlit.app", "https://issues.streamlit.app"],
-                "views_history": [[random.randint(0, 5000) for _ in range(30)] for _ in range(3)],
-            }
-        )
-        st.dataframe(
-            df,
-            column_config={
-                "Nome": "Documento",
-                "url": st.column_config.LinkColumn("App URL"),
-                "views_history": st.column_config.LineChartColumn(
-                    "Visualização (últimos 30 dias)", y_min=0, y_max=5000
-                ),
-            },
-            hide_index=True,
-        )
 
 
     with tab2:
         st.title('Anexar arquivo')
 
         ## Botão para anexar
-        file = st.file_uploader("Escolha um arquivo:", type=['pdf', 'jpg', 'png', 'jpeg'])
+        st.file_uploader("Escolha um arquivo:", type=['pdf', 'jpg', 'png', 'jpeg'])
 
         ## Seletor do tipo de arquivo
-        document_type = st.radio('Tipo do arquivo:', ['Contrato', 'Registro', 'Documento'])
+        st.radio('Tipo do arquivo:', ['Contrato', 'Registro', 'Documento'])
 
         ## Selecionar TAG
-        tags = st.multiselect('Marcadores', ['Contratos', 'Registros', 'Documentos', 'Em andamento', 'CNH', 'RG', 'CPF', 'Recibo'])
+        tags = st.multiselect('Marcadores', ['Contratos', 'Registros', 'Documentos'])
 
-        ocr_model = st.selectbox('Selecione o modelo de documento', ['OCR_model1', 'OCR_model2', 'OCR_model3'])
-        
-        # Seletor da data do arquivo
-        # st.date_input("Escolha a data do documento:", value=None)
+        st.date_input("Escolha a data do documento:", value=None)
 
         ## Botão de enviar
-        st.button(
-            label='Enviar',
-            on_click=create_document,
-            args=[file, document_type, st.session_state.user_id, ocr_model, tags]
-        )
+        st.button('Enviar')
+        
 
