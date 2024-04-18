@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import random
+from controllers.documents_controllers import create_document
 
 def doc_page():
     st.write('')
@@ -13,15 +14,15 @@ def doc_page():
         st.subheader("Localizar arquivo")
 
         ## Nome do arquivo
-        st.text_input('Nome do arquivo:')
+        file_name = st.text_input('Nome do arquivo:')
 
         ## Filtro de data
         col1, col2 = st.columns(2)
         with col1:
-            st.date_input("Escolha a data inicial", value=None)
+            starting_date = st.date_input("Escolha a data inicial", value=None)
 
         with col2:
-            st.date_input("Escolha a data final", value=None)
+            limit_date = st.date_input("Escolha a data final", value=None)
 
         ## Filtro funcionário
         team = st.selectbox(
@@ -64,17 +65,23 @@ def doc_page():
         st.title('Anexar arquivo')
 
         ## Botão para anexar
-        st.file_uploader("Escolha um arquivo:")
+        file = st.file_uploader("Escolha um arquivo:", type=['pdf', 'jpg', 'png', 'jpeg'])
 
         ## Seletor do tipo de arquivo
-        st.radio('Tipo do arquivo:', ['Contrato', 'Registro', 'Documento'])
+        document_type = st.radio('Tipo do arquivo:', ['Contrato', 'Registro', 'Documento'])
 
         ## Selecionar TAG
-        st.multiselect('TAG', ['Contratos', 'Registros', 'Documentos'])
+        tags = st.multiselect('Marcadores', ['Contratos', 'Registros', 'Documentos', 'Em andamento', 'CNH', 'RG', 'CPF', 'Recibo'])
 
+        ocr_model = st.selectbox('Selecione o modelo de documento', ['OCR_model1', 'OCR_model2', 'OCR_model3'])
+        
         # Seletor da data do arquivo
-        st.date_input("Escolha a data do documento:", value=None)
+        # st.date_input("Escolha a data do documento:", value=None)
 
         ## Botão de enviar
-        st.button('Enviar')
+        st.button(
+            label='Enviar',
+            on_click=create_document,
+            args=[file, document_type, st.session_state.user_id, ocr_model, tags]
+        )
 
