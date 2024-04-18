@@ -2,7 +2,7 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 from projeto_ciclo1.database.database import *
-import sparrow as spr
+import projeto_ciclo1.pages_library.sparrow_models as spr
 
 def model_config():
     try:

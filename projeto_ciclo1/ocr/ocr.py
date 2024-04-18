@@ -69,8 +69,9 @@ def labels(img, roi, filter):
     img_show = img.copy()
     img_mask = np.zeros_like(img_show)
     data = []
+    kernel = np.ones((3, 3))
+
     for x, r in enumerate(roi):
-        kernel = np.ones((3, 3))
         cv.rectangle(img_mask, (r[0][0], r[0][1]), (r[1][0], r[1][1]), (0, 0, 245), cv.FILLED)
         img_show = cv.addWeighted(img_show, 1, img_mask, 1, 0)
 
@@ -83,7 +84,7 @@ def labels(img, roi, filter):
         img_gray = cv.cvtColor(img_cut, cv.COLOR_BGR2GRAY)
         
         #('Padrão', 'Filtro1')
-        if filter == 'Filtro1':
+        if filter == 'Tratamento de Ruido':
             img_dilate = cv.dilate(img_gray, (kernel), iterations=1)
             img_erode = cv.erode(img_dilate, (kernel), iterations=1)
             _, img_threshhold = cv.threshold(img_erode, 127, 255, cv.THRESH_BINARY)

@@ -16,7 +16,7 @@ def run(img_file, model):
             "image_id": 1,
             "image_size": {
                 "width": 1280,
-                "height": 850
+                "height": 900
             }
         },
         "words": []
@@ -36,11 +36,9 @@ def run(img_file, model):
 
     data_processor = DataProcessor()
 
-    col1, col2 = st.columns([4, 6])
-
+    col1, col2 = st.columns([1, 1])
     with col1:
-        
-
+    
         canvas_width = canvas_available_width(ui_width)
         
         result_rects = st_sparrow_labeling(
@@ -61,34 +59,27 @@ def run(img_file, model):
             key="doc_annotation"
         )
         
-        st.caption("Check 'Assign Labels' to enable editing of labels and values, move and resize the boxes to "
-                   "annotate the document.")
-        st.caption(
-            "Add annotations by clicking and dragging on the document, when 'Assign Labels' is unchecked.")
+        # st.caption("Check 'Assign Labels' to enable editing of labels and values, move and resize the boxes to "
+        #            "annotate the document.")
+        
 
     with col2:
         if result_rects is not None:
             with st.form(key="fields_form"):
-                if result_rects.current_rect_index is not None and result_rects.current_rect_index != -1:
-                    st.write("Selected Field: ",
-                             result_rects.rects_data['words'][result_rects.current_rect_index]['value'])
+                
+                st.markdown("---")
+                for i, rect in enumerate(result_rects.rects_data['words']):
+                    label = st.text_input("Rótulo", key=f"label_{i}", disabled=False if i == result_rects.current_rect_index else True)
+
                     st.markdown("---")
 
-                if ui_width > 1500:
-                    render_form_wide(
-                        result_rects.rects_data['words'], result_rects, data_processor, proportion)
-                elif ui_width > 1000:
-                    render_form_avg(
-                        result_rects.rects_data['words'], result_rects, data_processor, proportion)
-                elif ui_width > 500:
-                    render_form_narrow(
-                        result_rects.rects_data['words'], result_rects, data_processor, proportion)
-                else:
-                    render_form_mobile(
-                        result_rects.rects_data['words'], result_rects, data_processor, proportion)
+                    data_processor.update_rect_data(result_rects.rects_data, i, [], label)
 
                 submit = st.form_submit_button("Save", type="primary")
                 if submit:
+                    if model == '':
+                        raise Exception('Insira o nome modelo!')
+                    
                     with Session(bind=engine) as session:
                         try:
                             # enviar url da imagem
@@ -98,11 +89,15 @@ def run(img_file, model):
                             img_bytes = buffer.getvalue()
                             rois = []
                             
-                            for dic in result_rects.rects_data['words']:
-                                roi = dic['value']
-                                roi.append(dic['label'])
+                            for rect in result_rects.rects_data['words']:
+                                p1 = (int(rect['rect']['x1'] * proportion[0]),
+                                      int(rect['rect']['y1'] * proportion[1]))
+                                p2 = (int(rect['rect']['x2'] * proportion[0]),
+                                      int(rect['rect']['y2'] * proportion[1]))
+                                roi = [str(p1), str(p2)]
+                                roi.append(rect['label'])
                                 rois.append(roi)
-                                
+                            
                             session.add(OcrConfig(name=model, img=img_bytes, rois=rois))
                             session.commit()
                             st.balloons()
@@ -173,15 +168,11 @@ def render_form_mobile(words, result_rects, data_processor, proportion):
 
 
 def render_form_element(rect, i, result_rects, data_processor, proportion):
-
-    value1 = st.text_input("Ponto A", (int(rect['rect']['x1'] * proportion[0]) , int(rect['rect']['y1'] * proportion[1])), key=f"field_value_a_{i}",
-                           disabled=True)
-    value2 = st.text_input("Ponto B", (int(rect['rect']['x2'] * proportion[0]), int(rect['rect']['y2'] * proportion[1])), key=f"field_value_b_{i}",
-                           disabled=True)
     label = st.text_input("Rótulo", key=f"label_{i}", disabled=False if i == result_rects.current_rect_index else True)
+    
     st.markdown("---")
 
-    data_processor.update_rect_data(result_rects.rects_data, i, [value1, value2], label)
+    data_processor.update_rect_data(result_rects.rects_data, i, [], label)
     
 
 

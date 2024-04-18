@@ -1,5 +1,6 @@
 import streamlit as st
 
+
 def profile_page():
     st.write('')
     col1, col2, col3 = st.columns(spec=[0.2, 0.1, 0.7])

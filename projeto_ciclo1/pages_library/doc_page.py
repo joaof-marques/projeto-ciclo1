@@ -1,17 +1,21 @@
 import streamlit as st
 import pandas as pd
 import random
-from model_config import model_config
-from attach import attach
+from streamlit_option_menu import option_menu
+from projeto_ciclo1.pages_library.model_config import model_config
+from projeto_ciclo1.pages_library.attach import attach
 
 def doc_page():
 
     st.write('')
-    st.subheader('Documentos')
+    st.title('Documentos')
 
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(['Encontrar', 'Anexar', 'Histórico','Editar', 'Deletar', 'Criar Modelo', 'Editar Modelo'])
+    selected = option_menu(None, ['Encontrar', 'Anexar', 'Histórico', 'Editar', 'Deletar',
+                           'Criar Modelo', 'Editar Modelo'],
+                           menu_icon="cast", default_index=0, orientation="horizontal")
+    #tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(['Encontrar', 'Anexar', 'Histórico','Editar', 'Deletar', 'Criar Modelo', 'Editar Modelo'])
 
-    with tab1:
+    if selected == 'Encontrar':
         st.subheader("Localizar arquivo")
 
         ## Nome do arquivo
@@ -61,8 +65,7 @@ def doc_page():
             hide_index=True,
         )
 
-
-    with tab2:
+    if selected == 'Anexar':
         attach()
         # st.title('Anexar arquivo')
 
@@ -81,5 +84,5 @@ def doc_page():
         # ## Botão de enviar
         # st.button('Enviar')
 
-    with tab6:
+    if selected == 'Criar Modelo':
         model_config()
