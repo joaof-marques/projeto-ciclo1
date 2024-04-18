@@ -35,7 +35,7 @@ def doc_page():
         search_button = st.button('Procurar', type='primary')
         
         if search_button:
-            files = get_document_from_database(file_name, register_user)
+            files = get_document_from_database(file_name, register_user, starting_date, limit_date)
             show_document_search_results(files)
             
         

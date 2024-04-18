@@ -2,6 +2,7 @@ from database.database import Document, User, engine
 from sqlalchemy.orm import Session
 from controllers.system_log_controllers import insert_system_log
 from time import time
+import datetime
 import os
 
 def create_document(new_file, document_type,user_id, content, tags:list=[]):
@@ -43,13 +44,39 @@ def save_document_get_path(new_file):
     
     return os.path.relpath(file_path, src_path)
 
-def get_document_from_database(file_name, user_register_name):
+def get_document_from_database(file_name, user_register_name, starting_date=None, limit_date=None):
+    if starting_date is None:
+        starting_date = datetime.datetime(1900, 1, 1)
+    if limit_date is None:
+        limit_date = datetime.datetime(2100, 12, 31)
+    
+    starting_date += datetime.timedelta(days=1)
+    limit_date += datetime.timedelta(days=1)
     
     with Session(bind=engine) as session:
         
-        query_result = session.query(Document).join(User, Document.id_register_user == User.id).filter(Document.name.ilike(f'%{file_name}%'), User.name.ilike(f'%{user_register_name}%')).where(Document.deleted == False).order_by(Document.id).all()
+        query_result = session.query(Document)\
+            .join(User, Document.id_register_user == User.id)\
+            .filter(
+                Document.name.ilike(f'%{file_name}%'),
+                User.name.ilike(f'%{user_register_name}%'),
+                Document.register_date >= starting_date,
+                Document.register_date <= limit_date
+                )\
+            .where(Document.deleted.is_(False))\
+            .order_by(Document.id).all()
         
-        commom_objects_result = [{'id': document.id, 'name': document.name, 'type': document.type, 'id_register_user': document.id_register_user, 'img': document.img, 'tags':document.tags, 'content': document.content, 'doc_history':document.log_document, 'user_register': document.user_register.name, 'register_date': document.register_date} for document in query_result]
+        commom_objects_result = [{
+            'id': document.id, 'name': document.name,
+            'type': document.type,
+            'id_register_user': document.id_register_user,
+            'img': document.img,
+            'tags':document.tags,
+            'content': document.content,
+            'doc_history':document.log_document,
+            'user_register': document.user_register.name,
+            'register_date': document.register_date
+            } for document in query_result]
         
         return commom_objects_result
         
