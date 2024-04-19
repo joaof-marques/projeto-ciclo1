@@ -14,16 +14,12 @@ from pages_library.login_functions import display_menu, display_menu_adm
 
 def store_logged_user_credentials(username):
     _, credentials = get_user_profile(username)
-    if 'user_id' not in st.session_state:
-        st.session_state.user_id = credentials['id']
-    if 'user_name' not in st.session_state:
-        st.session_state.user_name = credentials['name']
-    if 'user_cpf' not in st.session_state:
-        st.session_state.user_cpf = credentials['cpf']
-    if 'user_email' not in st.session_state:
-        st.session_state.user_email = credentials['email']
-    if 'user_access_level' not in st.session_state:
-        st.session_state.user_access_level = credentials['access_level']
+
+    st.session_state.user_id = credentials['id']
+    st.session_state.user_name = credentials['name']
+    st.session_state.user_cpf = credentials['cpf']
+    st.session_state.user_email = credentials['email']
+    st.session_state.user_access_level = credentials['access_level']
 
 
 def app():
@@ -57,12 +53,12 @@ def app():
                         display_menu()
                     else:
                         display_menu_adm()
-                    Authenticator.logout(button_name='Sair', location='sidebar')
+                    logout_button = Authenticator.logout(button_name='Sair', location='sidebar')
+                    if logout_button:
+                        clear_stored_user_credentials()
                     
                 else:
                     st.warning('Usuario não existe')
-
-                        
 
 
     except Exception as error:

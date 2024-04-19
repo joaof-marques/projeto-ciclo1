@@ -56,4 +56,3 @@ def display_menu_adm():
 
     if selected == 'Logs':
         log_history()
-
