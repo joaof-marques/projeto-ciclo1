@@ -1,14 +1,8 @@
 import streamlit as st
 import streamlit_authenticator as stauth
 from controllers.system_log_controllers import insert_system_log
-from streamlit_option_menu import option_menu
-from pages_library.home import home
-from pages_library.doc_page import doc_page
-from pages_library.profile_page import profile_page
-from pages_library.register_user_page import register_page
-from pages_library.log_user_history import log_history
-from pages_library.utils import fetch_users
-from pages_library.utils import get_user_profile
+from controllers.utils import fetch_users
+from controllers.utils import get_user_profile
 from pages_library.login_functions import display_menu, display_menu_adm
 
 
@@ -54,8 +48,7 @@ def app():
                     else:
                         display_menu_adm()
                     logout_button = Authenticator.logout(button_name='Sair', location='sidebar')
-                    if logout_button:
-                        clear_stored_user_credentials()
+
                     
                 else:
                     st.warning('Usuario não existe')

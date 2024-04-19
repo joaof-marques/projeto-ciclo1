@@ -1,6 +1,4 @@
-import streamlit as st
 import re
-from controllers.user_controllers import create_user
 from controllers.system_log_controllers import insert_system_log
 from database.database import engine, User, LogUser, LogDocument, LogSystem
 from sqlalchemy.orm import Session
@@ -92,7 +90,7 @@ def update_email(lost_email, new_email):
             user = session.query(User).filter_by(email = lost_email).first()
             user.email = new_email
             session.commit()
-            return True, user
+            return True, None
 
         except Exception as error:
             insert_system_log(error)
@@ -107,7 +105,7 @@ def update_password(email, new_password):
             user = session.query(User).filter_by(email = email).first()
             user.password = hashed_password
             session.commit()
-            return True, user
+            return True, None
 
         except Exception as error:
             insert_system_log(error)
@@ -120,7 +118,7 @@ def delete_user(email, cpf):
             user = session.query(User).filter_by(email = email).filter_by(cpf = cpf).first()
             user.deleted = True
             session.commit()
-            return True, user
+            return True, None
         
         except Exception as error:
             insert_system_log(error)

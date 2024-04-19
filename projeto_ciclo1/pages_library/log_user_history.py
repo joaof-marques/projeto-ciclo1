@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from pages_library.utils import get_log_user, get_log_documents, get_log_system
+from controllers.utils import get_log_user, get_log_documents, get_log_system
 def log_history():
     tab_log_documents, tab_log_system, tab_log_users = st.tabs(['Logs de Documentos', 'Logs do Sistema', 'Logs de Usuários'])
 

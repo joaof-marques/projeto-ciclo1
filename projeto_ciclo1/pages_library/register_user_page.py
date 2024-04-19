@@ -1,5 +1,5 @@
 import streamlit as st
-from pages_library.utils import validate_cpf, validate_email, validate_username, get_user_emails, get_usernames, update_password, delete_user, validate_name
+from controllers.utils import validate_cpf, validate_email, validate_username, get_user_emails, get_usernames, update_password, delete_user, validate_name
 from controllers.user_controllers import create_user
 
 def register_store_user_credentials():
