@@ -6,8 +6,10 @@ from pages_library.home import home
 from pages_library.doc_page import doc_page
 from pages_library.profile_page import profile_page
 from pages_library.register_user_page import register_page
+from pages_library.log_user_history import log_history
 from pages_library.utils import fetch_users
 from pages_library.utils import get_user_profile
+from pages_library.login_functions import display_menu, display_menu_adm
 
 
 def store_logged_user_credentials(username):
@@ -51,34 +53,16 @@ def app():
                 if authentication_status:
                     store_logged_user_credentials(username)
 
-                    with st.sidebar:          
-                        selected = option_menu(None, ["Início", "Documentos", "Perfil", 'Cadastro'], 
-                            icons=['house', 'cloud-upload', "list-task", 'gear'], 
-                            menu_icon="cast", default_index=0, orientation="vertical",
-                            styles={
-                                "container": {"padding": "0!important", "background-color": "#ffff"},
-                                "icon": {"color": "#282634", "font-size": "14px"}, 
-                                "nav-link": {"color": "#000000", "font-size": "14px", "text-align": "center", "margin":"0px", "--hover-color": "#bd928b"},
-                                "nav-link-selected": {"background-color": "#ff4e44"},
-                            }
-                        )
-                        Authenticator.logout(button_name='Sair', location='sidebar')
-
-                    if selected == 'Início':
-                        home()
-
-                    if selected == 'Documentos':
-                        doc_page()
-
-                    if selected == 'Perfil':
-                        profile_page()
-
-                    if selected == 'Cadastro':
-                        register_page()
-
-                        
+                    if st.session_state.user_access_level < 4:
+                        display_menu()
+                    else:
+                        display_menu_adm()
+                    Authenticator.logout(button_name='Sair', location='sidebar')
+                    
                 else:
                     st.warning('Usuario não existe')
+
+                        
 
 
     except Exception as error:
