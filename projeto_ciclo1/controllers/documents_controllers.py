@@ -44,7 +44,33 @@ def save_document_get_path(new_file):
     
     return os.path.relpath(file_path, src_path)
 
-def get_document_from_database(file_name, user_register_name, starting_date=None, limit_date=None):
+def get_query_lenght(file_name, user_register_name, starting_date=None, limit_date=None):
+    
+    if starting_date is None:
+        starting_date = datetime.datetime(1900, 1, 1)
+    if limit_date is None:
+        limit_date = datetime.datetime(2100, 12, 31)
+
+    starting_date += datetime.timedelta(days=1)
+    limit_date += datetime.timedelta(days=1)
+    
+    with Session(bind=engine) as session:
+        
+        query_results_size = session.query(Document)\
+            .join(User, Document.id_register_user == User.id)\
+            .filter(
+                Document.name.ilike(f'%{file_name}%'),
+                User.name.ilike(f'%{user_register_name}%'),
+                Document.register_date >= starting_date,
+                Document.register_date <= limit_date
+                )\
+            .where(Document.deleted.is_(False))\
+            .count()
+            
+        return query_results_size
+
+def get_document_from_database(file_name, user_register_name, starting_date=None, limit_date=None, page=1):
+    
     if starting_date is None:
         starting_date = datetime.datetime(1900, 1, 1)
     if limit_date is None:
@@ -64,7 +90,9 @@ def get_document_from_database(file_name, user_register_name, starting_date=None
                 Document.register_date <= limit_date
                 )\
             .where(Document.deleted.is_(False))\
-            .order_by(Document.id).all()
+            .order_by(Document.register_date)\
+            .slice(10 * (page-1), (10 * (page-1))+10)\
+            .all()
         
         commom_objects_result = [{
             'id': document.id, 'name': document.name,
