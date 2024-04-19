@@ -137,31 +137,6 @@ def get_user_profile(username):
             insert_system_log(error)
             session.rollback()
             return False, None
-
-def get_log_user():
-    try:
-        with Session(bind=engine) as session:
-            logs = session.query(LogUser).all()
-            log_user = [
-                {
-                    'log_id': log.id,
-                    'modifier_id': log.id_user_modifier,
-                    'modifier_name': log.user_modifier.name,
-                    'modified_id': log.id_user_modified,
-                    'modified_name': log.user_modified.name,
-                    'log_date': f'{log.log_date.day}/{log.log_date.month}/{log.log_date.year} - {log.log_date.hour}:{log.log_date.minute}:{log.log_date.microsecond}',
-                    'log_txt': log.log_txt,
-                }
-                for log in logs
-            ]
-
-            return True, log_user
-
-    except Exception as error:
-
-            insert_system_log(error)
-            session.rollback()
-            return False, None
     
 def get_log_documents():
     try:
@@ -170,8 +145,8 @@ def get_log_documents():
             log_documents = [
                 {
                     'log_id': log.id,
-                    'modifier': f'{log.id_user_modifier} - {log.user.name}',
-                    'document_modified_id': f'{log.id_document_modified} - {log.document.name}',
+                    'modifier': f'{log.user.name}',
+                    'document_modified_id': f'{log.document.name}',
                     'log_date': f'{log.log_date.day}/{log.log_date.month}/{log.log_date.year} - {log.log_date.hour}:{log.log_date.minute}:{log.log_date.microsecond}',
                     'log_txt': log.log_txt,
                 }
@@ -201,6 +176,28 @@ def get_log_system():
             ]
 
         return True, log_system
+
+    except Exception as error:
+
+            insert_system_log(error)
+            session.rollback()
+            return False, None
+
+def get_log_user():
+    try:
+        with Session(bind=engine) as session:
+            logs = session.query(LogUser).all()
+            log_user = [
+                {
+                    'log_id': log.id,
+                    'modifier_name': log.user_modifier.name,
+                    'modified_name': log.user_modified.name,
+                    'log_date': f'{log.log_date.day}/{log.log_date.month}/{log.log_date.year} - {log.log_date.hour}:{log.log_date.minute}:{log.log_date.microsecond}',
+                    'log_txt': log.log_txt,
+                }
+                for log in logs
+            ]
+            return True, log_user
 
     except Exception as error:
 
