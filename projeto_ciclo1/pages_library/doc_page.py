@@ -1,8 +1,9 @@
 import streamlit as st
 import pandas as pd
 import random
-from controllers.documents_controllers import create_document, get_document_from_database
+from controllers.documents_controllers import create_document, get_document_from_database, get_query_lenght
 from pages_library.utils import show_document_search_results
+import math
 
 def doc_page():
     st.write('')
@@ -34,9 +35,28 @@ def doc_page():
         ## Botão localizar
         search_button = st.button('Procurar', type='primary')
         
+        current_page, pages_quantity = 1
         if search_button:
-            files = get_document_from_database(file_name, register_user, starting_date, limit_date)
-            show_document_search_results(files)
+                query_result_length = get_query_lenght(file_name, register_user, starting_date, limit_date)
+                pages_quantity = math.ceil(query_result_length/10)
+                
+                files = get_document_from_database(file_name, register_user, starting_date, limit_date, current_page)
+                show_document_search_results(files)
+                
+        
+        with st.empty() as container:
+            _, minus_one, display, plus_one, _ = st.columns([0.30, 0.06, 0.04, 0.06, 0.3])
+
+            with minus_one:
+                minus = st.button("◀")
+                if minus and current_page-1 != 0:
+                    current_page-=1
+            with display:
+                st.write(current_page)
+            with plus_one:
+                plus = st.button("▶") 
+                if plus and current_page+1 <= pages_quantity:
+                    current_page+=1
             
         
         st.divider()
