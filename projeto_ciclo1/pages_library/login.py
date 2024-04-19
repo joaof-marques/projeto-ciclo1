@@ -8,6 +8,8 @@ from pages_library.profile_page import profile_page
 from pages_library.register_user_page import register_page
 from pages_library.utils import fetch_users
 from pages_library.utils import get_user_profile
+from pages_library.log_user_history import log_history
+from pages_library.access_denied import access_denied
 
 
 def store_logged_user_credentials(username):
@@ -52,7 +54,7 @@ def app():
                     store_logged_user_credentials(username)
 
                     with st.sidebar:          
-                        selected = option_menu(None, ["Início", "Documentos", "Perfil", 'Cadastro'], 
+                        selected = option_menu(None, ["Início", "Documentos", "Perfil", 'Cadastro', 'Logs'], 
                             icons=['house', 'cloud-upload', "list-task", 'gear'], 
                             menu_icon="cast", default_index=0, orientation="vertical",
                             styles={
@@ -63,7 +65,7 @@ def app():
                             }
                         )
                         Authenticator.logout(button_name='Sair', location='sidebar')
-
+                    
                     if selected == 'Início':
                         home()
 
@@ -74,7 +76,15 @@ def app():
                         profile_page()
 
                     if selected == 'Cadastro':
-                        register_page()
+                        if st.session_state.user_access_level >= 4:
+                            register_page()
+                    else:
+                        access_denied()
+
+                    if selected == 'Logs' and st.session_state.user_access_level >= 4:
+                        log_history()
+                    else:
+                        access_denied()
 
                         
                 else:

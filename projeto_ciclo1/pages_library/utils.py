@@ -2,7 +2,7 @@ import streamlit as st
 import re
 from controllers.user_controllers import create_user
 from controllers.system_log_controllers import insert_system_log
-from database.database import User, engine
+from database.database import engine, User, LogUser, LogDocument, LogSystem
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv, find_dotenv
 import os
@@ -86,7 +86,6 @@ def validate_cpf(cpf):
     
     return True
 
-
 def update_email(lost_email, new_email):
     with Session(bind=engine) as session:
         try: 
@@ -141,4 +140,72 @@ def get_user_profile(username):
             session.rollback()
             return False, None
 
+def get_log_user():
+    try:
+        with Session(bind=engine) as session:
+            logs = session.query(LogUser).all()
+            log_user = [
+                {
+                    'log_id': log.id,
+                    'modifier_id': log.id_user_modifier,
+                    'modifier_name': log.user_modifier.name,
+                    'modified_id': log.id_user_modified,
+                    'modified_name': log.user_modified.name,
+                    'log_date': f'{log.log_date.day}/{log.log_date.month}/{log.log_date.year} - {log.log_date.hour}:{log.log_date.minute}:{log.log_date.microsecond}',
+                    'log_txt': log.log_txt,
+                }
+                for log in logs
+            ]
+
+            return True, log_user
+
+    except Exception as error:
+
+            insert_system_log(error)
+            session.rollback()
+            return False, None
     
+def get_log_documents():
+    try:
+        with Session(bind=engine) as session:
+            logs = session.query(LogDocument).all()
+            log_documents = [
+                {
+                    'log_id': log.id,
+                    'modifier': f'{log.id_user_modifier} - {log.user.name}',
+                    'document_modified_id': f'{log.id_document_modified} - {log.document.name}',
+                    'log_date': f'{log.log_date.day}/{log.log_date.month}/{log.log_date.year} - {log.log_date.hour}:{log.log_date.minute}:{log.log_date.microsecond}',
+                    'log_txt': log.log_txt,
+                }
+                for log in logs
+            ]
+
+        return True, log_documents
+
+    except Exception as error:
+
+            insert_system_log(error)
+            session.rollback()
+            return False, None
+    
+def get_log_system():
+    try:
+        with Session(bind=engine) as session:
+            logs = session.query(LogSystem).all()
+            log_system = [
+                {
+                    'log_id': log.id,
+                    'error_type': log.error_type,
+                    'log_date': f'{log.log_date.day}/{log.log_date.month}/{log.log_date.year} - {log.log_date.hour}:{log.log_date.minute}:{log.log_date.microsecond}',
+                    'log_txt': log.log_txt,
+                }
+                for log in logs
+            ]
+
+        return True, log_system
+
+    except Exception as error:
+
+            insert_system_log(error)
+            session.rollback()
+            return False, None

@@ -39,10 +39,13 @@ def register_page():
                 email = st.text_input('Email', key='create_user_email', placeholder='Email')
                 cpf = st.text_input('CPF', key='create_user_cpf', placeholder='CPF')
                 password = st.text_input('Senha', key='create_user_password', placeholder='Senha', type='password')
+                confirm_password = st.text_input('Confirmar Senha', key='create_user_confirm_password', placeholder='Confirmar Senha', type='password')
+                
                 access_level = st.number_input('Nivel de Acesso', key='create_user_access_level', min_value=1, max_value=4, step=1)
                 warning = st.empty()
 
                 create_user_button = st.form_submit_button('Enviar', type='primary', on_click=register_store_user_credentials)
+
                 if create_user_button:
                     if not username or len(username) < 4:
                         warning.warning('Nome de usuário inválido. Tamanho mínimo requerido: 4 caracteres')
@@ -64,6 +67,9 @@ def register_page():
                     if len(password)<8:
                         warning.warning('Senha muito curta. Tamanho mínimo requerido: 8 caracteres.')
                         return
+                    if st.session_state.password != confirm_password:
+                         warning.warning('Senhas não coincidem.')
+                         return
                     
                     create_user(name, username, email, cpf, password, access_level, st.session_state.user_id)
                     warning.empty()
