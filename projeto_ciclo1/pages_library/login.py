@@ -44,7 +44,6 @@ def app():
         
         Authenticator = stauth.Authenticate(credentials, cookie_name='StreamLit', cookie_key='abcdef', cookie_expiry_days=0)
 
-
         email, authentication_status, username = Authenticator.login(fields={'Form name':'Entrar', 'Username':'Usuário', 'Password':'Senha', 'Login':'Entrar'})
 
         if username:
@@ -57,10 +56,10 @@ def app():
                     else:
                         display_menu_adm()
                     Authenticator.logout(button_name='Sair', location='sidebar')
+
                 else:
                     st.warning('Usuario não existe')
 
-                    
     except Exception as error:
         st.warning(f'{error}')
         insert_system_log(error)
