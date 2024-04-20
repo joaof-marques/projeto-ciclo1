@@ -22,12 +22,11 @@ def run(img_file):
         "words": []
     }
     
-    ui_width = st_js.st_javascript("window.innerWidth")
-
-    docImg = Image.open(img_file)
+    ui_width = st_js.st_javascript("window.innerWidth", key='uiwidth1')
+    
     height = initial_rect['meta']['image_size']['width']
     width = initial_rect['meta']['image_size']['height']
-    with_org, height_org = docImg.size
+    with_org, height_org = img_file.size
     
     proportion = map_proportion(with_org, height_org, width, height)
     
@@ -40,13 +39,13 @@ def run(img_file):
 
     with col1:
     
-        canvas_width = ui_width/2
+        canvas_width = ui_width/2.1
         
         result_rects = st_sparrow_labeling(
             fill_color="rgba(0, 151, 255, 0.3)",
             stroke_width=1,
             stroke_color="rgba(0, 50, 255, 0.7)",
-            background_image=docImg,
+            background_image=img_file,
             initial_rects=initial_rect,
             height=height,
             width=width,
@@ -90,14 +89,6 @@ def run(img_file):
                     except Exception as e:
                         print(e)
     
-    
-
-def canvas_available_width(ui_width):
-    # Get ~40% of the available width, if the UI is wider than 500px
-    if ui_width > 500:
-        return math.floor(38 * ui_width / 100)
-    else:
-        return ui_width
 
 def map_proportion(width_org, height_org, width_new, heigt_new):
     proportion_w = width_org / width_new

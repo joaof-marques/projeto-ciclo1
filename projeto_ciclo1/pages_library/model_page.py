@@ -1,4 +1,6 @@
 import streamlit as st
+from PIL import Image
+from pdf2image import convert_from_bytes
 from projeto_ciclo1.database.database import *
 import projeto_ciclo1.pages_library.sparrow_models as spr
 
@@ -20,7 +22,16 @@ def model_config():
         uploaded_file = st.file_uploader("Selecione um arquivo", type=['png', 'jpg', 'jpeg', 'pdf', 'jfif'])
 
         if uploaded_file is not None:
-            spr.run(uploaded_file, title)  
+            if uploaded_file.name.endswith('pdf'):
+                    # Convertendo o PDF para uma lista de imagens
+                pages = convert_from_bytes(uploaded_file.read(),
+                                        poppler_path=r'poppler-24.02.0\Library\bin')
+
+                pil_image = pages[0].convert('RGB')
+            else:
+                pil_image = Image.open(uploaded_file)
+            
+            spr.run(pil_image, title)  
             
     except Exception as e:
         print(e)

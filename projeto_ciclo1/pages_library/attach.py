@@ -1,7 +1,9 @@
 import io
 from PIL import Image
 import streamlit as st
+import streamlit_javascript as st_js
 from projeto_ciclo1.ocr.ocr import *
+from pdf2image import convert_from_bytes
 from projeto_ciclo1.database.database import *
 import projeto_ciclo1.pages_library.sparrow_scan as spr
 from streamlit_extras.stylable_container import stylable_container
@@ -47,7 +49,16 @@ def normal_attach():
 
 
     if uploaded_file is not None and option:
+        
+        if uploaded_file.name.endswith('pdf'):
+            # Convertendo o PDF para uma lista de imagens
+            pages = convert_from_bytes(uploaded_file.read(),
+                                       poppler_path=r'poppler-24.02.0\Library\bin')
 
+            pil_image = pages[0].convert('RGB')
+        else:
+            pil_image = Image.open(uploaded_file)
+            
         # Extraindo a configuração definida pelo usuário
         with Session(bind=engine) as session:
             conf = all_configs.filter(OcrConfig.name == option).first()
@@ -73,8 +84,7 @@ def normal_attach():
         
         
         # Convertendo imagem em array
-        img2 = Image.open(uploaded_file)
-        array_img2 = np.array(img2)
+        array_img2 = np.array(pil_image)
         
         # implementando funcionalidade do orc - reorientação e leitura
         img_new = perspective(array_img1, array_img2)
@@ -97,9 +107,10 @@ def normal_attach():
                 if st.form_submit_button('Enviar', type='primary'): 
                     if len(tags) > 0 and title != '':
                         # Image to bytes
-                        docImg = Image.open(uploaded_file)
+                        
                         buffer = io.BytesIO()
-                        docImg.save(buffer, format='PNG')
+                        img_new = Image.fromarray(img_new)
+                        img_new.save(buffer, format='PNG')
                         img_bytes = buffer.getvalue()
                         
                         with Session(bind=engine) as session:
@@ -130,12 +141,21 @@ def fast_attach():
             
     if uploaded_file is not None:
         
-        spr.run(uploaded_file)
+        if uploaded_file.name.endswith('pdf'):
+            
+            # Convertendo o PDF para uma lista de imagens
+            pages = convert_from_bytes(uploaded_file.read(), 
+                                       poppler_path=r'poppler-24.02.0\Library\bin')
+            
+            pil_image = pages[0].convert('RGB')
+        else:
+            pil_image = Image.open(uploaded_file)
+            
+        spr.run(pil_image)
             
         if 'rois' in st.session_state and st.session_state.rois is not None:
             
-            img = Image.open(uploaded_file)
-            array_img = np.array(img)
+            array_img = np.array(pil_image)
             
             data, img_labels = labels(array_img, st.session_state.rois, filter)
 
@@ -143,7 +163,8 @@ def fast_attach():
             clm1, clm2 = st.columns(2)
             with clm1:
                 img_labels = cv.resize(img_labels, 
-                                       (int(900 * 75 / 100), int(1280 * 75 / 100)))
+                                       (int(900 * 70 / 100),  
+                                        int(1280 * 70 / 100)))
                 st.image(img_labels)
 
             with clm2:
@@ -163,9 +184,8 @@ def fast_attach():
                         try:
                             if len(tags) > 0 and title != '':
                                 
-                                docImg = Image.open(uploaded_file)
                                 buffer = io.BytesIO()
-                                docImg.save(buffer, format='PNG')
+                                pil_image.save(buffer, format='PNG')
                                 img_bytes = buffer.getvalue()
 
                                 with Session(bind=engine) as session:

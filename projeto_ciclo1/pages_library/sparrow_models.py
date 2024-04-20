@@ -21,12 +21,11 @@ def run(img_file, model):
         "words": []
     }
     
-    ui_width = st_js.st_javascript("window.innerWidth")
+    ui_width = st_js.st_javascript("window.innerWidth", key='uiwidth0')
 
-    docImg = Image.open(img_file)
     height = initial_rect['meta']['image_size']['width']
     width = initial_rect['meta']['image_size']['height']
-    with_org, height_org = docImg.size
+    with_org, height_org = img_file.size
     
     proportion = map_proportion(with_org, height_org, width, height)
     
@@ -38,13 +37,13 @@ def run(img_file, model):
     col1, col2 = st.columns([1, 1])
     with col1:
     
-        canvas_width = canvas_available_width(ui_width)
+        canvas_width = ui_width/2.1
         
         result_rects = st_sparrow_labeling(
             fill_color="rgba(0, 151, 255, 0.3)",
             stroke_width=1,
             stroke_color="rgba(0, 50, 255, 0.7)",
-            background_image=docImg,
+            background_image=img_file,
             initial_rects=initial_rect,
             height=height,
             width=width,
@@ -80,7 +79,7 @@ def run(img_file, model):
                     with Session(bind=engine) as session:
                         try:
                             buffer = io.BytesIO()
-                            docImg.save(buffer, format='PNG')
+                            img_file.save(buffer, format='PNG')
                             img_bytes = buffer.getvalue()
                             rois = []
                             
@@ -95,7 +94,6 @@ def run(img_file, model):
                             
                             session.add(OcrConfig(name=model, img=img_bytes, rois=rois))
                             session.commit()
-                            st.balloons()
                         except Exception as e:
                             session.rollback()
                             print(e)
