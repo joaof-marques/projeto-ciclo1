@@ -114,6 +114,7 @@ def normal_attach():
             
 def fast_attach():
     title = st.text_input("Título", key='title_b')
+    
     tags = st.multiselect('Selecionar TAGs', 
                           ['Nota Fiscal', 'Contrato', 'RG', 'CPF', 'Passaporte'], 
                           key='insert_tags_b')
@@ -121,6 +122,7 @@ def fast_attach():
     filter = st.selectbox("Selecionar Filtro", 
                           ('Padrão', 'Tratamento de Ruido'), 
                           key='select_filter_2')
+    
     uploaded_file = st.file_uploader("Selecionar Arquivo", 
                                     type=['png', 'jpg', 'jpeg', 'pdf', 'jfif'], 
                                     key='uploader_file_2')
@@ -134,6 +136,7 @@ def fast_attach():
             
             img = Image.open(uploaded_file)
             array_img = np.array(img)
+            
             data, img_labels = labels(array_img, st.session_state.rois, filter)
 
             # Exibir imagem e colunas
@@ -145,17 +148,21 @@ def fast_attach():
 
             with clm2:
                 with st.form(key="send_form_b"):
+                    
                     final_text = ''
                     
                     for i, row in enumerate(st.session_state.rois):
                         text = st.text_area(
-                            f"{row[2]}", data[i][row[2]], key=f'text_area_b{i}')
+                            f"{row[2]} ", data[i][row[2]], key=f'text_area_b{i}')
+                        
                         final_text += f'{row[2]}\n{text}\n'
+                        
                         st.markdown("---")
                     
                     if st.form_submit_button('Enviar', type='primary'):
                         try:
                             if len(tags) > 0 and title != '':
+                                
                                 docImg = Image.open(uploaded_file)
                                 buffer = io.BytesIO()
                                 docImg.save(buffer, format='PNG')
