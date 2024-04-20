@@ -130,7 +130,7 @@ def fast_attach():
             
     if uploaded_file is not None:
         
-        st.session_state.rois = spr.run(uploaded_file)
+        spr.run(uploaded_file)
             
         if 'rois' in st.session_state and st.session_state.rois is not None:
             

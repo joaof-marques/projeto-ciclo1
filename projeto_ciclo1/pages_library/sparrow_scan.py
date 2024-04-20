@@ -66,26 +66,29 @@ def run(img_file):
 
     with col2:
         if result_rects is not None:
-            st.markdown("---")
+            with st.form(key="fields_form_scan"):
 
-            for i, rect in enumerate(result_rects.rects_data['words']):
-                
-                label = st.text_input("Rótulo", key=f"label_{i}", disabled=False if i == result_rects.current_rect_index else True)
-                st.markdown("---")
-                data_processor.update_rect_data(result_rects.rects_data, i, [], label)
-
-            try:
-                rois = []
                 for i, rect in enumerate(result_rects.rects_data['words']):
-                    p1 = (int(rect['rect']['x1'] * proportion[0]),int(rect['rect']['y1'] * proportion[1]))
-                    p2 = (int(rect['rect']['x2'] * proportion[0]),int(rect['rect']['y2'] * proportion[1]))
-                    roi = [p1, p2]
-                    roi.append(rect['label'])
-                    rois.append(roi)
-                
-                return rois
-            except Exception as e:
-                print(e)
+                    
+                    label = st.text_input("Rótulo", key=f"label_{i}", disabled=False if i == result_rects.current_rect_index else True)
+                    
+                    st.markdown("---")
+                    data_processor.update_rect_data(result_rects.rects_data, i, [], label)
+
+                btn = st.form_submit_button("Scan", type="secondary")
+                if btn:
+                    try:
+                        rois = []
+                        for i, rect in enumerate(result_rects.rects_data['words']):
+                            p1 = (int(rect['rect']['x1'] * proportion[0]),int(rect['rect']['y1'] * proportion[1]))
+                            p2 = (int(rect['rect']['x2'] * proportion[0]),int(rect['rect']['y2'] * proportion[1]))
+                            roi = [p1, p2]
+                            roi.append(rect['label'])
+                            rois.append(roi)
+                        
+                        st.session_state.rois = rois
+                    except Exception as e:
+                        print(e)
     
     
 
