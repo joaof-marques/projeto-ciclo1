@@ -15,10 +15,10 @@ def attach():
             normal_attach()
         except Exception as e:
             print(e)
+            
     with tab2:
         try:
             fast_attach()
-            
         except Exception as e:
             print(e)
             
@@ -31,7 +31,7 @@ def normal_attach():
                 lbls.append(conf.name)
                 
     title = st.text_input("Título", key='title_a')
-    tags = st.multiselect('Selecionar Tag', 
+    tags = st.multiselect('Selecionar TAGs', 
                           ['Nota Fiscal', 'Contrato', 'RG', 'CPF', 'Passaporte'],
                           key='insert_tags_a')
     
@@ -114,7 +114,7 @@ def normal_attach():
             
 def fast_attach():
     title = st.text_input("Título", key='title_b')
-    tags = st.multiselect('Selecionar Tag', 
+    tags = st.multiselect('Selecionar TAGs', 
                           ['Nota Fiscal', 'Contrato', 'RG', 'CPF', 'Passaporte'], 
                           key='insert_tags_b')
 
@@ -124,43 +124,17 @@ def fast_attach():
     uploaded_file = st.file_uploader("Selecionar Arquivo", 
                                     type=['png', 'jpg', 'jpeg', 'pdf', 'jfif'], 
                                     key='uploader_file_2')
-    
-    def send():
-        try:
-            if len(tags) > 0 and title != '':
-                docImg = Image.open(uploaded_file)
-                buffer = io.BytesIO()
-                docImg.save(buffer, format='PNG')
-                img_bytes = buffer.getvalue()
-
-                with Session(bind=engine) as session:
-                    try:
-                        session.add(Document(name=title, img=img_bytes, tags=tags,
-                                    content=final_text, id_register_user=st.session_state.user_id))
-                        session.commit()
-                    except Exception as e:
-                        print(e)
-                        session.rollback()
-                        
-                st.rerun()
-            else:
-                raise Exception('Campo Vazio!')
-        except Exception as e:
-            print(e)
+        
             
     if uploaded_file is not None:
-        # if 'rois' not in st.session_state or st.session_state.rois == None:
-        #     st.session_state.rois = None
-        #     while st.session_state.rois == None:
-        #         st.session_state.rois = spr.run(uploaded_file)
-    
-        rois = spr.run(uploaded_file)
         
-        if rois is not None:
+        st.session_state.rois = spr.run(uploaded_file)
+            
+        if 'rois' in st.session_state and st.session_state.rois is not None:
             
             img = Image.open(uploaded_file)
             array_img = np.array(img)
-            data, img_labels = labels(array_img, rois, filter)
+            data, img_labels = labels(array_img, st.session_state.rois, filter)
 
             # Exibir imagem e colunas
             clm1, clm2 = st.columns(2)
@@ -173,12 +147,36 @@ def fast_attach():
                 with st.form(key="send_form_b"):
                     final_text = ''
                     
-                    for i, row in enumerate(rois):
+                    for i, row in enumerate(st.session_state.rois):
                         text = st.text_area(
                             f"{row[2]}", data[i][row[2]], key=f'text_area_b{i}')
                         final_text += f'{row[2]}\n{text}\n'
                         st.markdown("---")
                     
-                    st.form_submit_button('Enviar', type='primary', on_click=send)
+                    if st.form_submit_button('Enviar', type='primary'):
+                        try:
+                            if len(tags) > 0 and title != '':
+                                docImg = Image.open(uploaded_file)
+                                buffer = io.BytesIO()
+                                docImg.save(buffer, format='PNG')
+                                img_bytes = buffer.getvalue()
+
+                                with Session(bind=engine) as session:
+                                    try:
+                                        session.add(Document(name=title, img=img_bytes, tags=tags,
+                                                    content=final_text, id_register_user=st.session_state.user_id))
+                                        session.commit()
+                                                   
+                                    except Exception as e:
+                                        print(e)
+                                        session.rollback()
+                
+                                st.rerun()
+                            else:
+                                raise Exception('Campo Vazio!')
+                        except Exception as e:
+                            print(e)
+    
+
                 
             
