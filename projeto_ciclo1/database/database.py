@@ -13,7 +13,7 @@ db = os.getenv('DB_NAME')
 
 # Conection
 url = f'postgresql://{user}:{password}@{host}/{db}'
-engine = create_engine(url)
+engine = create_engine(url, echo=True)
 
 # base class for sqlachemy ORM
 Base = declarative_base()
@@ -46,7 +46,6 @@ class Document(Base):
     
     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(VARCHAR(255))
-    type: Mapped[str] = mapped_column(VARCHAR(255))
     id_register_user: Mapped[int] = mapped_column(INTEGER, ForeignKey('users.id'))
     register_date: Mapped[str] = mapped_column(TIMESTAMP, server_default=func.now())
     img: Mapped[str] = mapped_column(LargeBinary)

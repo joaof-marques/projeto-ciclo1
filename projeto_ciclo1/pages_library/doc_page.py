@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import random
 from streamlit_option_menu import option_menu
-from projeto_ciclo1.pages_library.model_config import model_config
+from projeto_ciclo1.pages_library.model_page import models
 from projeto_ciclo1.pages_library.attach import attach
 
 def doc_page():
@@ -10,10 +10,15 @@ def doc_page():
     st.write('')
     st.title('Documentos')
 
-    selected = option_menu(None, ['Encontrar', 'Anexar', 'Histórico', 'Editar', 'Deletar',
-                           'Criar Modelo', 'Editar Modelo'],
-                           menu_icon="cast", default_index=0, orientation="horizontal")
-    #tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(['Encontrar', 'Anexar', 'Histórico','Editar', 'Deletar', 'Criar Modelo', 'Editar Modelo'])
+    selected = option_menu(None, ['Encontrar', 'Anexar', 'Histórico', 'Editar', 'Deletar','Modelos'],
+                            menu_icon="cast", default_index=0, orientation="horizontal", 
+                            styles={
+                                "container": {"padding": "0!important", "background-color": "#ffff"},
+                                "icon": {"color": "#282634", "font-size": "14px"},
+                                "nav-link": {"color": "#000000", "font-size": "14px", "text-align": "center", "margin": "0px", "--hover-color": "#bd928b"},
+                                "nav-link-selected": {"background-color": "#ff4e44"},
+                            }
+    )
 
     if selected == 'Encontrar':
         st.subheader("Localizar arquivo")
@@ -67,22 +72,6 @@ def doc_page():
 
     if selected == 'Anexar':
         attach()
-        # st.title('Anexar arquivo')
 
-        # ## Botão para anexar
-        # st.file_uploader("Escolha um arquivo:")
-
-        # ## Seletor do tipo de arquivo
-        # st.radio('Tipo do arquivo:', ['Contrato', 'Registro', 'Documento'])
-
-        # ## Selecionar TAG
-        # st.multiselect('TAG', ['Contratos', 'Registros', 'Documentos'])
-
-        # # Seletor da data do arquivo
-        # st.date_input("Escolha a data do documento:", value=None)
-
-        # ## Botão de enviar
-        # st.button('Enviar')
-
-    if selected == 'Criar Modelo':
-        model_config()
+    if selected == 'Modelos':
+        models()

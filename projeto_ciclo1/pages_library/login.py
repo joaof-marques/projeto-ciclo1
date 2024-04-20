@@ -69,5 +69,6 @@ def app():
 
 st.set_page_config(page_title='Projeto', page_icon='🐍', layout='wide')
 
+# register_page()
 app()
 # streamlit run projeto_ciclo1\pages_library\login.py

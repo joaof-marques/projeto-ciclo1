@@ -67,7 +67,7 @@ def run(img_file):
     with col2:
         if result_rects is not None:
             with st.form(key="fields_form"):
-                st.markdown("---")
+
                 for i, rect in enumerate(result_rects.rects_data['words']):
                     
                     label = st.text_input("Rótulo", key=f"label_{i}", disabled=False if i == result_rects.current_rect_index else True)

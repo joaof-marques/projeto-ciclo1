@@ -1,6 +1,5 @@
 from PIL import Image
 import streamlit as st
-import streamlit_nested_layout
 import streamlit_javascript as st_js
 from streamlit_sparrow_labeling import st_sparrow_labeling
 from streamlit_sparrow_labeling import DataProcessor
@@ -31,8 +30,8 @@ def run(img_file, model):
     
     proportion = map_proportion(with_org, height_org, width, height)
     
-    assign_labels = st.checkbox("Assign Labels", True)
-    mode = "transform" if assign_labels else "rect"
+    assign_labels = st.checkbox("Adicionar Campos", True)
+    mode = "transform" if not assign_labels else "rect"
 
     data_processor = DataProcessor()
 
@@ -67,7 +66,6 @@ def run(img_file, model):
         if result_rects is not None:
             with st.form(key="fields_form"):
                 
-                st.markdown("---")
                 for i, rect in enumerate(result_rects.rects_data['words']):
                     label = st.text_input("Rótulo", key=f"label_{i}", disabled=False if i == result_rects.current_rect_index else True)
 
@@ -78,13 +76,11 @@ def run(img_file, model):
                 submit = st.form_submit_button("Save", type="primary")
                 if submit:
                     if model == '':
-                        raise Exception('Insira o nome modelo!')
+                        raise Exception('Insira o nome do modelo!')
                     
                     with Session(bind=engine) as session:
                         try:
-                            # enviar url da imagem
                             buffer = io.BytesIO()
-                            # Você pode ajustar o formato conforme necessário
                             docImg.save(buffer, format='PNG')
                             img_bytes = buffer.getvalue()
                             rois = []
