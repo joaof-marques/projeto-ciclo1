@@ -64,7 +64,7 @@ def run(img_file, model):
 
     with col2:
         if result_rects is not None:
-            with st.form(key="fields_form"):
+            with st.form(key="fields_form_models"):
                 
                 for i, rect in enumerate(result_rects.rects_data['words']):
                     label = st.text_input("Rótulo", key=f"label_{i}", disabled=False if i == result_rects.current_rect_index else True)
@@ -73,8 +73,7 @@ def run(img_file, model):
 
                     data_processor.update_rect_data(result_rects.rects_data, i, [], label)
 
-                submit = st.form_submit_button("Save", type="primary")
-                if submit:
+                if st.form_submit_button("Save", type="primary"):
                     if model == '':
                         raise Exception('Insira o nome do modelo!')
                     
@@ -100,77 +99,6 @@ def run(img_file, model):
                         except Exception as e:
                             session.rollback()
                             print(e)
-
-def render_form_wide(words, result_rects, data_processor, proportion):
-    col1_form, col2_form, col3_form, col4_form = st.columns([1, 1, 1, 1])
-    num_rows = math.ceil(len(words) / 4)
-
-    for i, rect in enumerate(words):
-        if i < num_rows:
-            with col1_form:
-                render_form_element(
-                    rect, i, result_rects, data_processor, proportion)
-        elif i < num_rows * 2:
-            with col2_form:
-                render_form_element(
-                    rect, i, result_rects, data_processor, proportion)
-        elif i < num_rows * 3:
-            with col3_form:
-                render_form_element(
-                    rect, i, result_rects, data_processor, proportion)
-        else:
-            with col4_form:
-                render_form_element(
-                    rect, i, result_rects, data_processor, proportion)
-
-
-def render_form_avg(words, result_rects, data_processor, proportion):
-    col1_form, col2_form, col3_form = st.columns([1, 1, 1])
-    num_rows = math.ceil(len(words) / 3)
-
-    for i, rect in enumerate(words):
-        if i < num_rows:
-            with col1_form:
-                render_form_element(
-                    rect, i, result_rects, data_processor, proportion)
-        elif i < num_rows * 2:
-            with col2_form:
-                render_form_element(
-                    rect, i, result_rects, data_processor, proportion)
-        else:
-            with col3_form:
-                render_form_element(
-                    rect, i, result_rects, data_processor, proportion)
-
-
-def render_form_narrow(words, result_rects, data_processor, proportion):
-    col1_form, col2_form = st.columns([1, 1])
-    num_rows = math.ceil(len(words) / 2)
-
-    for i, rect in enumerate(words):
-        if i < num_rows:
-            with col1_form:
-                render_form_element(
-                    rect, i, result_rects, data_processor, proportion)
-        else:
-            with col2_form:
-                render_form_element(
-                    rect, i, result_rects, data_processor, proportion)
-
-
-def render_form_mobile(words, result_rects, data_processor, proportion):
-    for i, rect in enumerate(words):
-        render_form_element(rect, i, result_rects, data_processor, proportion)
-
-
-def render_form_element(rect, i, result_rects, data_processor, proportion):
-    label = st.text_input("Rótulo", key=f"label_{i}", disabled=False if i == result_rects.current_rect_index else True)
-    
-    st.markdown("---")
-
-    data_processor.update_rect_data(result_rects.rects_data, i, [], label)
-    
-
 
 def canvas_available_width(ui_width):
     # Get ~40% of the available width, if the UI is wider than 500px

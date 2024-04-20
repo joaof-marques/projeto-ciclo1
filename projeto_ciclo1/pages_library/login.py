@@ -1,12 +1,6 @@
 import streamlit as st
 import streamlit_authenticator as stauth
 from projeto_ciclo1.controllers.system_log_controllers import insert_system_log
-from streamlit_option_menu import option_menu
-from pages_library.home import home
-from pages_library.doc_page import doc_page
-from pages_library.profile_page import profile_page
-from pages_library.register_user_page import register_page
-from pages_library.log_user_history import log_history
 from pages_library.utils import fetch_users
 from pages_library.utils import get_user_profile
 from pages_library.login_functions import display_menu, display_menu_adm

@@ -66,7 +66,7 @@ def run(img_file):
 
     with col2:
         if result_rects is not None:
-            with st.form(key="fields_form"):
+            with st.form(key="fields_form_scan"):
 
                 for i, rect in enumerate(result_rects.rects_data['words']):
                     
@@ -76,8 +76,7 @@ def run(img_file):
                     data_processor.update_rect_data(result_rects.rects_data, i, [], label)
 
                     
-                submit = st.form_submit_button("Save", type="primary")
-                if submit:
+                if st.form_submit_button("Scan", type="secondary"):
                         try:
                             rois = []
                             for i, rect in enumerate(result_rects.rects_data['words']):

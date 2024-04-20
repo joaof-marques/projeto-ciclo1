@@ -18,6 +18,7 @@ def attach():
     with tab2:
         try:
             fast_attach()
+            
         except Exception as e:
             print(e)
             
@@ -34,10 +35,15 @@ def normal_attach():
                           ['Nota Fiscal', 'Contrato', 'RG', 'CPF', 'Passaporte'],
                           key='insert_tags_a')
     
-    option = st.selectbox("Selecionar Modelo", tuple(lbls), key='select_model_1')
-    filter = st.selectbox("Selecionar Filtro", ('Padrão', 'Tratamento de Ruido'), key='select_filter_1')
+    option = st.selectbox("Selecionar Modelo",
+                          tuple(lbls), key='select_model_1')
+    filter = st.selectbox("Selecionar Filtro",
+                          ('Padrão', 'Tratamento de Ruido'),
+                          key='select_filter_1')
     
-    uploaded_file = st.file_uploader("Selecionar Arquivo", type=['png', 'jpg', 'jpeg', 'pdf', 'jfif'], key='uploader_file_1')
+    uploaded_file = st.file_uploader("Selecionar Arquivo",
+                                    type=['png', 'jpg', 'jpeg', 'pdf', 'jfif'],
+                                    key='uploader_file_1')
 
 
     if uploaded_file is not None and option:
@@ -96,20 +102,16 @@ def normal_attach():
                         docImg.save(buffer, format='PNG')
                         img_bytes = buffer.getvalue()
                         
-                        #Buscar id do usuario
-                        
                         with Session(bind=engine) as session:
                             try:
-                                session.add(Document(name=title, img=img_bytes, tags=tags, content=final_text, id_register_user=1))
+                                session.add(Document(name=title, img=img_bytes, tags=tags, content=final_text, id_register_user=st.session_state.user_id))
                                 session.commit()
-                                st.balloons()
+                                attach()
                             except Exception as e:
-                                print(e)
                                 session.rollback()
                     else:
                         raise Exception('Campo Vazio!')
-                
-            
+                       
             
 def fast_attach():
     title = st.text_input("Título", key='title_b')
@@ -123,50 +125,62 @@ def fast_attach():
     uploaded_file = st.file_uploader("Selecionar Arquivo", 
                                     type=['png', 'jpg', 'jpeg', 'pdf', 'jfif'], 
                                     key='uploader_file_2')
+    
+    def send():
+        try:
+            if len(tags) > 0 and title != '':
+                docImg = Image.open(uploaded_file)
+                buffer = io.BytesIO()
+                docImg.save(buffer, format='PNG')
+                img_bytes = buffer.getvalue()
 
+                with Session(bind=engine) as session:
+                    try:
+                        session.add(Document(name=title, img=img_bytes, tags=tags,
+                                    content=final_text, id_register_user=st.session_state.user_id))
+                        session.commit()
+                        attach()
+                    except Exception as e:
+                        print(e)
+                        session.rollback()
+                        
+                st.rerun()
+            else:
+                raise Exception('Campo Vazio!')
+        except Exception as e:
+            print(e)
+            
     if uploaded_file is not None:
-
+        # if 'rois' not in st.session_state or st.session_state.rois == None:
+        #     st.session_state.rois = None
+        #     while st.session_state.rois == None:
+        #         st.session_state.rois = spr.run(uploaded_file)
+    
         rois = spr.run(uploaded_file)
-
+        
         if rois is not None:
-            # Convertendo imagem em array
+            
             img = Image.open(uploaded_file)
             array_img = np.array(img)
-
             data, img_labels = labels(array_img, rois, filter)
 
             # Exibir imagem e colunas
             clm1, clm2 = st.columns(2)
             with clm1:
-                img_labels = cv.resize(img_labels, (int(900 * 75 / 100), int(1280 * 75 / 100)))
+                img_labels = cv.resize(img_labels, 
+                                       (int(900 * 75 / 100), int(1280 * 75 / 100)))
                 st.image(img_labels)
 
             with clm2:
                 with st.form(key="send_form_b"):
                     final_text = ''
+                    
                     for i, row in enumerate(rois):
-                        text = st.text_area(f"{row[2]}", data[i][row[2]], key=f'text_area_b{i}')
+                        text = st.text_area(
+                            f"{row[2]}", data[i][row[2]], key=f'text_area_b{i}')
                         final_text += f'{row[2]}\n{text}\n'
                         st.markdown("---")
                     
-                    if st.form_submit_button('Enviar', type='primary'):
-                        if len(tags) > 0 and title != '':
-                            # Image to bytes
-                            docImg = Image.open(uploaded_file)
-                            buffer = io.BytesIO()
-                            docImg.save(buffer, format='PNG')
-                            img_bytes = buffer.getvalue()
-                            
-                            # Buscar id do usuario
-
-                            with Session(bind=engine) as session:
-                                try:
-                                    session.add(Document(
-                                        name=title, img=img_bytes, tags=tags, content=final_text, id_register_user=1))
-                                    session.commit()
-                                    st.balloons()
-                                except Exception as e:
-                                    print(e)
-                                    session.rollback()
-                        else:
-                            raise Exception('Campo Vazio!')
+                    st.form_submit_button('Enviar', type='primary', on_click=send)
+                
+            
