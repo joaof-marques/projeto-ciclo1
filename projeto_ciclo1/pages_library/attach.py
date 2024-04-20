@@ -106,7 +106,6 @@ def normal_attach():
                             try:
                                 session.add(Document(name=title, img=img_bytes, tags=tags, content=final_text, id_register_user=st.session_state.user_id))
                                 session.commit()
-                                attach()
                             except Exception as e:
                                 session.rollback()
                     else:
@@ -139,7 +138,6 @@ def fast_attach():
                         session.add(Document(name=title, img=img_bytes, tags=tags,
                                     content=final_text, id_register_user=st.session_state.user_id))
                         session.commit()
-                        attach()
                     except Exception as e:
                         print(e)
                         session.rollback()
