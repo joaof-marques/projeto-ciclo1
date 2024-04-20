@@ -1,4 +1,4 @@
-from projeto_ciclo1.database.database import LogSystem, engine
+from database.database import LogSystem, engine
 from sqlalchemy.orm import Session
 import time
 

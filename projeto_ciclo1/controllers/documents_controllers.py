@@ -1,6 +1,6 @@
-from projeto_ciclo1.database.database import Document, engine
+from database.database import Document, engine
 from sqlalchemy.orm import Session
-from projeto_ciclo1.controllers.system_log_controllers import insert_system_log
+from controllers.system_log_controllers import insert_system_log
 from time import time
 import os
 
