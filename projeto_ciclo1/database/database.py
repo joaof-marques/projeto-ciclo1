@@ -13,7 +13,7 @@ db = os.getenv('DB_NAME')
 
 # Conection
 url = f'postgresql://{user}:{password}@{host}/{db}'
-engine = create_engine(url, echo=True)
+engine = create_engine(url, echo=False)
 
 # base class for sqlachemy ORM
 Base = declarative_base()
@@ -25,6 +25,7 @@ class User(Base):
     
     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(VARCHAR(255))
+    username:Mapped[str] = mapped_column(VARCHAR(50))
     email: Mapped[str] = mapped_column(VARCHAR(255), unique=True)
     cpf: Mapped[str] = mapped_column(VARCHAR(11), unique=True)
     password: Mapped[str] = mapped_column(VARCHAR(255))
