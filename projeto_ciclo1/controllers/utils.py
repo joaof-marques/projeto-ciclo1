@@ -1,6 +1,6 @@
 import re
 from controllers.system_log_controllers import insert_system_log
-from database.database import engine, User, LogUser, LogDocument, LogSystem
+from database.database import engine, User, LogUser, LogDocument, LogSystem, Document
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv, find_dotenv
 import os

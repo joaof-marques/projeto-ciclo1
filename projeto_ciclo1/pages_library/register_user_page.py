@@ -64,7 +64,7 @@ def register_page():
                     if not validate_cpf(cpf):
                         warning.warning('CPF inválido.')
                         return
-                    if len(password)<8:
+                    if len(password) < 8:
                         warning.warning('Senha muito curta. Tamanho mínimo requerido: 8 caracteres.')
                         return
                     if st.session_state.password != confirm_password:
