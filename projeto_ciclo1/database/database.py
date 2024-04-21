@@ -108,10 +108,8 @@ class LogDocument(Base):
     document = relationship('Document', back_populates='log_document')
 
     id_index = Index('id_index_log_doc', id, postgresql_using='hash')
-    modifier_index = Index('modifier_index_log_doc',
-                           id_user_modifier, postgresql_using='hash')
-    modified_index = Index('modified_index_log_doc',
-                           id_document_modified, postgresql_using='hash')
+    modifier_index = Index('modifier_index_log_doc', id_user_modifier, postgresql_using='hash')
+    modified_index = Index('modified_index_log_doc', id_document_modified, postgresql_using='hash')
     date_index = Index('date_index_log_doc', log_date)
     
     def __repr__(self):
@@ -152,6 +150,6 @@ class OcrConfig(Base):
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
     
-    with Session(bind=engine) as session:
-        session.add(User(name='Feliphe', username='batata', cpf='12345678911', email='bat@ta', password='123', access_level=4))
-        session.commit()
+    # with Session(bind=engine) as session:
+    #     session.add(User(name='Feliphe', username='batata', cpf='12345678911', email='bat@ta', password='123', access_level=4))
+    #     session.commit()
