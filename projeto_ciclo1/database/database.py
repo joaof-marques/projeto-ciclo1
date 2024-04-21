@@ -26,7 +26,7 @@ class User(Base):
     
     id: Mapped[int] = mapped_column(INTEGER, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(VARCHAR(255))
-    username:Mapped[str] = mapped_column(VARCHAR(50))
+    username:Mapped[str] = mapped_column(VARCHAR(50), unique=True)
     email: Mapped[str] = mapped_column(VARCHAR(255), unique=True)
     cpf: Mapped[str] = mapped_column(VARCHAR(11), unique=True)
     password: Mapped[str] = mapped_column(VARCHAR(255))
@@ -41,7 +41,7 @@ class User(Base):
     
     id_index = Index('id_index_user', id, postgresql_using='hash')
     name_index = Index('name_index_user', name)
-    username_index = Index('username_index_user', username)
+    username_index = Index('username_index_user', username, postgresql_using='hash')
     email_index = Index('email_index_user', email, postgresql_using='hash')
     cpf_index = Index('cpf_index_user', cpf, postgresql_using='hash')
     
