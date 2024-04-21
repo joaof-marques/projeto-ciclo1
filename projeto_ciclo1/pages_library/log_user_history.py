@@ -13,6 +13,7 @@ def store_current_page():
 
 def log_history():
     tab_log_documents, tab_log_system, tab_log_users = st.tabs(['Logs de Documentos', 'Logs do Sistema', 'Logs de Usuários'])
+    store_current_page()
 
     with tab_log_documents:
         _, log_document = get_log_documents()
@@ -28,13 +29,13 @@ def log_history():
         _, col1, col2, col3, _ = st.columns(spec=[.3, .5, .6, .5, .3])
 
         with col1:
-            previous = st.button('Anterior', key='previous', on_click=log_document_previous)
+            previous = st.button('Anterior', key='document_log_previous', on_click=log_document_previous)
 
         with col2:
             st.write(f'Página {st.session_state.current_document_page}')
 
         with col3:
-            next = st.button('Proximo', key='next', on_click=log_document_next)
+            next = st.button('Proximo', key='document_log_next', on_click=log_document_next)
 
     with tab_log_system:
         _, log_system = get_log_system()
@@ -49,13 +50,13 @@ def log_history():
         _, col1, col2, col3, _ = st.columns(spec=[.3, .5, .6, .5, .3])
 
         with col1:
-            previous = st.button('Anterior', key='previous', on_click=log_system_previous)
+            previous = st.button('Anterior', key='system_log_previous', on_click=log_system_previous)
 
         with col2:
             st.write(f'Página {st.session_state.current_system_page}')
 
         with col3:
-            next = st.button('Proximo', key='next', on_click=log_system_next)
+            next = st.button('Proximo', key='system_log_next', on_click=log_system_next)
 
     with tab_log_users:
         _, log_user = get_log_user()
@@ -72,12 +73,12 @@ def log_history():
         _, col1, col2, col3, _ = st.columns(spec=[.3, .5, .6, .5, .3])
 
         with col1:
-            previous = st.button('Anterior', key='previous', on_click=log_user_previous)
+            previous = st.button('Anterior', key='user_log_previous', on_click=log_user_previous)
 
         with col2:
             st.write(f'Página {st.session_state.current_user_page}')
 
         with col3:
-            next = st.button('Proximo', key='next', on_click=log_user_next)
+            next = st.button('Proximo', key='user_log_next', on_click=log_user_next)
 
     
