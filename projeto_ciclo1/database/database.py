@@ -58,7 +58,7 @@ class Document(Base):
     log_document = relationship('LogDocument', back_populates='document', cascade='all, delete')
     
     def __repr__(self):
-        return f'{self.id} | {self.type} | {self.id_register_user} | {self.register_date} | {self.img} | {self.tags} | {self.content}'
+        return f'{self.id} | {self.id_register_user} | {self.register_date} | {self.tags} | {self.content}'
     
 # Logs tables
 class LogUser(Base):

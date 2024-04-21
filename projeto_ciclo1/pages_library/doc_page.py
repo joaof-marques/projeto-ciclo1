@@ -2,15 +2,16 @@ import streamlit as st
 import pandas as pd
 import random
 from streamlit_option_menu import option_menu
-from projeto_ciclo1.pages_library.model_page import models
-from projeto_ciclo1.pages_library.attach import attach
+from projeto_ciclo1.pages_library.doc_models import models
+from projeto_ciclo1.pages_library.doc_attach import attach
+from projeto_ciclo1.pages_library.doc_delete import delete
 
 def doc_page():
 
     st.write('')
     st.title('Documentos')
 
-    selected = option_menu(None, ['Encontrar', 'Anexar', 'Histórico', 'Editar', 'Deletar','Modelos'],
+    selected = option_menu(None, ['Encontrar', 'Anexar', 'Editar', 'Deletar','Modelos'],
                             menu_icon="cast", default_index=0, orientation="horizontal", 
                             styles={
                                 "container": {"padding": "0!important", "background-color": "#ffff"},
@@ -75,3 +76,6 @@ def doc_page():
 
     if selected == 'Modelos':
         models()
+        
+    if selected == "Deletar":
+        delete()
