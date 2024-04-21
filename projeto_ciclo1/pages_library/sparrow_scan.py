@@ -74,7 +74,7 @@ def run(img_file):
                     st.markdown("---")
                     data_processor.update_rect_data(result_rects.rects_data, i, [], label)
 
-                btn = st.form_submit_button("Scan", type="secondary")
+                btn = st.form_submit_button("Escanear", type="primary")
                 if btn:
                     try:
                         rois = []

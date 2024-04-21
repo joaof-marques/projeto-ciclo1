@@ -47,19 +47,22 @@ def normal_attach():
                                     type=['png', 'jpg', 'jpeg', 'pdf', 'jfif'],
                                     key='uploader_file_1')
 
+    st.markdown("---")
 
     if uploaded_file is not None and option:
         
+        # Convertion of pdf to img
         if uploaded_file.name.endswith('pdf'):
-            # Convertendo o PDF para uma lista de imagens
+    
             pages = convert_from_bytes(uploaded_file.read(),
                                        poppler_path=r'poppler-24.02.0\Library\bin')
 
             pil_image = pages[0].convert('RGB')
+            
         else:
             pil_image = Image.open(uploaded_file)
             
-        # Extraindo a configuração definida pelo usuário
+        # Get selected OCR-config 
         with Session(bind=engine) as session:
             conf = all_configs.filter(OcrConfig.name == option).first()
             
@@ -68,9 +71,10 @@ def normal_attach():
             img1 = Image.open(img_bytes)
             array_img1 = np.array(img1)
             
-            # Regiões de interesse
             roi_db = conf.rois
-            rois = []
+            
+        # Convertion of strings (rois in the database) to values that can be used
+        rois = []
     
         for row in roi_db:
             converted = []
@@ -83,14 +87,13 @@ def normal_attach():
             rois.append(converted)
         
         
-        # Convertendo imagem em array
         array_img2 = np.array(pil_image)
         
-        # implementando funcionalidade do orc - reorientação e leitura
+        # OCR - read and orientation
         img_new = perspective(array_img1, array_img2)
         data, img_labels = labels(img_new, rois, filter)
         
-        # Exibir imagem e colunas
+        
         clm1, clm2 = st.columns(2)
         with clm1:
             st.image(img_labels)
@@ -99,20 +102,24 @@ def normal_attach():
             with st.form(key="send_form_a"):
 
                 final_text = ''
+                
                 for i, row in enumerate(rois):
                     text = st.text_area(f'{row[2]}', data[i][row[2]], key=f'text_area_a{i}')
+                    
+                    # Text content for the document insertion
                     final_text += f'{row[2]}\n{text}\n'
                     st.markdown("---")
 
                 if st.form_submit_button('Enviar', type='primary'): 
                     if len(tags) > 0 and title != '':
-                        # Image to bytes
                         
+                        # Image to bytes
                         buffer = io.BytesIO()
                         img_new = Image.fromarray(img_new)
                         img_new.save(buffer, format='PNG')
                         img_bytes = buffer.getvalue()
                         
+                        # Database insertion
                         with Session(bind=engine) as session:
                             try:
                                 session.add(Document(name=title, img=img_bytes, tags=tags, content=final_text, id_register_user=st.session_state.user_id))
@@ -121,6 +128,9 @@ def normal_attach():
                                 session.rollback()
                     else:
                         raise Exception('Campo Vazio!')
+                    
+        st.markdown("---")
+
                        
             
 def fast_attach():
@@ -138,28 +148,41 @@ def fast_attach():
                                     type=['png', 'jpg', 'jpeg', 'pdf', 'jfif'], 
                                     key='uploader_file_2')
         
-            
+    st.markdown("---")
+
     if uploaded_file is not None:
         
+        # Reset rois if the file change
+        if 'actual_file' not in st.session_state:
+            st.session_state.actual_file = uploaded_file.name
+            
+        elif st.session_state.actual_file != uploaded_file.name:
+            if 'rois' in st.session_state:
+                del st.session_state.rois
+            st.session_state.actual_file = uploaded_file.name
+            
+        # Convertion of pdf to img
         if uploaded_file.name.endswith('pdf'):
             
-            # Convertendo o PDF para uma lista de imagens
             pages = convert_from_bytes(uploaded_file.read(), 
                                        poppler_path=r'poppler-24.02.0\Library\bin')
             
             pil_image = pages[0].convert('RGB')
+            
         else:
             pil_image = Image.open(uploaded_file)
-            
+        
+        # Call sparrow
         spr.run(pil_image)
-            
+        
+        st.markdown("---")
+
+        # Call labeling after rois being defined in the sparrow
         if 'rois' in st.session_state and st.session_state.rois is not None:
             
             array_img = np.array(pil_image)
-            
             data, img_labels = labels(array_img, st.session_state.rois, filter)
 
-            # Exibir imagem e colunas
             clm1, clm2 = st.columns(2)
             with clm1:
                 img_labels = cv.resize(img_labels, 
@@ -176,6 +199,7 @@ def fast_attach():
                         text = st.text_area(
                             f"{row[2]} ", data[i][row[2]], key=f'text_area_b{i}')
                         
+                        # Text content for the document insertion
                         final_text += f'{row[2]}\n{text}\n'
                         
                         st.markdown("---")
@@ -184,10 +208,12 @@ def fast_attach():
                         try:
                             if len(tags) > 0 and title != '':
                                 
+                                # Imago to bytes
                                 buffer = io.BytesIO()
                                 pil_image.save(buffer, format='PNG')
                                 img_bytes = buffer.getvalue()
 
+                                # Database insertion
                                 with Session(bind=engine) as session:
                                     try:
                                         session.add(Document(name=title, img=img_bytes, tags=tags,
@@ -203,7 +229,11 @@ def fast_attach():
                                 raise Exception('Campo Vazio!')
                         except Exception as e:
                             print(e)
-    
+                            
+            st.markdown("---")
+     
+    elif 'rois' in st.session_state:
+        del st.session_state.rois
 
                 
             

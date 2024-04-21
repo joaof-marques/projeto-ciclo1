@@ -20,6 +20,8 @@ def model_config():
     try:
         title = st.text_input("Nome do modelo", key='model_name')
         uploaded_file = st.file_uploader("Selecione um arquivo", type=['png', 'jpg', 'jpeg', 'pdf', 'jfif'])
+        
+        st.markdown('---')
 
         if uploaded_file is not None:
             if uploaded_file.name.endswith('pdf'):
@@ -33,6 +35,8 @@ def model_config():
             
             spr.run(pil_image, title)  
             
+            st.markdown('---')
+
     except Exception as e:
         print(e)
 
@@ -49,7 +53,7 @@ def model_edit():
                     for row in conf.rois:
                         lbls.append(row[2])
                         
-                    clm1, clm2, clm3, clm4 = st.columns(4)
+                    clm1, clm2, clm3, clm4, clm5, clm6 = st.columns(6)
                     
                     with clm1:
                         st.write(i+1)
@@ -60,12 +64,12 @@ def model_edit():
                     with clm3:
                         st.write(tuple([lbl for lbl in lbls]))
                         
-                    with clm4:
+                    with clm6:
                         if st.button('Deletar', type='primary', key=f'del_con_{i}'):
                             session.delete(conf)
                             session.commit()
                             st.rerun()
-            
+                st.markdown('---')
             else:
                 st.title("Sem modelos para gerenciar!")
     except Exception as e:

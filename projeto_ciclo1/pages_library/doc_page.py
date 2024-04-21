@@ -6,11 +6,12 @@ from projeto_ciclo1.pages_library.doc_models import models
 from projeto_ciclo1.pages_library.doc_attach import attach
 
 def doc_page():
-
-    st.write('')
-    st.title('Documentos')
+    clm1, clm2, clm3, clm4, clm5 = st.columns(5)
+    with clm3:
+        st.title('Documentos')
 
     selected = option_menu(None, ['Encontrar', 'Anexar','Modelos'],
+                            icons=['search', 'cloud-upload','file-earmark-ruled'],
                             menu_icon="cast", default_index=0, orientation="horizontal", 
                             styles={
                                 "container": {"padding": "0!important", "background-color": "#ffff"},

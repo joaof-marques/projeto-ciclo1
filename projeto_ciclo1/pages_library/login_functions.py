@@ -32,7 +32,8 @@ def display_menu():
 def display_menu_adm():
     with st.sidebar:          
         selected = option_menu(None, ["Início", "Documentos", "Perfil", 'Cadastro', 'Logs'], 
-            icons=['house', 'cloud-upload', "list-task", 'gear'], 
+                               icons=['house', 'file-earmark-text',
+                                      "list-task", 'gear'],
             menu_icon="cast", default_index=0, orientation="vertical",
             styles={
                 "container": {"padding": "0!important", "background-color": "#ffff"},
