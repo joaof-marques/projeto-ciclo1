@@ -26,16 +26,15 @@ def app():
         emails = []
         usernames = []
         passwords = []
-        for user in users:
+        
+        credentials = {'usernames': {}}
+        
+        for index, user in enumerate(users):
             emails.append(user['email'])
             usernames.append(user['username'])
             passwords.append(user['password'])
-        
-        credentials = {'usernames': {}}
-
-        for index in range(len(emails)):
             credentials['usernames'][usernames[index]] = {'name': emails[index], 'password': passwords[index]}
-        
+
         Authenticator = stauth.Authenticate(credentials, cookie_name='StreamLit', cookie_key='abcdef', cookie_expiry_days=0)
 
         email, authentication_status, username = Authenticator.login(fields={'Form name':'Entrar', 'Username':'Usuário', 'Password':'Senha', 'Login':'Entrar'})
