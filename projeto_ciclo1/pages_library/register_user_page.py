@@ -33,7 +33,6 @@ def register_page():
     with tab_register:
 
             with st.form(key='signup', clear_on_submit=True):
-                # st.subheader(':red[Cadastro]')
                 name = st.text_input('Nome', key='create_user_name', placeholder='Nome')
                 username = st.text_input('Usuario', key='create_user_username', placeholder='Nome de usuario')
                 email = st.text_input('Email', key='create_user_email', placeholder='Email')
