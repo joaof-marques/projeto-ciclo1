@@ -1,5 +1,6 @@
 from database.database import Document, User, engine
 from sqlalchemy.orm import Session
+from sqlalchemy import delete
 from controllers.system_log_controllers import insert_system_log
 from time import time
 import datetime
@@ -108,7 +109,17 @@ def get_document_from_database(file_name, user_register_name, starting_date=None
         
         return commom_objects_result
         
-        
-
+def delete_document(document_id):
+    with Session(bind=engine) as session:
+        try:    
+            
+            resultado = session.query(Document).filter(Document.id == document_id).delete()
+            session.commit()
+            return True
+        except Exception as e:
+            session.rollback()
+            return False
+       
+       
 if __name__ == '__main__':
     pass

@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import random
-from controllers.documents_controllers import create_document, get_document_from_database, get_query_lenght
+from controllers.documents_controllers import create_document, get_document_from_database, get_query_lenght, delete_document
 from pages_library.utils import show_document_search_results
 import math
 from streamlit_modal import Modal
@@ -97,6 +97,12 @@ def doc_page():
                     tag_str = ", ".join(st.session_state.selected_file['tags'])
                     st.markdown(tag_str)
 
+            with img_col:
+                _, button, _ = st.columns([0.3,0.5,0.3])
+                with button:
+                    delete_button = st.button("Deletar Documento")
+                    if delete_button:
+                        delete_document(st.session_state.selected_file['id'])
     with tab2:
         st.title('Anexar arquivo')
 
