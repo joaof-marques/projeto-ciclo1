@@ -1,5 +1,5 @@
 import streamlit as st
-from pages_library.utils import validate_email, update_password
+from controllers.utils import validate_email, update_password
 
 def update_password_store_user_credentials():
         if 'email' not in st.session_state:
