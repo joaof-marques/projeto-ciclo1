@@ -26,7 +26,7 @@ def log_history():
             st.write(document_dataframe)
         
         st.markdown("""---""")
-        _, col1, col2, col3, _ = st.columns(spec=[.3, .5, .6, .5, .3])
+        _, col1, col2, col3, _ = st.columns(spec=[.3, .06, .04, .06, .3])
 
         with col1:
             previous = st.button('Anterior', key='document_log_previous', on_click=log_document_previous)
