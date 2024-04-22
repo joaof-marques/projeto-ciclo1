@@ -23,12 +23,12 @@ def delete_store_user_credentials():
             if 'cpf' not in st.session_state:
                 st.session_state.cpf = st.session_state.cpf_delete_user
 
+
 def register_page():
+    #register_store_user_credentials()
     st.subheader('Cadastro de funcionário:')
 
     tab_register, tab_delete_user = st.tabs(['Cadastrar', 'Deletar'])
-
-    
 
     with tab_register:
 
