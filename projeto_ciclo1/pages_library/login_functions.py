@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 from pages_library.home import home
-from pages_library.doc_page import doc_page
+from pages_library.doc_page import DocPage
 from pages_library.profile_page import profile_page
 from pages_library.register_user_page import register_page
 from pages_library.log_user_history import log_history
@@ -24,7 +24,7 @@ def display_menu():
         home()
 
     if selected == 'Documentos':
-        doc_page()
+        DocPage.draw()
 
     if selected == 'Perfil':
         profile_page()
@@ -47,7 +47,7 @@ def display_menu_adm():
         home()
 
     if selected == 'Documentos':
-        doc_page()
+        DocPage.draw()
 
     if selected == 'Perfil':
         profile_page()

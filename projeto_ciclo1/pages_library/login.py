@@ -36,8 +36,11 @@ def app():
             credentials['usernames'][usernames[index]] = {'name': emails[index], 'password': passwords[index]}
 
         Authenticator = stauth.Authenticate(credentials, cookie_name='StreamLit', cookie_key='abcdef', cookie_expiry_days=0)
+        clm1, clm2, clm3 = st.columns(3)
 
-        email, authentication_status, username = Authenticator.login(fields={'Form name':'Entrar', 'Username':'Usuário', 'Password':'Senha', 'Login':'Entrar'})
+        with clm2:
+
+            email, authentication_status, username = Authenticator.login(fields={'Form name':'Entrar', 'Username':'Usuário', 'Password':'Senha', 'Login':'Entrar'})
 
         if username:
             if username in usernames:
