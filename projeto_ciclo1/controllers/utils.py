@@ -1,8 +1,7 @@
-import streamlit as st
 import re
-from controllers.user_controllers import create_user
+import streamlit as st
 from controllers.system_log_controllers import insert_system_log
-from database.database import engine, User, LogUser, LogDocument, LogSystem
+from database.database import engine, User, LogUser, LogDocument, LogSystem, Document
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv, find_dotenv
 import os
@@ -92,7 +91,7 @@ def update_email(lost_email, new_email):
             user = session.query(User).filter_by(email = lost_email).first()
             user.email = new_email
             session.commit()
-            return True, user
+            return True, None
 
         except Exception as error:
             insert_system_log(error)
@@ -107,7 +106,7 @@ def update_password(email, new_password):
             user = session.query(User).filter_by(email = email).first()
             user.password = hashed_password
             session.commit()
-            return True, user
+            return True, None
 
         except Exception as error:
             insert_system_log(error)
@@ -120,7 +119,7 @@ def delete_user(email, cpf):
             user = session.query(User).filter_by(email = email).filter_by(cpf = cpf).first()
             user.deleted = True
             session.commit()
-            return True, user
+            return True, None
         
         except Exception as error:
             insert_system_log(error)
@@ -139,41 +138,16 @@ def get_user_profile(username):
             insert_system_log(error)
             session.rollback()
             return False, None
-
-def get_log_user():
-    try:
-        with Session(bind=engine) as session:
-            logs = session.query(LogUser).all()
-            log_user = [
-                {
-                    'log_id': log.id,
-                    'modifier_id': log.id_user_modifier,
-                    'modifier_name': log.user_modifier.name,
-                    'modified_id': log.id_user_modified,
-                    'modified_name': log.user_modified.name,
-                    'log_date': f'{log.log_date.day}/{log.log_date.month}/{log.log_date.year} - {log.log_date.hour}:{log.log_date.minute}:{log.log_date.microsecond}',
-                    'log_txt': log.log_txt,
-                }
-                for log in logs
-            ]
-
-            return True, log_user
-
-    except Exception as error:
-
-            insert_system_log(error)
-            session.rollback()
-            return False, None
     
 def get_log_documents():
     try:
         with Session(bind=engine) as session:
-            logs = session.query(LogDocument).all()
+            logs = session.query(LogDocument).slice(10 * (st.session_state.current_document_page - 1), (10 * (st.session_state.current_document_page - 1))+ 10).all()
             log_documents = [
                 {
                     'log_id': log.id,
-                    'modifier': f'{log.id_user_modifier} - {log.user.name}',
-                    'document_modified_id': f'{log.id_document_modified} - {log.document.name}',
+                    'modifier': f'{log.user.name}',
+                    'document_modified_id': f'{log.document.name}',
                     'log_date': f'{log.log_date.day}/{log.log_date.month}/{log.log_date.year} - {log.log_date.hour}:{log.log_date.minute}:{log.log_date.microsecond}',
                     'log_txt': log.log_txt,
                 }
@@ -191,7 +165,7 @@ def get_log_documents():
 def get_log_system():
     try:
         with Session(bind=engine) as session:
-            logs = session.query(LogSystem).all()
+            logs = session.query(LogSystem).slice(10 * (st.session_state.current_system_page - 1), (10 * (st.session_state.current_system_page - 1))+ 10).all()
             log_system = [
                 {
                     'log_id': log.id,
@@ -203,6 +177,28 @@ def get_log_system():
             ]
 
         return True, log_system
+
+    except Exception as error:
+
+            insert_system_log(error)
+            session.rollback()
+            return False, None
+
+def get_log_user():
+    try:
+        with Session(bind=engine) as session:
+            logs = session.query(LogUser).slice(10 * (st.session_state.current_user_page - 1), (10 * (st.session_state.current_user_page - 1))+ 10).all()
+            log_user = [
+                {
+                    'log_id': log.id,
+                    'modifier_name': log.user_modifier.name,
+                    'modified_name': log.user_modified.name,
+                    'log_date': f'{log.log_date.day}/{log.log_date.month}/{log.log_date.year} - {log.log_date.hour}:{log.log_date.minute}:{log.log_date.microsecond}',
+                    'log_txt': log.log_txt,
+                }
+                for log in logs
+            ]
+            return True, log_user
 
     except Exception as error:
 

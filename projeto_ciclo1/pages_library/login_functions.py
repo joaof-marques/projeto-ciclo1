@@ -5,7 +5,9 @@ from pages_library.doc_page import DocPage
 from pages_library.profile_page import profile_page
 from pages_library.register_user_page import register_page
 from pages_library.log_user_history import log_history
-
+def execute_logout():
+    st.session_state['logout'] = True
+    st.session_state['authentication_status'] = None
 
 def display_menu():
     with st.sidebar:          
@@ -19,6 +21,7 @@ def display_menu():
                 "nav-link-selected": {"background-color": "#ff4e44"},
             }
         )
+        logout_button = st.button('Sair', on_click=execute_logout)
     
     if selected == 'Início':
         home()
@@ -42,6 +45,8 @@ def display_menu_adm():
                 "nav-link-selected": {"background-color": "#ff4e44"},
             }
         )
+        logout_button = st.button('Sair', on_click=execute_logout)
+
     
     if selected == 'Início':
         home()
@@ -57,4 +62,3 @@ def display_menu_adm():
 
     if selected == 'Logs':
         log_history()
-
