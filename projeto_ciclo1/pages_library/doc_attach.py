@@ -68,7 +68,7 @@ class Attach:
                 
             # Get selected OCR-config 
             with Session(bind=engine) as session:
-                conf = all_configs.filter(OcrConfig.name == option).first()
+                conf = all_configs.filter_by(name = option).first()
                 
                 # Imagem byte -> array
                 img_bytes = io.BytesIO(conf.img)
