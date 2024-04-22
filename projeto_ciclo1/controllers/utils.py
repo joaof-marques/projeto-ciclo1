@@ -1,4 +1,5 @@
 import re
+import streamlit as st
 from controllers.system_log_controllers import insert_system_log
 from database.database import engine, User, LogUser, LogDocument, LogSystem, Document
 from sqlalchemy.orm import Session
@@ -141,7 +142,7 @@ def get_user_profile(username):
 def get_log_documents():
     try:
         with Session(bind=engine) as session:
-            logs = session.query(LogDocument).all()
+            logs = session.query(LogDocument).slice(10 * (st.session_state.current_document_page - 1), (10 * (st.session_state.current_document_page - 1))+ 10).all()
             log_documents = [
                 {
                     'log_id': log.id,
@@ -164,7 +165,7 @@ def get_log_documents():
 def get_log_system():
     try:
         with Session(bind=engine) as session:
-            logs = session.query(LogSystem).all()
+            logs = session.query(LogSystem).slice(10 * (st.session_state.current_system_page - 1), (10 * (st.session_state.current_system_page - 1))+ 10).all()
             log_system = [
                 {
                     'log_id': log.id,
@@ -186,7 +187,7 @@ def get_log_system():
 def get_log_user():
     try:
         with Session(bind=engine) as session:
-            logs = session.query(LogUser).all()
+            logs = session.query(LogUser).slice(10 * (st.session_state.current_user_page - 1), (10 * (st.session_state.current_user_page - 1))+ 10).all()
             log_user = [
                 {
                     'log_id': log.id,
