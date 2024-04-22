@@ -107,13 +107,13 @@ class Login:
 
 
     @classmethod
-    def execute_logout():
+    def execute_logout(self):
         st.session_state['logout'] = True
         st.session_state['authentication_status'] = None
 
 
     @classmethod
-    def display_menu():
+    def display_menu(self):
         with st.sidebar:
             selected = option_menu(None, ["Início", "Documentos", "Perfil"],
                                 icons=['house', 'cloud-upload',
@@ -126,7 +126,7 @@ class Login:
                 "nav-link-selected": {"background-color": "#ff4e44"},
             }
             )
-            st.button('Sair', on_click=execute_logout)
+            st.button('Sair', on_click=self.xecute_logout)
 
         if selected == 'Início':
             Home.home()
@@ -138,7 +138,7 @@ class Login:
             ProfilePage.profile_page()
 
     @classmethod
-    def display_menu_adm():
+    def display_menu_adm(self):
         with st.sidebar:
             selected = option_menu(None, ["Início", "Documentos", "Perfil", 'Cadastro', 'Logs'],
                                 icons=['house', 'cloud-upload',
@@ -151,7 +151,7 @@ class Login:
                 "nav-link-selected": {"background-color": "#ff4e44"},
             }
             )
-            st.button('Sair', on_click=execute_logout)
+            st.button('Sair', on_click=self.execute_logout)
 
         if selected == 'Início':
             Home.home()
