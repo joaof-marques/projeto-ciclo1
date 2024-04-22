@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from dotenv import load_dotenv, find_dotenv
 import os, pandas as pd
 import bcrypt
+from streamlit_modal import Modal
 
 load_dotenv(find_dotenv())
 
@@ -163,6 +164,9 @@ def show_document_search_results(files):
         with date_column:
             st.write(file['register_date'].strftime("%d/%m/%Y"))
         with detail_column:
-            st.button("Detalhes", on_click=print, args=[file['name']], key=file['id'])
- 
-        
+            st.button("Detalhes", on_click=set_file_to_details_area, args=[file,] , key=file)
+    
+
+def set_file_to_details_area(file):
+    st.session_state.selected_file = file
+    
