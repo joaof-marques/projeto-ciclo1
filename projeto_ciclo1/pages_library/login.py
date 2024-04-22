@@ -1,12 +1,6 @@
 import streamlit as st
 import streamlit_authenticator as stauth
 from projeto_ciclo1.controllers.system_log_controllers import insert_system_log
-from streamlit_option_menu import option_menu
-from pages_library.home import home
-from pages_library.doc_page import doc_page
-from pages_library.profile_page import profile_page
-from pages_library.register_user_page import register_page
-from pages_library.log_user_history import log_history
 from pages_library.utils import fetch_users
 from pages_library.utils import get_user_profile
 from pages_library.login_functions import display_menu, display_menu_adm
@@ -32,20 +26,21 @@ def app():
         emails = []
         usernames = []
         passwords = []
-        for user in users:
+        
+        credentials = {'usernames': {}}
+        
+        for index, user in enumerate(users):
             emails.append(user['email'])
             usernames.append(user['username'])
             passwords.append(user['password'])
-        
-        credentials = {'usernames': {}}
-
-        for index in range(len(emails)):
             credentials['usernames'][usernames[index]] = {'name': emails[index], 'password': passwords[index]}
-        
+
         Authenticator = stauth.Authenticate(credentials, cookie_name='StreamLit', cookie_key='abcdef', cookie_expiry_days=0)
+        clm1, clm2, clm3 = st.columns(3)
 
+        with clm2:
 
-        email, authentication_status, username = Authenticator.login(fields={'Form name':'Entrar', 'Username':'Usuário', 'Password':'Senha', 'Login':'Entrar'})
+            email, authentication_status, username = Authenticator.login(fields={'Form name':'Entrar', 'Username':'Usuário', 'Password':'Senha', 'Login':'Entrar'})
 
         if username:
             if username in usernames:
@@ -64,9 +59,3 @@ def app():
     except Exception as error:
         st.warning(f'{error}')
         insert_system_log(error)
-
-
-st.set_page_config(page_title='Projeto', page_icon='🐍', layout='wide')
-
-app()
-# streamlit run projeto_ciclo1\pages_library\login.py

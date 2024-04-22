@@ -2,7 +2,6 @@ import streamlit as st
 from pages_library.utils import validate_cpf, validate_email, validate_username, get_user_emails, get_usernames, update_password, delete_user, validate_name
 from controllers.user_controllers import create_user
 
-
 def register_store_user_credentials():
     if 'name' not in st.session_state:
          st.session_state.name = st.session_state.create_user_name
@@ -24,12 +23,12 @@ def delete_store_user_credentials():
             if 'cpf' not in st.session_state:
                 st.session_state.cpf = st.session_state.cpf_delete_user
 
+
 def register_page():
+    #register_store_user_credentials()
     st.subheader('Cadastro de funcionário:')
 
     tab_register, tab_delete_user = st.tabs(['Cadastrar', 'Deletar'])
-
-    
 
     with tab_register:
 
