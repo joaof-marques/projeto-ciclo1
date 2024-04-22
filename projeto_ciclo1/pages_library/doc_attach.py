@@ -2,10 +2,10 @@ import io
 from PIL import Image
 import streamlit as st
 import streamlit_javascript as st_js
-from projeto_ciclo1.ocr.ocr import *
+from ocr.ocr import *
 from pdf2image import convert_from_bytes
-from projeto_ciclo1.database.database import *
-import projeto_ciclo1.pages_library.sparrow_attach as spr
+from database.database import *
+import pages_library.sparrow_attach as spr
 from streamlit_extras.stylable_container import stylable_container
 
 class Attach:

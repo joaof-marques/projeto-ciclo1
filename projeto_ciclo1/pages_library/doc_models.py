@@ -1,8 +1,8 @@
 import streamlit as st
 from PIL import Image
 from pdf2image import convert_from_bytes
-from projeto_ciclo1.database.database import *
-import projeto_ciclo1.pages_library.sparrow_models as spr
+from database.database import *
+import pages_library.sparrow_models as spr
 
 class Models:
     @classmethod

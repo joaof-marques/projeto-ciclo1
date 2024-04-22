@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd
 import random
 from streamlit_option_menu import option_menu
-from projeto_ciclo1.pages_library.doc_models import Models
-from projeto_ciclo1.pages_library.doc_attach import Attach
+from pages_library.doc_models import Models
+from pages_library.doc_attach import Attach
 
 class DocPage:
     

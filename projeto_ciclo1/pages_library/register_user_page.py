@@ -40,7 +40,7 @@ def register_page():
                 password = st.text_input('Senha', key='create_user_password', placeholder='Senha', type='password')
                 confirm_password = st.text_input('Confirmar Senha', key='create_user_confirm_password', placeholder='Confirmar Senha', type='password')
                 
-                access_level = st.number_input('Nivel de Acesso', key='create_user_access_level', min_value=1, max_value=4, step=1)
+                access_level = st.number_input('Nivel de Acesso', key='create_user_access_level', min_value=1, max_value=2, step=1)
                 warning = st.empty()
 
                 create_user_button = st.form_submit_button('Enviar', type='primary', on_click=register_store_user_credentials)
