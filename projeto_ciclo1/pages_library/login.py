@@ -157,7 +157,7 @@ class Login:
             Home.home()
 
         if selected == 'Documentos':
-            DocPage.doc_page()
+            DocPage.draw()
 
         if selected == 'Perfil':
             ProfilePage.profile_page()

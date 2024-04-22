@@ -50,7 +50,7 @@ class ProfilePage:
                 'Senha', placeholder='Confirme a nova senha', type='password', key='confirm_update_password')
 
             update_password_button = st.form_submit_button(
-                label="Salvar", type='primary', on_click=update_password_store_user_credentials)
+                label="Salvar", type='primary', on_click=self.update_password_store_user_credentials)
 
             if update_password_button:
                 if new_password != confirm_new_password and (not validate_email(email)):

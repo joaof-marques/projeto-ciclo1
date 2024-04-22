@@ -5,3 +5,4 @@ st.set_page_config(page_title='RADE', page_icon='💨', layout='wide')
 
 Login.run()
 
+# streamlit run app.py
