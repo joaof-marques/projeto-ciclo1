@@ -5,6 +5,7 @@ from controllers.utils import get_log_user, get_log_documents, get_log_system
 from math import ceil
 from database.database import engine, LogDocument, LogSystem, LogUser
 from sqlalchemy.orm import Session
+
 class LogHistory:
     @classmethod
     def store_current_page(self):
