@@ -1,5 +1,5 @@
 import streamlit as st
-from pages_library.utils import validate_cpf, validate_email, validate_username, get_user_emails, get_usernames, update_password, delete_user, validate_name
+from controllers.utils import validate_cpf, validate_email, validate_username, get_user_emails, get_usernames, update_password, delete_user, validate_name
 from controllers.user_controllers import create_user
 
 def register_store_user_credentials():
@@ -33,7 +33,6 @@ def register_page():
     with tab_register:
 
             with st.form(key='signup', clear_on_submit=True):
-                # st.subheader(':red[Cadastro]')
                 name = st.text_input('Nome', key='create_user_name', placeholder='Nome')
                 username = st.text_input('Usuario', key='create_user_username', placeholder='Nome de usuario')
                 email = st.text_input('Email', key='create_user_email', placeholder='Email')
@@ -64,7 +63,7 @@ def register_page():
                     if not validate_cpf(cpf):
                         warning.warning('CPF inválido.')
                         return
-                    if len(password)<8:
+                    if len(password) < 8:
                         warning.warning('Senha muito curta. Tamanho mínimo requerido: 8 caracteres.')
                         return
                     if st.session_state.password != confirm_password:
