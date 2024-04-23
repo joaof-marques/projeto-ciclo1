@@ -1,11 +1,11 @@
 import io
 from PIL import Image
 import streamlit as st
-from projeto_ciclo1.ocr.ocr import *
+from ocr.ocr import *
 from pdf2image import convert_from_bytes
-from projeto_ciclo1.database.database import *
-from projeto_ciclo1.controllers.logs_controllers import Log
-import projeto_ciclo1.pages_library.sparrow_attach as spr
+from database.database import *
+from controllers.logs_controllers import Log
+import pages_library.sparrow_attach as spr
 
 
 class Attach:

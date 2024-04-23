@@ -3,7 +3,7 @@ import streamlit as st
 import streamlit_javascript as st_js
 from streamlit_sparrow_labeling import st_sparrow_labeling
 from streamlit_sparrow_labeling import DataProcessor
-from projeto_ciclo1.database.database import *
+from database.database import *
 import math
 import io
 
