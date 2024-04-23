@@ -1,5 +1,5 @@
 import streamlit as st
-from controllers.system_log_controllers import insert_system_log
+from projeto_ciclo1.controllers.logs_controllers import Log
 from controllers.utils import get_user_profile
 from streamlit_option_menu import option_menu
 from sqlalchemy.orm import Session

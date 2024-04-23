@@ -72,7 +72,7 @@ def labels(img, roi, filter):
     kernel = np.ones((3, 3))
 
     for x, r in enumerate(roi):
-        cv.rectangle(img_mask, (r[0][0], r[0][1]), (r[1][0], r[1][1]), (0, 0, 245), cv.FILLED)
+        cv.rectangle(img_mask, (r[0][0], r[0][1]), (r[1][0], r[1][1]), (0, 0, 255), cv.FILLED)
         img_show = cv.addWeighted(img_show, 1, img_mask, 1, 0)
 
         img_cut = img[r[0][1]:r[1][1], r[0][0]:r[1][0]]

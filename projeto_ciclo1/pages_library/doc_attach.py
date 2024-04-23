@@ -4,14 +4,16 @@ import streamlit as st
 from projeto_ciclo1.ocr.ocr import *
 from pdf2image import convert_from_bytes
 from projeto_ciclo1.database.database import *
+from projeto_ciclo1.controllers.logs_controllers import Log
 import projeto_ciclo1.pages_library.sparrow_attach as spr
+
 
 class Attach:
     
     @classmethod
     def attach(self): 
         
-        st.title("Anexar Arquivo")
+        st.title('Anexar')
         tab1, tab2 = st.tabs(['Anexo com modelo', 'Anexo sem modelo'])
         
         with tab1:
@@ -70,11 +72,14 @@ class Attach:
     def document_insertion(self, title, img_bytes, tags, text, id_register):
         with Session(bind=engine) as session:
             try:
-                session.add(Document(name=title, img=img_bytes, tags=tags,
-                            content=text, id_register_user=id_register))
+                doc = Document(name=title, img=img_bytes, tags=tags,
+                               content=text, id_register_user=id_register)
+                session.add(doc)
                 session.commit()
+                Log.insert_document_log(st.session_state.user_id, doc.id, 'New document created')
             except Exception as e:
                 session.rollback()
+                return None
 
 
     @classmethod
@@ -108,9 +113,8 @@ class Attach:
                         # Image to bytes
                         img_bytes = self.image_2_bytes(img)
                         # Database insertion
-                        self.document_insertion(
-                            title, img_bytes, tags, final_text, st.session_state.user_id)
-                        
+                        self.document_insertion(title, img_bytes, tags, final_text, st.session_state.user_id)
+                        st.success('Arquivo Salvo!')
                     else:
                         st.warning('TAGs Vazia!')
                 else:
