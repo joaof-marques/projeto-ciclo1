@@ -126,7 +126,9 @@ class Login:
                     "nav-link-selected": {"background-color": "#ff4e44"},
                 }
             )
-            st.button('Sair', on_click=self.execute_logout)
+            col1, col2, col3 = st.columns(3)
+            with col2:
+                st.button('Sair', on_click=self.execute_logout)
         
         if selected == 'Início':
             Home.home()
@@ -150,7 +152,9 @@ class Login:
                     "nav-link-selected": {"background-color": "#ff4e44"},
                 }
             )
-            st.button('Sair', on_click=self.execute_logout)
+            col1, col2, col3 = st.columns(3)
+            with col2:
+                st.button('Sair', on_click=self.execute_logout)
             
         if selected == 'Início':
             Home.home()
