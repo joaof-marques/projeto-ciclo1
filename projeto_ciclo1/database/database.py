@@ -13,7 +13,6 @@ db = os.getenv('DB_NAME')
 
 # Conection
 url = f'postgresql://{user}:{password}@{host}/{db}'
-
 engine = create_engine(url, echo=True)
 
 # base class for sqlachemy ORM
@@ -150,6 +149,6 @@ class OcrConfig(Base):
 if __name__ == '__main__':
     Base.metadata.create_all(engine)
     
-    with Session(bind=engine) as session:
-        session.add(User(name='Feliphe', username='batata', cpf='12345678911', email='bat@ta', password='123', access_level=4))
-        session.commit()
+    # with Session(bind=engine) as session:
+    #     session.add(User(name='Feliphe', username='batata', cpf='12345678911', email='bat@ta', password='123', access_level=4))
+    #     session.commit()

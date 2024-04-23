@@ -55,11 +55,7 @@ def run(img_file, model):
             doc_width=width,
             image_rescale=True,
             key="doc_annotation"
-        )
-        
-        # st.caption("Check 'Assign Labels' to enable editing of labels and values, move and resize the boxes to "
-        #            "annotate the document.")
-        
+        )  
 
     with col2:
         if result_rects is not None:

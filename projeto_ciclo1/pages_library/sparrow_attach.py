@@ -1,12 +1,10 @@
 from PIL import Image
 import streamlit as st
-import streamlit_nested_layout
 import streamlit_javascript as st_js
 from streamlit_sparrow_labeling import st_sparrow_labeling
 from streamlit_sparrow_labeling import DataProcessor
 from projeto_ciclo1.database.database import *
-import math
-import io
+
 
 def run(img_file):
     initial_rect = {
@@ -58,11 +56,7 @@ def run(img_file):
             image_rescale=True,
             key="doc_annotation"
         )
-        
-        # st.caption("Check 'Assign Labels' to enable editing of labels and values, move and resize the boxes to "
-        #            "annotate the document.")
        
-
     with col2:
         if result_rects is not None:
             with st.form(key="fields_form_scan"):

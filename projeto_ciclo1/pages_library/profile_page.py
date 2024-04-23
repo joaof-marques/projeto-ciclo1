@@ -17,7 +17,7 @@ class ProfilePage:
         clm1, clm2, clm3 = st.columns([1, 3, 1])
 
         with clm2:
-            clm1, clm2, clm3 = st.columns([2, 1, 2])
+            clm1, clm2, clm3 = st.columns([3, 1, 3])
             with clm2:
                 st.title('Perfil')
 

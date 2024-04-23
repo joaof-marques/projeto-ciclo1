@@ -9,8 +9,6 @@ from pages_library.doc_page import DocPage
 from pages_library.profile_page import ProfilePage
 from pages_library.register_user_page import RegisterPage
 from pages_library.log_user_history import LogHistory
-
-
 import bcrypt
 import re
 
@@ -126,7 +124,9 @@ class Login:
                 "nav-link-selected": {"background-color": "#ff4e44"},
             }
             )
-            st.button('Sair', on_click=self.xecute_logout)
+            clm1, clm2, clm3 = st.columns(3)
+            with clm2:
+                st.button('Sair', on_click=self.execute_logout)
 
         if selected == 'Início':
             Home.home()
@@ -151,7 +151,9 @@ class Login:
                 "nav-link-selected": {"background-color": "#ff4e44"},
             }
             )
-            st.button('Sair', on_click=self.execute_logout)
+            clm1, clm2, clm3 = st.columns(3)
+            with clm2:
+                st.button('Sair', on_click=self.execute_logout)
 
         if selected == 'Início':
             Home.home()
