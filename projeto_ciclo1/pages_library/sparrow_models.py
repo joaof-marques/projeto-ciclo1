@@ -55,11 +55,7 @@ def run(img_file, model):
             doc_width=width,
             image_rescale=True,
             key="doc_annotation"
-        )
-        
-        # st.caption("Check 'Assign Labels' to enable editing of labels and values, move and resize the boxes to "
-        #            "annotate the document.")
-        
+        )  
 
     with col2:
         if result_rects is not None:
@@ -73,30 +69,31 @@ def run(img_file, model):
                     data_processor.update_rect_data(result_rects.rects_data, i, [], label)
 
                 if st.form_submit_button("Save", type="primary"):
-                    if model == '':
-                        raise Exception('Insira o nome do modelo!')
-                    
-                    with Session(bind=engine) as session:
-                        try:
-                            buffer = io.BytesIO()
-                            img_file.save(buffer, format='PNG')
-                            img_bytes = buffer.getvalue()
-                            rois = []
-                            
-                            for rect in result_rects.rects_data['words']:
-                                p1 = (int(rect['rect']['x1'] * proportion[0]),
-                                      int(rect['rect']['y1'] * proportion[1]))
-                                p2 = (int(rect['rect']['x2'] * proportion[0]),
-                                      int(rect['rect']['y2'] * proportion[1]))
-                                roi = [str(p1), str(p2)]
-                                roi.append(rect['label'])
-                                rois.append(roi)
-                            
-                            session.add(OcrConfig(name=model, img=img_bytes, rois=rois))
-                            session.commit()
-                        except Exception as e:
-                            session.rollback()
-                            print(e)
+                    if model != '':                    
+                        with Session(bind=engine) as session:
+                            try:
+                                buffer = io.BytesIO()
+                                img_file.save(buffer, format='PNG')
+                                img_bytes = buffer.getvalue()
+                                rois = []
+                                
+                                for rect in result_rects.rects_data['words']:
+                                    p1 = (int(rect['rect']['x1'] * proportion[0]),
+                                        int(rect['rect']['y1'] * proportion[1]))
+                                    p2 = (int(rect['rect']['x2'] * proportion[0]),
+                                        int(rect['rect']['y2'] * proportion[1]))
+                                    roi = [str(p1), str(p2)]
+                                    roi.append(rect['label'])
+                                    rois.append(roi)
+                                
+                                session.add(OcrConfig(name=model, img=img_bytes, rois=rois))
+                                session.commit()
+                                st.success('Modelo Salvo!')
+                            except Exception as e:
+                                session.rollback()
+                                print(e)
+                    else:
+                        st.warning('Título Vazio!')
 
 def canvas_available_width(ui_width):
     # Get ~40% of the available width, if the UI is wider than 500px
