@@ -1,14 +1,16 @@
 import streamlit as st
-from controllers.utils import validate_email, update_password
+from controllers.utils import validate_email, update_password, validate_password
 
 class ProfilePage:
     @classmethod
     def update_password_store_user_credentials(self):
-            if 'email' not in st.session_state:
-                st.session_state.email = st.session_state.email_user
-            
-            if 'password' not in st.session_state:
-                st.session_state.password = st.session_state.update_password
+        if 'current_password' not in st.session_state:
+            st.session_state.email = st.session_state.current_password
+        
+        if 'password' not in st.session_state:
+            st.session_state.password = st.session_state.update_password
+        if 'confirm_password' not in st.session_state:
+            st.session_state.confirm_password = st.session_state.confirm_update_password
     
     @classmethod
     def profile_page(self):
@@ -44,15 +46,24 @@ class ProfilePage:
 
         with tab_update_password:
             with st.form(key='change_email', clear_on_submit=True):
-                email = st.text_input('E-mail:', placeholder='Email', key='email_user')
-                new_password = st.text_input('Senha', placeholder='Insira nova senha', type='password', key='update_password')
+                current_password = st.text_input('Senha Atual:', placeholder='Senha atual', key='current_password')
 
-                confirm_new_password = st.text_input('Senha', placeholder='Confirme a nova senha', type='password', key='confirm_update_password')
+                new_password = st.text_input('Nova Senha', placeholder='Insira nova senha', type='password', key='update_password')
+
+                confirm_new_password = st.text_input('Confirmar Senha', placeholder='Confirme a nova senha', type='password', key='confirm_update_password')
                 
                 update_password_button = st.form_submit_button(label="Salvar", type='primary', on_click=self.update_password_store_user_credentials)
                 if update_password_button:
-                    if new_password != confirm_new_password and (not validate_email(email)):
-                        st.warning('Credenciais inválidas')
-                        return 
-                    update_password(email, new_password)
+                    if (not validate_password(st.session_state.user_email, st.session_state.current_password)):
+                        st.warning('Senha atual inválida')
+                        return
+                    if st.session_state.update_password != st.session_state.confirm_update_password:
+                        st.warning('Senhas não coincidem')
+                        return
+                    if len(st.session_state.update_password) < 8:
+                        st.warning('Senha muito curta')
+                        return
+
+                    print(new_password,st.session_state.update_password, st.session_state.confirm_update_password, st.session_state.user_email)
+                    update_password(st.session_state.user_email, new_password)
                     st.success('Senha de funcionário atualizado')

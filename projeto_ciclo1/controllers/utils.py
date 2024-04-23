@@ -97,6 +97,23 @@ def update_email(lost_email, new_email):
             insert_system_log(error)
             session.rollback()
             return False, None
+        
+def validate_password(email, current_password):
+    with Session(bind=engine) as session:
+        try:
+            user = session.query(User).filter_by(email = email).first()
+            print(type(current_password))
+            if bcrypt.checkpw(current_password.encode('utf-8'), user.password.encode('utf-8')):
+                print('checagem')
+
+                return True
+            print('falso')
+            return False
+
+        except Exception as error:
+            insert_system_log(error)
+            session.rollback()
+            return False, None
 
 def update_password(email, new_password):
     with Session(bind=engine) as session:
@@ -205,3 +222,4 @@ def get_log_user():
             insert_system_log(error)
             session.rollback()
             return False, None
+    
