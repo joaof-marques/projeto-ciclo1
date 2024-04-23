@@ -1,6 +1,6 @@
 import re
 import streamlit as st
-from controllers.system_log_controllers import insert_system_log
+from projeto_ciclo1.controllers.logs_controllers import Log
 from database.database import engine, User, LogUser, LogDocument, LogSystem, Document
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv, find_dotenv
@@ -94,7 +94,7 @@ def update_email(lost_email, new_email):
             return True, None
 
         except Exception as error:
-            insert_system_log(error)
+            Log.insert_system_log(error)
             session.rollback()
             return False, None
         
@@ -126,7 +126,7 @@ def update_password(email, new_password):
             return True, None
 
         except Exception as error:
-            insert_system_log(error)
+            Log.insert_system_log(error)
             session.rollback()
             return False, None
         
@@ -139,7 +139,7 @@ def delete_user(email, cpf):
             return True, None
         
         except Exception as error:
-            insert_system_log(error)
+            Log.insert_system_log(error)
             session.rollback()
             return False, None
         
@@ -152,7 +152,7 @@ def get_user_profile(username):
             return True, user_credentials
     except Exception as error:
 
-            insert_system_log(error)
+            Log.insert_system_log(error)
             session.rollback()
             return False, None
     
@@ -175,7 +175,7 @@ def get_log_documents():
 
     except Exception as error:
 
-            insert_system_log(error)
+            Log.insert_system_log(error)
             session.rollback()
             return False, None
     
@@ -197,7 +197,7 @@ def get_log_system():
 
     except Exception as error:
 
-            insert_system_log(error)
+            Log.insert_system_log(error)
             session.rollback()
             return False, None
 
@@ -219,7 +219,7 @@ def get_log_user():
 
     except Exception as error:
 
-            insert_system_log(error)
+            Log.insert_system_log(error)
             session.rollback()
             return False, None
     

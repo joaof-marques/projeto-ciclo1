@@ -1,5 +1,5 @@
 import streamlit as st
-from controllers.system_log_controllers import insert_system_log
+from projeto_ciclo1.controllers.logs_controllers import Log
 from controllers.utils import get_user_profile
 from streamlit_option_menu import option_menu
 from sqlalchemy.orm import Session
@@ -7,13 +7,14 @@ from database.database import User, engine
 from pages_library.home import Home
 from pages_library.doc_page import DocPage
 from pages_library.profile_page import ProfilePage
-from pages_library.register_user_page import RegisterPage 
+from pages_library.register_user_page import RegisterPage
 from pages_library.log_user_history import LogHistory
-
-
 import bcrypt
 import re
+
+
 class Login:
+    
     @classmethod
     def run(self):
         col1, col2, col3 = st.columns(3)
@@ -24,9 +25,9 @@ class Login:
                 login_form = st.form('Login', clear_on_submit=True)
                 login_form.subheader('Entrar')
                 username = login_form.text_input('Usuário', key='user')
-                password = login_form.text_input('Senha', type='password', key='pw')
+                password = login_form.text_input(
+                    'Senha', type='password', key='pw')
 
-        
                 if login_form.form_submit_button('Entrar', on_click=self.store_user_login_credentials):
                     if self.login_fetch_user(username, password):
                         self.store_logged_user_credentials(username)
@@ -40,7 +41,8 @@ class Login:
                 self.display_menu()
             else:
                 self.display_menu_adm()
-    
+
+                
     @classmethod
     def authentication_handler(self):
         if 'name' not in st.session_state:
@@ -52,17 +54,19 @@ class Login:
         if 'logout' not in st.session_state:
             st.session_state['logout'] = None
 
+            
     @classmethod
     def store_user_login_credentials(self):
         st.session_state.username = st.session_state.user
 
+        
     @classmethod
     def login_fetch_user(self, username, password):
         try:
 
             with Session(bind=engine) as session:
 
-                user = session.query(User).filter_by(username = username).first()
+                user = session.query(User).filter_by(username=username).first()
 
                 if user.deleted == True:
                     return False
@@ -70,8 +74,8 @@ class Login:
 
                     if user.username == username and user.password == password:
                         return True
-                    
-                if user.username == username and bcrypt.checkpw( password.encode('utf-8'), user.password.encode('utf-8')):
+
+                if user.username == username and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
 
                     return True
 
@@ -83,30 +87,31 @@ class Login:
     @classmethod
     def store_logged_user_credentials(self, username):
         _, credentials = get_user_profile(username)
-
         st.session_state.user_id = credentials['id']
         st.session_state.user_name = credentials['name']
         st.session_state.user_cpf = credentials['cpf']
         st.session_state.user_email = credentials['email']
         st.session_state.user_access_level = credentials['access_level']
 
+        
     @classmethod
     def execute_login(self):
         st.session_state['logout'] = False
         st.session_state['authentication_status'] = True
         st.rerun()
 
-    
+        
     @classmethod
     def is_hash(self, hash_string):
-
         bcrypt_regex = re.compile(r'^\$2[aby]\$\d+\$.{53}$')
         return bool(bcrypt_regex.match(hash_string))
 
+      
     @classmethod
     def execute_logout(self):
         st.session_state['logout'] = True
         st.session_state['authentication_status'] = None
+
 
     @classmethod
     def display_menu(self):
@@ -146,8 +151,7 @@ class Login:
                 }
             )
             st.button('Sair', on_click=self.execute_logout)
-
-        
+            
         if selected == 'Início':
             Home.home()
 
@@ -162,3 +166,4 @@ class Login:
 
         if selected == 'Logs':
             LogHistory.log_history()
+
