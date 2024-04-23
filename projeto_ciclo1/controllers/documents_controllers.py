@@ -1,6 +1,6 @@
-from database.database import Document, User, engine
+from database.database import Document, User, LogDocument, engine
 from sqlalchemy.orm import Session
-from sqlalchemy import delete
+from sqlalchemy import any_, func
 from controllers.system_log_controllers import insert_system_log
 from time import time
 import datetime
@@ -82,44 +82,70 @@ def get_document_from_database(file_name, user_register_name, starting_date=None
     
     with Session(bind=engine) as session:
         
-        query_result = session.query(Document)\
-            .join(User, Document.id_register_user == User.id)\
-            .filter(
-                Document.name.ilike(f'%{file_name}%'),
-                User.name.ilike(f'%{user_register_name}%'),
-                Document.register_date >= starting_date,
-                Document.register_date <= limit_date
-                )\
-            .where(Document.deleted.is_(False))\
-            .order_by(Document.register_date)\
-            .slice(10 * (page-1), (10 * (page-1))+10)\
-            .all()
+        try:
+            
+            query_result = session.query(Document)\
+                .join(User, Document.id_register_user == User.id)\
+                .filter(
+                    Document.name.ilike(f'%{file_name}%'),
+                    User.name.ilike(f'%{user_register_name}%'),
+                    Document.register_date >= starting_date,
+                    Document.register_date <= limit_date
+                    )\
+                .where(Document.deleted.is_(False))\
+                .order_by(Document.register_date)\
+                .slice(10 * (page-1), (10 * (page-1))+10)\
+                .all()
+            
+            commom_objects_result = [{
+                'id': document.id, 'name': document.name,
+                'type': document.type,
+                'id_register_user': document.id_register_user,
+                'img': document.img,
+                'tags':document.tags,
+                'content': document.content,
+                'doc_history':document.log_document,
+                'user_register': document.user_register.name,
+                'register_date': document.register_date
+                } for document in query_result]
+            
+            return commom_objects_result
+        except Exception as e:
+            session.rollback()
+            print(e)
+            return False
         
-        commom_objects_result = [{
-            'id': document.id, 'name': document.name,
-            'type': document.type,
-            'id_register_user': document.id_register_user,
-            'img': document.img,
-            'tags':document.tags,
-            'content': document.content,
-            'doc_history':document.log_document,
-            'user_register': document.user_register.name,
-            'register_date': document.register_date
-            } for document in query_result]
-        
-        return commom_objects_result
-        
-def delete_document(document_id):
+def soft_delete_document(document_id):
     with Session(bind=engine) as session:
         try:    
             
-            resultado = session.query(Document).filter(Document.id == document_id).delete()
+            document = session.query(Document)\
+                .filter(Document.id == document_id).all()
+            
+            document[0].deleted = True   
+
             session.commit()
             return True
         except Exception as e:
             session.rollback()
+            print(e)
             return False
        
-       
+
+def get_document_log_history(document_id):
+    
+    with Session(bind=engine) as session:
+        try:
+            query_result = session.query(LogDocument)\
+            .filter(LogDocument.id_document_modified==document_id)\
+            .all()
+            found_logs = [{'username': log.user.username, 'log_txt': log.log_txt, 'log_date': log.log_date} for log in query_result]
+
+            return found_logs
+        except Exception as e:
+            session.rollback()
+            print(e)
+            return False
+
 if __name__ == '__main__':
     pass
