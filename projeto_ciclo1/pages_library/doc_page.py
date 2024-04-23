@@ -9,7 +9,7 @@ from projeto_ciclo1.pages_library.doc_attach import Attach
 class DocPage:
 
     @classmethod
-    def draw(self):
+    def doc_page(self):
         clm1, clm2, clm3, clm4, clm5 = st.columns(5)
         with clm3:
             st.title('Documentos')
