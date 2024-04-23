@@ -42,6 +42,7 @@ class Login:
             else:
                 self.display_menu_adm()
 
+                
     @classmethod
     def authentication_handler(self):
         if 'name' not in st.session_state:
@@ -53,10 +54,12 @@ class Login:
         if 'logout' not in st.session_state:
             st.session_state['logout'] = None
 
+            
     @classmethod
     def store_user_login_credentials(self):
         st.session_state.username = st.session_state.user
 
+        
     @classmethod
     def login_fetch_user(self, username, password):
         try:
@@ -84,26 +87,26 @@ class Login:
     @classmethod
     def store_logged_user_credentials(self, username):
         _, credentials = get_user_profile(username)
-
         st.session_state.user_id = credentials['id']
         st.session_state.user_name = credentials['name']
         st.session_state.user_cpf = credentials['cpf']
         st.session_state.user_email = credentials['email']
         st.session_state.user_access_level = credentials['access_level']
 
+        
     @classmethod
     def execute_login(self):
         st.session_state['logout'] = False
         st.session_state['authentication_status'] = True
         st.rerun()
 
+        
     @classmethod
     def is_hash(self, hash_string):
-
         bcrypt_regex = re.compile(r'^\$2[aby]\$\d+\$.{53}$')
         return bool(bcrypt_regex.match(hash_string))
 
-
+      
     @classmethod
     def execute_logout(self):
         st.session_state['logout'] = True
@@ -112,22 +115,19 @@ class Login:
 
     @classmethod
     def display_menu(self):
-        with st.sidebar:
-            selected = option_menu(None, ["Início", "Documentos", "Perfil"],
-                                icons=['house', 'cloud-upload',
-                                        "list-task", 'gear'],
-                                menu_icon="cast", default_index=0, orientation="vertical",
-                                styles={
-                "container": {"padding": "0!important", "background-color": "#ffff"},
-                "icon": {"color": "#282634", "font-size": "14px"},
-                "nav-link": {"color": "#000000", "font-size": "14px", "text-align": "center", "margin": "0px", "--hover-color": "#bd928b"},
-                "nav-link-selected": {"background-color": "#ff4e44"},
-            }
+        with st.sidebar:          
+            selected = option_menu(None, ["Início", "Documentos", "Perfil"], 
+                icons=['house', 'cloud-upload', "list-task", 'gear'], 
+                menu_icon="cast", default_index=0, orientation="vertical",
+                styles={
+                    "container": {"padding": "0!important", "background-color": "#ffff"},
+                    "icon": {"color": "#282634", "font-size": "14px"}, 
+                    "nav-link": {"color": "#000000", "font-size": "14px", "text-align": "center", "margin":"0px", "--hover-color": "#bd928b"},
+                    "nav-link-selected": {"background-color": "#ff4e44"},
+                }
             )
-            clm1, clm2, clm3 = st.columns(3)
-            with clm2:
-                st.button('Sair', on_click=self.execute_logout)
-
+            st.button('Sair', on_click=self.execute_logout)
+        
         if selected == 'Início':
             Home.home()
 
@@ -139,27 +139,24 @@ class Login:
 
     @classmethod
     def display_menu_adm(self):
-        with st.sidebar:
-            selected = option_menu(None, ["Início", "Documentos", "Perfil", 'Cadastro', 'Logs'],
-                                icons=['house', 'cloud-upload',
-                                        "list-task", 'gear'],
-                                menu_icon="cast", default_index=0, orientation="vertical",
-                                styles={
-                "container": {"padding": "0!important", "background-color": "#ffff"},
-                "icon": {"color": "#282634", "font-size": "14px"},
-                "nav-link": {"color": "#000000", "font-size": "14px", "text-align": "center", "margin": "0px", "--hover-color": "#bd928b"},
-                "nav-link-selected": {"background-color": "#ff4e44"},
-            }
+        with st.sidebar:          
+            selected = option_menu(None, ["Início", "Documentos", "Perfil", 'Cadastro', 'Logs'], 
+                icons=['house', 'cloud-upload', "list-task", 'gear'], 
+                menu_icon="cast", default_index=0, orientation="vertical",
+                styles={
+                    "container": {"padding": "0!important", "background-color": "#ffff"},
+                    "icon": {"color": "#282634", "font-size": "14px"}, 
+                    "nav-link": {"color": "#000000", "font-size": "14px", "text-align": "center", "margin":"0px", "--hover-color": "#bd928b"},
+                    "nav-link-selected": {"background-color": "#ff4e44"},
+                }
             )
-            clm1, clm2, clm3 = st.columns(3)
-            with clm2:
-                st.button('Sair', on_click=self.execute_logout)
-
+            st.button('Sair', on_click=self.execute_logout)
+            
         if selected == 'Início':
             Home.home()
 
         if selected == 'Documentos':
-            DocPage.draw()
+            DocPage.doc_page()
 
         if selected == 'Perfil':
             ProfilePage.profile_page()
@@ -169,3 +166,4 @@ class Login:
 
         if selected == 'Logs':
             LogHistory.log_history()
+

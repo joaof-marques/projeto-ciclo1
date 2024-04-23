@@ -132,3 +132,4 @@ class RegisterPage:
                 warning.empty()
                 st.success('Usuario criado')
                 return True
+              

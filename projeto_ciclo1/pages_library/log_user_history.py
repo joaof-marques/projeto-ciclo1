@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 from streamlit_option_menu import option_menu
 from controllers.utils import get_log_user, get_log_documents, get_log_system
-# from controllers.log_funcions import log_document_next, log_document_previous, log_document_max_page, log_system_next, log_system_previous, log_system_max_page, log_user_next, log_user_previous, log_user_max_page
 from math import ceil
 from database.database import engine, LogDocument, LogSystem, LogUser
 from sqlalchemy.orm import Session

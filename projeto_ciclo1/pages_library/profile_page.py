@@ -1,15 +1,18 @@
 import streamlit as st
-from controllers.utils import validate_email, update_password
+from controllers.utils import validate_email, update_password, validate_password
 from streamlit_option_menu import option_menu
+
 
 class ProfilePage:
     @classmethod
     def update_password_store_user_credentials(self):
-            if 'email' not in st.session_state:
-                st.session_state.email = st.session_state.email_user
-            
-            if 'password' not in st.session_state:
-                st.session_state.password = st.session_state.update_password
+        if 'current_password' not in st.session_state:
+            st.session_state.email = st.session_state.current_password
+        
+        if 'password' not in st.session_state:
+            st.session_state.password = st.session_state.update_password
+        if 'confirm_password' not in st.session_state:
+            st.session_state.confirm_password = st.session_state.confirm_update_password
     
     @classmethod
     def profile_page(self):
@@ -79,4 +82,4 @@ class ProfilePage:
         st.subheader('Nível de acesso:')
         container_function = st.container(border=True)
         container_function.write(f'{st.session_state.user_access_level}')
-
+        
