@@ -1,12 +1,13 @@
 import streamlit as st
 import pandas as pd
 import os
-from controllers.documents_controllers import get_document_from_database, get_query_lenght, soft_delete_document, get_document_log_history
+
+from controllers.documents_controllers import DocumentControllers as dc
 from pages_library.utils import show_document_search_results
 import math
 
 
-class SearhPage:
+class SearchPage:
     def draw():
         
         st.subheader("Localizar arquivo")
@@ -55,10 +56,10 @@ class SearhPage:
             
         if search_button or minus or plus:
             if st.session_state.document_search_pages_quantity == 0:
-                query_result_length = get_query_lenght(file_name, register_user, starting_date, limit_date)
+                query_result_length = dc.get_query_lenght(file_name, register_user, starting_date, limit_date)
                 st.session_state.document_search_pages_quantity = math.ceil(query_result_length/10)
             
-            st.session_state.filtered_files = get_document_from_database(file_name, register_user, starting_date, limit_date, st.session_state.document_search_current_page)
+            st.session_state.filtered_files = dc.get_document_from_database(file_name, register_user, starting_date, limit_date, st.session_state.document_search_current_page)
         
         if st.session_state.filtered_files:
             show_document_search_results(st.session_state.filtered_files)
@@ -89,7 +90,7 @@ class SearhPage:
                     st.markdown(tag_str)
                     
                 st.subheader('Histórico do documento: ') 
-                dataframe_data = get_document_log_history(st.session_state.selected_file['id'])
+                dataframe_data = dc.get_document_log_history(st.session_state.selected_file['id'])
                 df = pd.DataFrame(data = dataframe_data)
                 st.dataframe(df, column_config={"_index": "Nº", "username": "Nome de Usuário", "log_txt": "Mensagem da modificação", "log_date": "Data da modificação"}, use_container_width=True, )
                 
@@ -100,7 +101,7 @@ class SearhPage:
                 with button:                    
                     delete_button = st.button("Deletar Documento")
                     if delete_button:
-                        delete_result = soft_delete_document(st.session_state.selected_file['id'])
+                        delete_result = dc.soft_delete_document(st.session_state.selected_file['id'])
                         
                         if delete_result:
                             st.success("Documento deletado com sucesso!")
