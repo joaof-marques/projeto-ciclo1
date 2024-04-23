@@ -31,7 +31,7 @@ class Attach:
     # Convertion of pdf to img
     @classmethod
     def pdf_convertion(self, pdf):
-        pages = convert_from_bytes(pdf.read(), poppler_path=r'poppler-24.02.0\Library\bin')
+        pages = convert_from_bytes(pdf.read(), poppler_path=r'projeto_ciclo1\poppler-24.02.0\Library\bin')
         image = pages[0].convert('RGB')
         return image
     
