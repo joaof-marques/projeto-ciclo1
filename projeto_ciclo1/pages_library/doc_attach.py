@@ -31,7 +31,7 @@ class Attach:
     # Convertion of pdf to img
     @classmethod
     def pdf_convertion(self, pdf):
-        pages = convert_from_bytes(pdf.read(),poppler_path=r'poppler-24.02.0\Library\bin')
+        pages = convert_from_bytes(pdf.read(), poppler_path=r'poppler-24.02.0\Library\bin')
         image = pages[0].convert('RGB')
         return image
     
@@ -84,7 +84,6 @@ class Attach:
 
     @classmethod
     def reset_session_rois(self, file):
-        # Reset rois if the file change
         if 'actual_file' not in st.session_state:
             st.session_state.actual_file = file.name
 

@@ -9,6 +9,7 @@ from pages_library.doc_page import DocPage
 from pages_library.profile_page import ProfilePage
 from pages_library.register_user_page import RegisterPage
 from pages_library.log_user_history import LogHistory
+import cv2 as cv
 import bcrypt
 import re
 
@@ -17,9 +18,18 @@ class Login:
     
     @classmethod
     def run(self):
+        
+        
         col1, col2, col3 = st.columns(3)
         with col2:
+                
             if 'authentication_status' not in st.session_state or not st.session_state.authentication_status:
+                col1, col2, col3 = st.columns(3)
+                with col2:
+                    img = cv.imread(r'projeto_ciclo1\pages_library\logo.png')
+                    img = cv.resize(img, (400, 600))
+                    _, img = cv.threshold(img, 50, 255, cv.THRESH_BINARY_INV)
+                    st.image(img)
                 self.authentication_handler()
                 login_form = st.form('Entrar', clear_on_submit=True)
                 login_form = st.form('Login', clear_on_submit=True)
