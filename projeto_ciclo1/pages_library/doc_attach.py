@@ -1,4 +1,5 @@
 import io
+import os
 from PIL import Image
 import streamlit as st
 from ocr.ocr import *
@@ -31,7 +32,7 @@ class Attach:
     # Convertion of pdf to img
     @classmethod
     def pdf_convertion(self, pdf):
-        pages = convert_from_bytes(pdf.read(), poppler_path=r'projeto_ciclo1\poppler-24.02.0\Library\bin')
+        pages = convert_from_bytes(pdf.read(), poppler_path=os.path.join(os.path.dirname(__file__), r'poppler-24.02.0\Library\bin'))
         image = pages[0].convert('RGB')
         return image
     
