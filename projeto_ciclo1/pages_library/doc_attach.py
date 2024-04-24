@@ -6,7 +6,7 @@ from ocr.ocr import *
 from pdf2image import convert_from_bytes
 from database.database import *
 from controllers.logs_controllers import Log
-import pages_library.sparrow_attach as spr
+from pages_library.sparrow import Sparrow
 import json
 
 class Attach:
