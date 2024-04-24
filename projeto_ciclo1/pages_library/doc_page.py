@@ -6,7 +6,6 @@ from pages_library.doc_models import Models
 from pages_library.doc_attach import Attach
 from pages_library.search_doc import SearchPage
 
-
 class DocPage:
 
     @classmethod

@@ -32,6 +32,7 @@ class RegisterPage:
 
         tab_register, tab_delete_user = st.tabs(['Cadastrar', 'Deletar'])
 
+
     @classmethod
     def register_page(self):
         

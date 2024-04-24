@@ -27,6 +27,7 @@ class Login:
             if 'authentication_status' not in st.session_state or not st.session_state.authentication_status:
                 col1, col2, col3 = st.columns([1, 10, 1])
                 with col2:
+
                     theme = st_js.st_javascript("""window.getComputedStyle(window.parent.document.getElementsByClassName("stApp")[0]).getPropertyValue("color-scheme")""")
 
                     if theme == 'dark':
