@@ -10,7 +10,7 @@ from io import BytesIO
 class SearchPage:
     def draw():
         
-        st.subheader("Localizar arquivo")
+        st.title("Localizar arquivo")
         
         ## Nome do arquivo
         file_name = st.text_input('Nome do arquivo:')

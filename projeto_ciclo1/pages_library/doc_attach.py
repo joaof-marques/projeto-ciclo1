@@ -29,7 +29,7 @@ class Attach:
             except Exception as e:
                 print(e)
                 
-    # Convertion of pdf to img
+
     @classmethod
     def pdf_convertion(self, pdf):
         
@@ -74,8 +74,7 @@ class Attach:
     def document_insertion(self, title, img_bytes, tags, text, id_register):
         with Session(bind=engine) as session:
             try:
-                doc = Document(name=title, img=img_bytes, tags=tags,
-                               content=text, id_register_user=id_register)
+                doc = Document(name=title, img=img_bytes, tags=tags, content=text, id_register_user=id_register)
                 session.add(doc)
                 session.commit()
                 Log.insert_document_log(st.session_state.user_id, doc.id, 'New document created')
@@ -107,15 +106,15 @@ class Attach:
                 text = st.text_area(
                     f'{row[2]}', data[i][row[2]], key=f'{form_key}{i}')
                 st.markdown("---")
-                # Text content for the document insertion
+                
                 final_text.update({row[2]:text})
             if st.form_submit_button('Enviar', type='primary'):
                 if title != '':
                     if len(tags) > 0:
                         json_final_text = json.dumps(final_text)
-                        # Image to bytes
+                        
                         img_bytes = self.image_2_bytes(img)
-                        # Database insertion
+                        
                         self.document_insertion(title, img_bytes, tags, json_final_text, st.session_state.user_id)
                         st.success('Arquivo Salvo!')
                     else:
@@ -134,20 +133,10 @@ class Attach:
             models_name.append(conf.name)
                     
         title = st.text_input("Título", key='title_a')
-        tags = st.multiselect('Selecionar TAGs', 
-                            ['Nota Fiscal', 'Contrato', 'RG', 'CPF', 'Passaporte'],
-                            key='insert_tags_a')
-        
-        option = st.selectbox("Selecionar Modelo",
-                            tuple(models_name), key='select_model_1')
-        
-        filter = st.selectbox("Selecionar Filtro",
-                            ('Padrão', 'Tratamento de Ruido'),
-                            key='select_filter_1')
-        
-        uploaded_file = st.file_uploader("Selecionar Arquivo",
-                                        type=['png', 'jpg', 'jpeg', 'pdf', 'jfif'],
-                                        key='uploader_file_1')
+        tags = st.multiselect('Selecionar TAGs', ['Nota Fiscal', 'Contrato', 'RG', 'CPF', 'Passaporte'], key='insert_tags_a')
+        option = st.selectbox("Selecionar Modelo", tuple(models_name), key='select_model_1')
+        filter = st.selectbox("Selecionar Filtro", ('Padrão', 'Tratamento de Ruido'), key='select_filter_1')
+        uploaded_file = st.file_uploader("Selecionar Arquivo", type=['png', 'jpg', 'jpeg', 'pdf', 'jfif'], key='uploader_file_1')
 
         st.markdown("---")
 
@@ -191,19 +180,11 @@ class Attach:
 
     @classmethod
     def fast_attach(self):
+        
         title = st.text_input("Título", key='title_b')
-        
-        tags = st.multiselect('Selecionar TAGs', 
-                            ['Nota Fiscal', 'Contrato', 'RG', 'CPF', 'Passaporte'], 
-                            key='insert_tags_b')
-
-        filter = st.selectbox("Selecionar Filtro", 
-                            ('Padrão', 'Tratamento de Ruido'), 
-                            key='select_filter_2')
-        
-        uploaded_file = st.file_uploader("Selecionar Arquivo", 
-                                        type=['png', 'jpg', 'jpeg', 'pdf', 'jfif'], 
-                                        key='uploader_file_2')
+        tags = st.multiselect('Selecionar TAGs', ['Nota Fiscal', 'Contrato', 'RG', 'CPF', 'Passaporte'], key='insert_tags_b')
+        filter = st.selectbox("Selecionar Filtro", ('Padrão', 'Tratamento de Ruido'), key='select_filter_2')
+        uploaded_file = st.file_uploader("Selecionar Arquivo", type=['png', 'jpg', 'jpeg', 'pdf', 'jfif'], key='uploader_file_2')
             
         st.markdown("---")
 

@@ -9,8 +9,7 @@ class Log:
     def insert_system_log(self, error):
         with Session(bind=engine) as session:
             try:
-                error_log_system = LogSystem(error_type=type(error), 
-                                            log_txt=error)
+                error_log_system = LogSystem(error_type=type(error), log_txt=error)
                 session.add(error_log_system)
                 session.commit()
                 return True, "Log de erro de sistema registrado com sucesso."
