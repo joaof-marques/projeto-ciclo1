@@ -1,126 +1,88 @@
 import streamlit as st
 import pandas as pd
 import random
-from controllers.documents_controllers import create_document, get_document_from_database, get_query_lenght, delete_document
-from pages_library.utils import show_document_search_results
-import math
-from streamlit_modal import Modal
+from streamlit_option_menu import option_menu
+from search_doc import SearchPage
+from pages_library.doc_models import Models
+from pages_library.doc_attach import Attach
 
 
-def doc_page():
-    st.write('')
-    st.subheader('Documentos')
+class DocPage:
 
-    tab1, tab2, tab3, tab4, tab5 = st.tabs(['Encontrar', 'Anexar', 'Histórico','Editar', 'Deletar'])
-    
-    with tab1:
-        st.subheader("Localizar arquivo")
-        
-        ## Nome do arquivo
-        file_name = st.text_input('Nome do arquivo:')
+    @classmethod
+    def doc_page(self):
+        clm1, clm2, clm3, clm4, clm5 = st.columns(5)
+        with clm3:
+            st.title('Documentos')
 
-        ## Filtro de data
-        col1, col2 = st.columns(2)
-        with col1:
-            starting_date = st.date_input("Escolha a data inicial", value=None)
+        selected = option_menu(None, ['Encontrar', 'Anexar', 'Modelos'],
+                               icons=['search', 'cloud-upload',
+                                      'file-earmark-ruled'],
+                               menu_icon="cast", default_index=0, orientation="horizontal",
+                               styles={
+            "container": {"padding": "0!important", "background-color": "#ffff"},
+            "icon": {"color": "#282634", "font-size": "14px"},
+            "nav-link": {"color": "#000000", "font-size": "14px", "text-align": "center", "margin": "0px", "--hover-color": "#bd928b"},
+            "nav-link-selected": {"background-color": "#ff4e44"},
+        }
+        )
 
-        with col2:
-            limit_date = st.date_input("Escolha a data final", value=None)
+        if selected == 'Encontrar':
+            st.subheader("Localizar arquivo")
 
-        ## Filtro funcionário
-        register_user = st.text_input("Nome do funcionário que registrou o documento")
+            # Nome do arquivo
+            st.text_input('Nome do arquivo:')
 
-        ## Filtro personalizado
-        tag = st.multiselect('TAGs', ['Contratos', 'Registros', 'Documentos'])
+            # Filtro de data
+            col1, col2 = st.columns(2)
+            with col1:
+                st.date_input("Escolha a data inicial", value=None)
 
-        ## Botão localizar
-        search_button = st.button('Procurar', type='primary')
-        
-        if 'document_search_current_page' not in st.session_state:
-            st.session_state.document_search_current_page = 1
-        if 'document_search_pages_quantity' not in st.session_state:
-            st.session_state.document_search_pages_quantity = 0          
-        if 'selected_file' not in st.session_state:
-            st.session_state.selected_file = None
-        if 'filtered_files' not in st.session_state:
-            st.session_state.filtered_files = None
-        
-        _, minus_one, display, plus_one, _ = st.columns([0.30, 0.06, 0.04, 0.06, 0.3])
+            with col2:
+                st.date_input("Escolha a data final", value=None)
 
-        with minus_one:
-            minus = st.button("◀")
-            if minus and (st.session_state.document_search_current_page-1) > 0:
-                st.session_state.document_search_current_page-=1
-        with plus_one:
-            plus = st.button("▶") 
-            if plus and (st.session_state.document_search_current_page+1) <= st.session_state.document_search_pages_quantity:
-                st.session_state.document_search_current_page+=1
-        with display:
-            st.write(st.session_state.document_search_current_page)
-            
-        if search_button or minus or plus:
-            if st.session_state.document_search_pages_quantity == 0:
-                query_result_length = get_query_lenght(file_name, register_user, starting_date, limit_date)
-                st.session_state.document_search_pages_quantity = math.ceil(query_result_length/10)
-            
-            st.session_state.filtered_files = get_document_from_database(file_name, register_user, starting_date, limit_date, st.session_state.document_search_current_page)
-        
-        if st.session_state.filtered_files:
-            show_document_search_results(st.session_state.filtered_files)
-        st.divider()
-        
-        view_document_area = st.container()
-        if st.session_state.selected_file:
-            details_col, _, img_col = st.columns([0.5,0.1,0.4])
+            # Filtro funcionário
+            team = st.selectbox(
+                "Funcionário: ",
+                ('Fulano', 'Ciclano', 'Beltrano', 'Tiago', 'Joãos', 'Feliphe'),
+                index=None,
+                placeholder="Selecione o funcionário"
+            )
 
-            
-            with details_col:
-                st.subheader('Nome do documento: ')
-                container_name = st.container(border=True)
-                container_name.write(st.session_state.selected_file['name'])
-                
-                st.subheader('Tipo de documento: ')
-                container_name = st.container(border=True)
-                container_name.write(st.session_state.selected_file['type'])
-                
-                st.subheader('Cadastrado por: ')
-                container_name = st.container(border=True)
-                container_name.write(st.session_state.selected_file['user_register'])
-                
-                st.subheader('Cadastrado por: ')
-                container_name = st.container(border=True)
-                container_name.write(st.session_state.selected_file['user_register'])
+            # Filtro personalizado
+            tag = st.multiselect(
+                'TAGs', ['Contratos', 'Registros', 'Documentos'])
 
-                st.subheader('Tags: ')
-                container_name = st.container(border=True)
-                with container_name:
-                    tag_str = ", ".join(st.session_state.selected_file['tags'])
-                    st.markdown(tag_str)
+            # Botão localizar
+            st.button('Procurar', type='primary')
 
-            with img_col:
-                _, button, _ = st.columns([0.3,0.5,0.3])
-                with button:
-                    delete_button = st.button("Deletar Documento")
-                    if delete_button:
-                        delete_document(st.session_state.selected_file['id'])
-    with tab2:
-        st.title('Anexar arquivo')
+            st.divider()
 
-        ## Botão para anexar
-        st.file_uploader("Escolha um arquivo:", type=['pdf', 'jpg', 'png', 'jpeg'])
+            # Exibidor dos arquivos
+            df = pd.DataFrame(
+                {
+                    "Nome": ["Documento1", "Documento2", "Documento3"],
+                    "url": ["https://roadmap.streamlit.app", "https://extras.streamlit.app", "https://issues.streamlit.app"],
+                    "views_history": [[random.randint(0, 5000) for _ in range(30)] for _ in range(3)],
+                }
+            )
+            st.dataframe(
+                df,
+                column_config={
+                    "Nome": "Documento",
+                    "url": st.column_config.LinkColumn("App URL"),
+                    "views_history": st.column_config.LineChartColumn(
+                        "Visualização (últimos 30 dias)", y_min=0, y_max=5000
+                    ),
+                },
+                hide_index=True,
+            )
 
-        ## Seletor do tipo de arquivo
-        st.radio('Tipo do arquivo:', ['Contrato', 'Registro', 'Documento'])
+        if selected == 'Encontrar':
+            SearchPage.draw()
 
-        ## Selecionar TAG
-        tags = st.multiselect('Marcadores', ['Contratos', 'Registros', 'Documentos'])
+        if selected == 'Anexar':
+            Attach.attach()
 
-        st.date_input("Escolha a data do documento:", value=None)
-
-        ## Botão de enviar
-        st.button('Enviar')
-        
-
-    
-    
-
+        if selected == 'Modelos':
+            Models.models()
