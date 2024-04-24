@@ -222,4 +222,31 @@ def get_log_user():
             Log.insert_system_log(error)
             session.rollback()
             return False, None
+        
+def show_document_search_results(files):
+    
+    id_column, name_column, date_column, detail_column = st.columns([0.1, 0.5, 0.2, 0.2])
+    with id_column:
+        st.subheader('Id')
+    with name_column:
+        st.subheader('Nome do documento')
+    with date_column:
+        st.subheader('Data')
+    with detail_column:
+        st.subheader('Detalhes')
+        
+    for file in files:     
+        id_column, name_column, date_column, detail_column = st.columns([0.1, 0.5, 0.2, 0.2])  
+        with id_column:
+            st.write(file['id'])
+        with name_column:
+            st.write(file['name'])
+        with date_column:
+            st.write(file['register_date'].strftime("%d/%m/%Y"))
+        with detail_column:
+            st.button("Detalhes", on_click=set_file_to_details_area, args=[file,] , key=file)
+    
+
+def set_file_to_details_area(file):
+    st.session_state.selected_file = file
     
