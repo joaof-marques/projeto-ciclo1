@@ -2,7 +2,7 @@ import streamlit as st
 from PIL import Image
 from pdf2image import convert_from_bytes
 from database.database import *
-import pages_library.sparrow_models as spr
+from pages_library.sparrow import Sparrow
 
 class Models:
     @classmethod
@@ -33,7 +33,7 @@ class Models:
                 else:
                     pil_image = Image.open(uploaded_file)
                 
-                spr.run(pil_image, title)  
+                Sparrow.run_save(pil_image, title)  
                 
                 st.markdown('---')
 
