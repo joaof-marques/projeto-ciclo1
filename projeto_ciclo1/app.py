@@ -1,8 +1,8 @@
-from pages_library.login import app
+from pages_library.login import Login
 import streamlit as st
 
-st.set_page_config(page_title='Projeto', page_icon='🐍', layout='wide')
+st.set_page_config(page_title='RADE', page_icon='imgs/logo-rade.png', layout='wide')
 
-app()
+Login.run()
 
-# streamlit run app.py
+# streamlit run projeto_ciclo1\app.py

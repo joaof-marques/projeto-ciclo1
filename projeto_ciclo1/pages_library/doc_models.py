@@ -54,7 +54,7 @@ class Models:
                         for row in conf.rois:
                             lbls.append(row[2])
                             
-                        clm1, clm2, clm3, clm4, clm5, clm6 = st.columns(6)
+                        clm1, clm2, clm3, clm4 = st.columns([1, 1, 3, 1])
                         
                         with clm1:
                             st.write(i+1)
@@ -65,7 +65,7 @@ class Models:
                         with clm3:
                             st.write(tuple([lbl for lbl in lbls]))
                             
-                        with clm6:
+                        with clm4:
                             if st.button('Deletar', type='primary', key=f'del_con_{i}'):
                                 session.delete(conf)
                                 session.commit()

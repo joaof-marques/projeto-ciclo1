@@ -13,7 +13,6 @@ db = os.getenv('DB_NAME')
 
 # Conection
 url = f'postgresql://{user}:{password}@{host}/{db}'
-
 engine = create_engine(url, echo=True)
 
 # base class for sqlachemy ORM
