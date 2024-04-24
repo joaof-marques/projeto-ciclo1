@@ -26,7 +26,7 @@ class Login:
             if 'authentication_status' not in st.session_state or not st.session_state.authentication_status:
                 col1, col2, col3 = st.columns(3)
                 with col2:
-                    img = cv.imread(r'projeto_ciclo1\pages_library\logo.png')
+                    img = cv.imread(r'pages_library\logo.png')
                     img = cv.resize(img, (400, 600))
                     _, img = cv.threshold(img, 50, 255, cv.THRESH_BINARY_INV)
                     st.image(img)

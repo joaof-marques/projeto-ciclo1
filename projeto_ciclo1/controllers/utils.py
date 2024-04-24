@@ -1,6 +1,6 @@
 import re
 import streamlit as st
-from projeto_ciclo1.controllers.logs_controllers import Log
+from controllers.logs_controllers import Log
 from database.database import engine, User, LogUser, LogDocument, LogSystem, Document
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv, find_dotenv
@@ -104,14 +104,12 @@ def validate_password(email, current_password):
             user = session.query(User).filter_by(email = email).first()
             print(type(current_password))
             if bcrypt.checkpw(current_password.encode('utf-8'), user.password.encode('utf-8')):
-                print('checagem')
 
                 return True
-            print('falso')
             return False
 
         except Exception as error:
-            insert_system_log(error)
+            Log.insert_system_log(error)
             session.rollback()
             return False, None
 
