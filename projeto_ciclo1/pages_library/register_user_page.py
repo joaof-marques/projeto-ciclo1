@@ -77,7 +77,7 @@ class RegisterPage:
     @classmethod
     def register_tab(self):
         try:
-            with st.form(key='signup'):
+            with st.form(key='signup', clear_on_submit=True):
                 name = st.text_input(
                     'Nome', key='create_user_name', placeholder='Nome')
                 username = st.text_input(
