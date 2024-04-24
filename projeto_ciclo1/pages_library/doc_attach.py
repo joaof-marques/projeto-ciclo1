@@ -141,16 +141,18 @@ class Attach:
         st.markdown("---")
 
         if uploaded_file is not None and option:
-            
+
             # Convertion of pdf to img
             if uploaded_file.name.endswith('pdf'):
-                
+
                 pil_image = self.pdf_convertion(uploaded_file)
                 
             else:
                 pil_image = Image.open(uploaded_file)
+
             
             conf = all_configs.filter_by(name = option).first()
+
             
             # Images 2 array
             img_bytes = io.BytesIO(conf.img)
@@ -158,14 +160,16 @@ class Attach:
             array_img1 = np.array(img1)
             array_img2 = np.array(pil_image)
 
+
             # Convertion of strings (rois in the database) to values that can be used
             rois_db = conf.rois
             rois = self.rois_convertion(rois_db)
+
             
             # OCR - read and orientation
             img_new = perspective(array_img1, array_img2)
             data, img_labels = labels(img_new, rois, filter)
-            
+
             img_new = Image.fromarray(img_new)
             
             clm1, clm2 = st.columns(2)

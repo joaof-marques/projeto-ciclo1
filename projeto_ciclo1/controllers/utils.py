@@ -128,14 +128,18 @@ def update_password(email, new_password):
             session.rollback()
             return False, None
         
-def delete_user(email, cpf):
+def delete_user(email, cpf, logged_user_id):
     with Session(bind=engine) as session:
         try:
             user = session.query(User).filter_by(email = email).filter_by(cpf = cpf).first()
             user.deleted = True
+            
             session.commit()
+
+            Log.insert_user_log(logged_user_id, user.id, 'User Deleted.')
+
             return True, None
-        
+
         except Exception as error:
             Log.insert_system_log(error)
             session.rollback()
@@ -161,7 +165,7 @@ def get_log_documents():
             log_documents = [
                 {
                     'log_id': log.id,
-                    'modifier': f'{log.user.name}',
+                    'document_modifier_id': f'{log.user.name}',
                     'document_modified_id': f'{log.document.name}',
                     'log_date': f'{log.log_date.day}/{log.log_date.month}/{log.log_date.year} - {log.log_date.hour}:{log.log_date.minute}:{log.log_date.microsecond}',
                     'log_txt': log.log_txt,

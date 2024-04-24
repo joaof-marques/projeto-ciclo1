@@ -3,14 +3,14 @@ import pytesseract
 import numpy as np
 
 
-# path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-# pytesseract.pytesseract.tesseract_cmd = path
+path = r'C:\Users\n7499\AppData\Local\Programs\Tesseract-OCR'
+pytesseract.pytesseract.tesseract_cmd = path
 
 def perspective(img1, img2):
     
     # Altura e largura da imagem base
-    h, w, _ = img1.shape
-    
+    h, w = img1.shape
+
     #Pontos de interesse
     orb = cv.ORB_create(5000)
 
@@ -70,7 +70,6 @@ def labels(img, roi, filter):
     img_mask = np.zeros_like(img_show)
     data = []
     kernel = np.ones((3, 3))
-
     for x, r in enumerate(roi):
         cv.rectangle(img_mask, (r[0][0], r[0][1]), (r[1][0], r[1][1]), (0, 0, 255), cv.FILLED)
         img_show = cv.addWeighted(img_show, 1, img_mask, 1, 0)
