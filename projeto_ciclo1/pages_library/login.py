@@ -28,11 +28,11 @@ class Login:
                 col1, col2, col3 = st.columns([1, 10, 1])
                 with col2:
                     theme = st_js.st_javascript("""window.getComputedStyle(window.parent.document.getElementsByClassName("stApp")[0]).getPropertyValue("color-scheme")""")
-                    print(theme)
+
                     if theme == 'dark':
-                        image_path = os.path.join('projeto_ciclo1', 'Icons', 'light.png')
+                        image_path = os.path.join(os.path.dirname(__file__), 'Icons\light.png')
                     else:
-                        image_path = os.path.join('projeto_ciclo1', 'Icons', 'dark.png')
+                        image_path = os.path.join(os.path.dirname(__file__), 'Icons\dark.png')
 
                     st.image(image_path)
                         
