@@ -27,7 +27,7 @@ class Models:
             if uploaded_file is not None:
                 if uploaded_file.name.endswith('pdf'):
                         # Convertendo o PDF para uma lista de imagens
-                    pages = convert_from_bytes(pdf.read(), poppler_path=os.path.join(os.path.dirname(__file__), r'poppler-24.02.0\Library\bin'))
+                    pages = convert_from_bytes(uploaded_file.read(), poppler_path=os.path.join(os.path.dirname(__file__), r'poppler-24.02.0\Library\bin'))
 
                     pil_image = pages[0].convert('RGB')
                 else:
