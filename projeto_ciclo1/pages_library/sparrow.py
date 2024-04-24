@@ -104,8 +104,7 @@ class Sparrow:
                 with st.form(key="fields_form_models"):
 
                     for i, rect in enumerate(result_rects.rects_data['words']):
-                        label = st.text_input("Rótulo", key=f"label_{
-                                            i}", disabled=False if i == result_rects.current_rect_index else True)
+                        label = st.text_input("Rótulo", key=f"label_{i}", disabled=False if i == result_rects.current_rect_index else True)
 
                         st.markdown("---")
 
@@ -122,10 +121,8 @@ class Sparrow:
                                     rois = []
 
                                     for rect in result_rects.rects_data['words']:
-                                        p1 = (int(rect['rect']['x1'] * proportion[0]),
-                                            int(rect['rect']['y1'] * proportion[1]))
-                                        p2 = (int(rect['rect']['x2'] * proportion[0]),
-                                            int(rect['rect']['y2'] * proportion[1]))
+                                        p1 = (int(rect['rect']['x1'] * proportion[0]), int(rect['rect']['y1'] * proportion[1]))
+                                        p2 = (int(rect['rect']['x2'] * proportion[0]), int(rect['rect']['y2'] * proportion[1]))
                                         roi = [str(p1), str(p2)]
                                         roi.append(rect['label'])
                                         rois.append(roi)
