@@ -11,11 +11,7 @@ class SearchPage:
     def draw():
         
         st.title("Localizar arquivo")
-        
-        ## Nome do arquivo
         file_name = st.text_input('Nome do arquivo:')
-
-        ## Filtro de data
         col1, col2 = st.columns(2)
         with col1:
             starting_date = st.date_input("Escolha a data inicial", value=None)
@@ -23,13 +19,7 @@ class SearchPage:
         with col2:
             limit_date = st.date_input("Escolha a data final", value=None)
 
-        ## Filtro funcionário
         register_user = st.text_input("Nome do funcionário que registrou o documento")
-
-        ## Filtro personalizado
-        # tag = st.multiselect('TAGs', ['Contratos', 'Registros', 'Documentos'])
-
-        ## Botão localizar
         search_button = st.button('Procurar', type='primary')
         
         if 'document_search_current_page' not in st.session_state:

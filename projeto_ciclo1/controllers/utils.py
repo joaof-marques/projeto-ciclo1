@@ -3,16 +3,8 @@ import streamlit as st
 from controllers.logs_controllers import Log
 from database.database import engine, User, LogUser, LogDocument, LogSystem, Document
 from sqlalchemy.orm import Session
-from dotenv import load_dotenv, find_dotenv
-import os
 import bcrypt
 
-load_dotenv(find_dotenv())
-
-user = os.getenv('DB_USER')
-password = os.getenv('DB_PASSWORD')
-host = os.getenv('DB_HOST')
-db = os.getenv('DB_NAME')
 
 def get_user_emails():
 
