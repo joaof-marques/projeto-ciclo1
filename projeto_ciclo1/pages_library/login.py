@@ -30,9 +30,9 @@ class Login:
                     theme = st_js.st_javascript("""window.getComputedStyle(window.parent.document.getElementsByClassName("stApp")[0]).getPropertyValue("color-scheme")""")
 
                     if theme == 'dark':
-                        image_path = os.path.join(os.path.dirname(__file__), 'Icons\light.png')
+                        image_path = os.path.join(os.path.dirname(__file__), r'Icons\light.png')
                     else:
-                        image_path = os.path.join(os.path.dirname(__file__), 'Icons\dark.png')
+                        image_path = os.path.join(os.path.dirname(__file__), r'Icons\dark.png')
 
                     st.image(image_path)
                         
