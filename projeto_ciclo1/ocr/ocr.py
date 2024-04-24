@@ -3,8 +3,8 @@ import pytesseract
 import numpy as np
 
 
-path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-pytesseract.pytesseract.tesseract_cmd = path
+# path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+# pytesseract.pytesseract.tesseract_cmd = path
 
 def perspective(img1, img2):
     
