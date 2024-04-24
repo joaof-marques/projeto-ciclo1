@@ -9,7 +9,6 @@ from controllers.logs_controllers import Log
 import pages_library.sparrow_attach as spr
 import json
 
-
 class Attach:
     
     @classmethod
@@ -217,7 +216,7 @@ class Attach:
             else:
                 pil_image = Image.open(uploaded_file)
             
-            spr.run(pil_image)
+            Sparrow.run_scan(pil_image)
             
             st.markdown("---")
 

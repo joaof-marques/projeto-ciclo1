@@ -159,7 +159,8 @@ class Login:
     def display_menu_adm(self):
         with st.sidebar:          
             selected = option_menu(None, ["Início", "Documentos", "Perfil", 'Cadastro', 'Logs'], 
-                icons=['house', 'cloud-upload', "list-task", 'gear'], 
+                                   icons=['house', 'cloud-upload',
+                                          "list-task", 'gear', 'code-square'],
                 menu_icon="cast", default_index=0, orientation="vertical",
                 styles={
                     "container": {"padding": "0!important", "background-color": "#ffff"},

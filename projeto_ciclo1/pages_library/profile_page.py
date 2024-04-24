@@ -25,7 +25,7 @@ class ProfilePage:
                 st.title('Perfil')
 
             selected = option_menu(None, ['Perfil', 'Alterar Senha'],
-                                icons=['search', 'cloud-upload'],
+                                   icons=['person', 'key'],
                                 menu_icon="cast", default_index=0, orientation="horizontal",
                                 styles={
                 "container": {"padding": "0!important", "background-color": "#ffff"},

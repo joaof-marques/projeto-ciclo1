@@ -23,8 +23,7 @@ class LogHistory:
             st.title('Logs')
             
         selected = option_menu(None, ['Logs de Documentos', 'Logs do Sistema', 'Logs de Usuários'],
-                            icons=['search', 'cloud-upload',
-                                    'file-earmark-ruled'],
+                               icons=['file-earmark-text', 'file-earmark-code','file-earmark-person'],
                             menu_icon="cast", default_index=0, orientation="horizontal",
                             styles={
             "container": {"padding": "0!important", "background-color": "#ffff"},
