@@ -6,6 +6,7 @@ from pdf2image import convert_from_bytes
 from database.database import *
 from controllers.logs_controllers import Log
 import pages_library.sparrow_attach as spr
+import json
 
 
 class Attach:
@@ -79,6 +80,7 @@ class Attach:
                 Log.insert_document_log(st.session_state.user_id, doc.id, 'New document created')
             except Exception as e:
                 session.rollback()
+                print(e)
                 return None
 
 
@@ -97,22 +99,23 @@ class Attach:
     def send_form(self, rois, data, img, tags, title, form_key):
         with st.form(key=form_key):
             
-            final_text = ''
+            final_text = {}
             
             for i, row in enumerate(rois):
+                print(f"row{i}: ", row)
                 text = st.text_area(
                     f'{row[2]}', data[i][row[2]], key=f'{form_key}{i}')
                 st.markdown("---")
                 # Text content for the document insertion
-                final_text += f'{row[2]}\n{text}\n'
-
+                final_text.update({row[2]:text})
             if st.form_submit_button('Enviar', type='primary'):
                 if title != '':
                     if len(tags) > 0:
+                        json_final_text = json.dumps(final_text)
                         # Image to bytes
                         img_bytes = self.image_2_bytes(img)
                         # Database insertion
-                        self.document_insertion(title, img_bytes, tags, final_text, st.session_state.user_id)
+                        self.document_insertion(title, img_bytes, tags, json_final_text, st.session_state.user_id)
                         st.success('Arquivo Salvo!')
                     else:
                         st.warning('TAGs Vazia!')
