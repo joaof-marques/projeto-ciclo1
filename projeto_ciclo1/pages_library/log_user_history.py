@@ -23,8 +23,7 @@ class LogHistory:
             st.title('Logs')
             
         selected = option_menu(None, ['Logs de Documentos', 'Logs do Sistema', 'Logs de Usuários'],
-                            icons=['search', 'cloud-upload',
-                                    'file-earmark-ruled'],
+                               icons=['file-earmark-text', 'file-earmark-code','file-earmark-person'],
                             menu_icon="cast", default_index=0, orientation="horizontal",
                             styles={
             "container": {"padding": "0!important", "background-color": "#ffff"},
@@ -51,13 +50,14 @@ class LogHistory:
     @classmethod
     def log_documents_tab(self):
         _, log_document = get_log_documents()
+        c1, c2, c3 = st.columns([1,2,1])
+        with c2:
+            if log_document is None or len(log_document) == 0:
+                st.title('Nenhum Log Disponível')
 
-        if log_document is None or len(log_document) == 0:
-            st.title('Nenhum Log Disponível')
-
-        else:
-            document_dataframe = pd.DataFrame(log_document)
-            st.write(document_dataframe)
+            else:
+                document_dataframe = pd.DataFrame(log_document)
+                st.write(document_dataframe)
         
         st.markdown("""---""")
         _, col1, col2, col3, _ = st.columns(spec=[.3, .06, .04, .06, .3])
@@ -74,13 +74,14 @@ class LogHistory:
     @classmethod
     def log_system_tab(self):
         _, log_system = get_log_system()
+        c1, c2, c3 = st.columns([1,2,1])
+        with c2:
+            if log_system is None  or len(log_system) == 0:
+                st.title('Nenhum Log Disponível')
 
-        if log_system is None  or len(log_system) == 0:
-            st.title('Nenhum Log Disponível')
-
-        else:
-            system_dataframe = pd.DataFrame(log_system)
-            st.write(system_dataframe)
+            else:
+                system_dataframe = pd.DataFrame(log_system)
+                st.write(system_dataframe)
         st.markdown("""---""")
         _, col1, col2, col3, _ = st.columns(spec=[.3, .06, .04, .06, .3])
 
@@ -98,13 +99,15 @@ class LogHistory:
     def log_users_tab(self):
         _, log_user = get_log_user()
 
+        c1, c2, c3 = st.columns([1,2,1])
+        with c2:
+            if log_user is None  or len(log_user) == 0:
+                st.title('Nenhum Log Disponível')
 
-        if log_user is None  or len(log_user) == 0:
-            st.title('Nenhum Log Disponível')
+            else:
+                user_dataframe = pd.DataFrame(log_user)
+                st.write(user_dataframe)
 
-        else:
-            user_dataframe = pd.DataFrame(log_user)
-            st.write(user_dataframe)
 
         st.markdown("""---""")
         _, col1, col2, col3, _ = st.columns(spec=[.3, .06, .04, .06, .3])

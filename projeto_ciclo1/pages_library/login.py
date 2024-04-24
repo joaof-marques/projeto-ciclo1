@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit_javascript as st_js
 from controllers.logs_controllers import Log
 from controllers.utils import get_user_profile
 from streamlit_option_menu import option_menu
@@ -9,7 +10,7 @@ from pages_library.doc_page import DocPage
 from pages_library.profile_page import ProfilePage
 from pages_library.register_user_page import RegisterPage
 from pages_library.log_user_history import LogHistory
-import cv2 as cv
+import os
 import bcrypt
 import re
 
@@ -24,12 +25,18 @@ class Login:
         with col2:
                 
             if 'authentication_status' not in st.session_state or not st.session_state.authentication_status:
-                col1, col2, col3 = st.columns(3)
+                col1, col2, col3 = st.columns([1, 10, 1])
                 with col2:
-                    img = cv.imread(r'pages_library/logo.png')
-                    img = cv.resize(img, (400, 600))
-                    _, img = cv.threshold(img, 50, 255, cv.THRESH_BINARY_INV)
-                    st.image(img)
+
+                    theme = st_js.st_javascript("""window.getComputedStyle(window.parent.document.getElementsByClassName("stApp")[0]).getPropertyValue("color-scheme")""")
+
+                    if theme == 'dark':
+                        image_path = os.path.join(os.path.dirname(__file__), r'Icons\light.png')
+                    else:
+                        image_path = os.path.join(os.path.dirname(__file__), r'Icons\dark.png')
+
+                    st.image(image_path)
+                    
                 self.authentication_handler()
                 login_form = st.form('Entrar', clear_on_submit=True)
                 login_form = st.form('Login', clear_on_submit=True)
@@ -153,7 +160,8 @@ class Login:
     def display_menu_adm(self):
         with st.sidebar:          
             selected = option_menu(None, ["Início", "Documentos", "Perfil", 'Cadastro', 'Logs'], 
-                icons=['house', 'cloud-upload', "list-task", 'gear'], 
+                                   icons=['house', 'cloud-upload',
+                                          "list-task", 'gear', 'code-square'],
                 menu_icon="cast", default_index=0, orientation="vertical",
                 styles={
                     "container": {"padding": "0!important", "background-color": "#ffff"},

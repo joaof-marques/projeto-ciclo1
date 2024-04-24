@@ -2,7 +2,7 @@ import streamlit as st
 from PIL import Image
 from pdf2image import convert_from_bytes
 from database.database import *
-import pages_library.sparrow_models as spr
+from pages_library.sparrow import Sparrow
 
 class Models:
     @classmethod
@@ -27,14 +27,13 @@ class Models:
             if uploaded_file is not None:
                 if uploaded_file.name.endswith('pdf'):
                         # Convertendo o PDF para uma lista de imagens
-                    pages = convert_from_bytes(uploaded_file.read(),
-                                            poppler_path=r'poppler-24.02.0\Library\bin')
+                    pages = convert_from_bytes(uploaded_file.read(), poppler_path=os.path.join(os.path.dirname(__file__), r'poppler-24.02.0\Library\bin'))
 
                     pil_image = pages[0].convert('RGB')
                 else:
                     pil_image = Image.open(uploaded_file)
                 
-                spr.run(pil_image, title)  
+                Sparrow.run_save(pil_image, title)  
                 
                 st.markdown('---')
 
