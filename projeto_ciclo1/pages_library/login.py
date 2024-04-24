@@ -35,7 +35,7 @@ class Login:
                         image_path = os.path.join(os.path.dirname(__file__), r'Icons\dark.png')
 
                     st.image(image_path)
-                        
+                    
                 self.authentication_handler()
                 login_form = st.form('Entrar', clear_on_submit=True)
                 login_form = st.form('Login', clear_on_submit=True)
