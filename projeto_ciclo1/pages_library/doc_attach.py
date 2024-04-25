@@ -115,7 +115,7 @@ class Attach:
                 
                 final_text = {}
                 for i, row in enumerate(rois):
-                    text = st.text_area(f'{row[2]}', data[i][row[2]], key=f'{form_key}{i}')
+                    text = st.text_area(f'{row[2]} ', data[i][row[2]], key=f'{form_key}{i}')
                     st.markdown("---")
                     
                     final_text.update({row[2]:text})
