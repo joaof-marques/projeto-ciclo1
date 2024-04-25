@@ -1,6 +1,6 @@
 import streamlit as st
 from controllers.utils import validate_cpf, validate_email, validate_username, get_user_emails, get_usernames, update_password, delete_user, validate_name
-from controllers.user_controllers import create_user
+from controllers.user_controllers import UserControllers
 from streamlit_option_menu import option_menu
 from controllers.logs_controllers import Log
 
@@ -126,7 +126,7 @@ class RegisterPage:
                     if password != confirm_password:
                         warning.warning('Senhas não coincidem.')
                         return
-                    create_user(name, username, email, cpf, password, access_level, st.session_state.user_id)
+                    UserControllers.create_user(name, username, email, cpf, password, access_level, st.session_state.user_id)
                     warning.empty()
 
                     st.success('Usuario criado')

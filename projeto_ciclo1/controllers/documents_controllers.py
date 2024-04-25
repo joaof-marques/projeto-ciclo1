@@ -1,7 +1,5 @@
 from database.database import Document, User, LogDocument, engine
 from sqlalchemy.orm import Session
-# from projeto_ciclo1.controllers.system_log_controllers import insert_system_log
-from time import time
 import datetime, json
 
 
