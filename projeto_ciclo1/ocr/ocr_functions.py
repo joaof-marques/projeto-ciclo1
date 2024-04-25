@@ -35,7 +35,7 @@ class Ocr:
         
         
     @classmethod
-    def labels(self, img, roi, filter):
+    def labels(self, img, roi, filter, threshold=127):
         try:
             img_show = img.copy()
             img_mask = np.zeros_like(img_show)
@@ -52,9 +52,9 @@ class Ocr:
                 if filter == 'Tratamento de Ruido':
                     img_dilate = cv.dilate(img_gray, (kernel), iterations=1)
                     img_erode = cv.erode(img_dilate, (kernel), iterations=1)
-                    _, img_threshhold = cv.threshold(img_erode, 80, 255, cv.THRESH_BINARY)
+                    _, img_threshhold = cv.threshold(img_erode, threshold, 255, cv.THRESH_BINARY)
                 else:
-                    _, img_threshhold = cv.threshold(img_gray, 80, 255, cv.THRESH_BINARY)
+                    _, img_threshhold = cv.threshold(img_gray, threshold, 255, cv.THRESH_BINARY)
 
                 data.append({r[2]: pytesseract.image_to_string(img_threshhold, lang='por')})
 
