@@ -68,9 +68,8 @@ class LogHistory:
                 st.title('Nenhum Log Disponível')
             
         else:
-            c1, c2, c3, c4, c5 = st.columns(5)
-            with c1:
-                st.subheader('Log ID')
+            _, c2, c3, c4, c5 = st.columns(5)
+
             with c2:
                 st.subheader('Modificante')
             with c3:
@@ -117,9 +116,8 @@ class LogHistory:
 
 
         else:
-            c1, c2, c3, c4 = st.columns(4)
-            with c1:
-                st.subheader('Log ID')
+            _, c2, c3, c4 = st.columns(4)
+
             with c2:
                 st.subheader('Erro')
             with c3:
@@ -163,9 +161,8 @@ class LogHistory:
                 st.title('Nenhum Log Disponível')
 
         else:
-            c1, c2, c3, c4, c5 = st.columns(5)
-            with c1:
-                st.subheader('Log ID')
+            _, c2, c3, c4, c5 = st.columns(5)
+
             with c2:
                 st.subheader('Modificante')
             with c3:
