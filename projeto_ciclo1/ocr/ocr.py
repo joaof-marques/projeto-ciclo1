@@ -3,13 +3,13 @@ import pytesseract
 import numpy as np
 
 
-path = r'C:\Users\n7499\AppData\Local\Programs\Tesseract-OCR'
+path = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 pytesseract.pytesseract.tesseract_cmd = path
 
 def perspective(img1, img2):
     
     # Altura e largura da imagem base
-    h, w = img1.shape
+    h, w, _ = img1.shape
 
     #Pontos de interesse
     orb = cv.ORB_create(5000)

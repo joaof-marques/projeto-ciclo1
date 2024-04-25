@@ -2,6 +2,7 @@ import streamlit as st
 import streamlit_javascript as st_js
 from streamlit_sparrow_labeling import st_sparrow_labeling
 from streamlit_sparrow_labeling import DataProcessor
+from controllers.utils import validate_unique_model 
 from database.database import *
 import io
 
@@ -112,30 +113,33 @@ class Sparrow:
                             result_rects.rects_data, i, [], label)
 
                     if st.form_submit_button("Save", type="primary"):
-                        if model != '':
-                            with Session(bind=engine) as session:
-                                try:
-                                    buffer = io.BytesIO()
-                                    img_file.save(buffer, format='PNG')
-                                    img_bytes = buffer.getvalue()
-                                    rois = []
+                        print(1)
+                        if validate_unique_model(model):
+                            print(2)
+                            if model != '':
+                                with Session(bind=engine) as session:
+                                    try:
+                                        buffer = io.BytesIO()
+                                        img_file.save(buffer, format='PNG')
+                                        img_bytes = buffer.getvalue()
+                                        rois = []
 
-                                    for rect in result_rects.rects_data['words']:
-                                        p1 = (int(rect['rect']['x1'] * proportion[0]), int(rect['rect']['y1'] * proportion[1]))
-                                        p2 = (int(rect['rect']['x2'] * proportion[0]), int(rect['rect']['y2'] * proportion[1]))
-                                        roi = [str(p1), str(p2)]
-                                        roi.append(rect['label'])
-                                        rois.append(roi)
+                                        for rect in result_rects.rects_data['words']:
+                                            p1 = (int(rect['rect']['x1'] * proportion[0]), int(rect['rect']['y1'] * proportion[1]))
+                                            p2 = (int(rect['rect']['x2'] * proportion[0]), int(rect['rect']['y2'] * proportion[1]))
+                                            roi = [str(p1), str(p2)]
+                                            roi.append(rect['label'])
+                                            rois.append(roi)
 
-                                    session.add(
-                                        OcrConfig(name=model, img=img_bytes, rois=rois))
-                                    session.commit()
-                                    st.success('Modelo Salvo!')
-                                except Exception as e:
-                                    session.rollback()
-                                    print(e)
-                        else:
-                            st.warning('Título Vazio!')
+                                        session.add(
+                                            OcrConfig(name=model, img=img_bytes, rois=rois))
+                                        session.commit()
+                                        st.success('Modelo Salvo!')
+                                    except Exception as e:
+                                        session.rollback()
+                                        print(e)
+                            else:
+                                st.warning('Título Vazio!')
 
     @classmethod
     def map_proportion(self, width_org, height_org, width_new, heigt_new):
