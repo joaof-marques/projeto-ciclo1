@@ -1,4 +1,5 @@
 import streamlit as st
+import numpy as np
 from PIL import Image
 from pdf2image import convert_from_bytes
 from database.database import *
@@ -23,6 +24,16 @@ class Models:
         except Exception as e:
             Log.insert_system_log(e)
             
+    @classmethod
+    def pdf_convertion(self, pdf):
+        try:
+            pages = convert_from_bytes(pdf.read(), poppler_path=os.path.join(os.path.dirname(__file__), r'poppler-24.02.0', r'Library\bin'))
+            image = pages[0].convert('RGB')
+            return image
+        except Exception as e:
+            Log.insert_system_log(e)
+            return False
+            
             
     @classmethod
     def model_config(self):
@@ -35,10 +46,14 @@ class Models:
 
             if uploaded_file is not None:
                 if uploaded_file.name.endswith('pdf'):
-                    pages = convert_from_bytes(uploaded_file.read(), poppler_path=os.path.join(os.path.dirname(__file__), r'poppler-24.02.0\Library\bin'))
-                    pil_image = pages[0].convert('RGB')
+                    pil_image = self.pdf_convertion(uploaded_file)
                 else:
                     pil_image = Image.open(uploaded_file)
+                array = np.array(pil_image, dtype='uint8')
+
+                if len(array.shape) == 2:
+                    array = np.stack((array,) * 3, axis=-1)
+                    pil_image = Image.fromarray(array)
                 
                 Sparrow.run_save(pil_image, title)  
                 

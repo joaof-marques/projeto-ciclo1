@@ -3,7 +3,8 @@ import pytesseract
 import numpy as np
 from controllers.logs_controllers import Log
 
-
+path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+pytesseract.pytesseract.tesseract_cmd = path
 class Ocr:
     @classmethod
     def perspective(self, img1, img2):
@@ -37,6 +38,7 @@ class Ocr:
     @classmethod
     def labels(self, img, roi, filter, threshold=127):
         try:
+           
             img_show = img.copy()
             img_mask = np.zeros_like(img_show)
             data = []
@@ -48,7 +50,7 @@ class Ocr:
 
                 img_cut = img[r[0][1]:r[1][1], r[0][0]:r[1][0]]
                 img_gray = cv.cvtColor(img_cut, cv.COLOR_BGR2GRAY)
-                
+
                 if filter == 'Tratamento de Ruido':
                     img_dilate = cv.dilate(img_gray, (kernel), iterations=1)
                     img_erode = cv.erode(img_dilate, (kernel), iterations=1)
@@ -57,13 +59,9 @@ class Ocr:
                     _, img_threshhold = cv.threshold(img_gray, threshold, 255, cv.THRESH_BINARY)
 
                 data.append({r[2]: pytesseract.image_to_string(img_threshhold, lang='por')})
-
+               
             return data, img_show
         except Exception as e:
             Log.insert_system_log(e)
             return False
-
-
-
-
 

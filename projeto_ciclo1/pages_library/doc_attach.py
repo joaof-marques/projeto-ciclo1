@@ -115,9 +115,8 @@ class Attach:
                 
                 final_text = {}
                 for i, row in enumerate(rois):
-                    text = st.text_area(f'{row[2]} ', data[i][row[2]], key=f'{form_key}{i}')
+                    text = st.text_area(f'{row[2]}' + ' ', data[i][row[2]], key=f'{form_key}{i}')
                     st.markdown("---")
-                    
                     final_text.update({row[2]:text})
                     
                 if st.form_submit_button('Enviar', type='primary'):
@@ -155,9 +154,16 @@ class Attach:
 
             if uploaded_file is not None and option:
                 if uploaded_file.name.endswith('pdf'):
+                    
                     pil_image = self.pdf_convertion(uploaded_file)
                 else:
                     pil_image = Image.open(uploaded_file)
+                
+                array = np.array(pil_image, dtype='uint8')
+    
+                if len(array.shape) == 2:
+                    array = np.stack((array,) * 3, axis=-1)
+                    pil_image = Image.fromarray(array)
                 
                 conf = all_configs.filter_by(name = option).first()
                 
@@ -166,18 +172,19 @@ class Attach:
                 
                 array_img1 = np.array(img1)
                 array_img2 = np.array(pil_image)
-                
+
                 rois_db = conf.rois
+
                 rois = self.rois_convertion(rois_db)
+
                 img_new = Ocr.perspective(array_img1, array_img2)
                 data, img_labels = Ocr.labels(img_new, rois, filter, threshold_value)
                 
                 img_new = Image.fromarray(img_new)
-                
                 clm1, clm2 = st.columns(2)
                 with clm1:
                     st.image(img_labels)
-                
+
                 with clm2:
                     self.send_form(rois, data, img_new, tags, title, 'send_form_a')
                     
@@ -204,18 +211,26 @@ class Attach:
                     pil_image = self.pdf_convertion(uploaded_file)
                 else:
                     pil_image = Image.open(uploaded_file)
-                
+
+                array = np.array(pil_image, dtype='uint8')
+
+                if len(array.shape) == 2:
+                    array = np.stack((array,) * 3, axis=-1)
+                    pil_image = Image.fromarray(array)
+                    
                 Sparrow.run_scan(pil_image)
                 st.markdown("---")
 
                 if 'rois' in st.session_state and st.session_state.rois is not None:
                     array_img = np.array(pil_image)
+                    
                     data, img_labels = Ocr.labels(array_img, st.session_state.rois, filter, threshold_value)
                     clm1, clm2 = st.columns(2)
                     
                     with clm1:
+                        img_labels = Image.fromarray(img_labels)
                         st.image(img_labels)
-
+                    
                     with clm2:
                         self.send_form(st.session_state.rois, data, pil_image, tags, title, 'send_form_b')
 
