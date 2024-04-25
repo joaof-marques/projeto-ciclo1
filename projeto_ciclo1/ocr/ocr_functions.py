@@ -3,7 +3,8 @@ import pytesseract
 import numpy as np
 from controllers.logs_controllers import Log
 
-
+path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+pytesseract.pytesseract.tesseract_cmd = path
 class Ocr:
     @classmethod
     def perspective(self, img1, img2):
