@@ -117,7 +117,6 @@ class Attach:
                 for i, row in enumerate(rois):
                     text = st.text_area(f'{row[2]}' + ' ', data[i][row[2]], key=f'{form_key}{i}')
                     st.markdown("---")
-                    
                     final_text.update({row[2]:text})
                     
                 if st.form_submit_button('Enviar', type='primary'):
@@ -148,8 +147,9 @@ class Attach:
             tags = st.multiselect('Selecionar TAGs', ['Nota Fiscal', 'Contrato', 'RG', 'CPF', 'Passaporte'], key='insert_tags_a')
             option = st.selectbox("Selecionar Modelo", tuple(models_name), key='select_model_1')
             filter = st.selectbox("Selecionar Filtro", ('Padrão', 'Tratamento de Ruido'), key='select_filter_1')
+            st.markdown(body='Limiar', help='Ajusta o nível de sensibilidade da detecção de ruídos da imagem.')
+            threshold_value = st.slider('', value=127 ,min_value=0, max_value=255, key='normal_attach_slider')
             uploaded_file = st.file_uploader("Selecionar Arquivo", type=['png', 'jpg', 'jpeg', 'pdf', 'jfif'], key='uploader_file_1')
-
             st.markdown("---")
 
             if uploaded_file is not None and option:
@@ -178,9 +178,8 @@ class Attach:
                 rois = self.rois_convertion(rois_db)
 
                 img_new = Ocr.perspective(array_img1, array_img2)
-
-                data, img_labels = Ocr.labels(img_new, rois, filter)
-
+                data, img_labels = Ocr.labels(img_new, rois, filter, threshold_value)
+                
                 img_new = Image.fromarray(img_new)
                 clm1, clm2 = st.columns(2)
                 with clm1:
@@ -200,8 +199,9 @@ class Attach:
             title = st.text_input("Título", key='title_b')
             tags = st.multiselect('Selecionar TAGs', ['Nota Fiscal', 'Contrato', 'RG', 'CPF', 'Passaporte'], key='insert_tags_b')
             filter = st.selectbox("Selecionar Filtro", ('Padrão', 'Tratamento de Ruido'), key='select_filter_2')
+            st.markdown(body='Limiar', help='Ajusta o nível de sensibilidade da detecção de ruídos da imagem.')
+            threshold_value = st.slider('', value=127 ,min_value=0, max_value=255, key='faster_attach_slider')
             uploaded_file = st.file_uploader("Selecionar Arquivo", type=['png', 'jpg', 'jpeg', 'pdf', 'jfif'], key='uploader_file_2')
-                
             st.markdown("---")
 
             if uploaded_file is not None:
@@ -223,8 +223,8 @@ class Attach:
 
                 if 'rois' in st.session_state and st.session_state.rois is not None:
                     array_img = np.array(pil_image)
-                    data, img_labels = Ocr.labels(array_img, st.session_state.rois, filter)
                     
+                    data, img_labels = Ocr.labels(array_img, st.session_state.rois, filter, threshold_value)
                     clm1, clm2 = st.columns(2)
                     
                     with clm1:
