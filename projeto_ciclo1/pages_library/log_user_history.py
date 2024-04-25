@@ -71,7 +71,7 @@ class LogHistory:
             _, c2, c3, c4, c5 = st.columns(5)
 
             with c2:
-                st.subheader('Modificante')
+                st.subheader('Modificador')
             with c3:
                 st.subheader('Modificado')
             with c4:
@@ -164,7 +164,7 @@ class LogHistory:
             _, c2, c3, c4, c5 = st.columns(5)
 
             with c2:
-                st.subheader('Modificante')
+                st.subheader('Modificador')
             with c3:
                 st.subheader('Modificado')
             with c4:
