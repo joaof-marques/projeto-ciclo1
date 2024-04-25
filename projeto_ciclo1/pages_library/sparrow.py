@@ -5,20 +5,30 @@ from streamlit_sparrow_labeling import DataProcessor
 from controllers.logs_controllers import Log
 from database.database import *
 import io
+import cv2 as cv
 
 class Sparrow:
     
     @classmethod
     def draw_canvas(self, img_file, ui_width):
         try:
+            img_width, img_height = img_file.size
+            
+            if img_width > img_height:
+                canva_w = 900
+                canva_h = 1280
+            else:
+                canva_w = 1280
+                canva_h = 900
+                    
             initial_rect = {
                 "meta": {
                     "version": "v0.1",
                     "split": "train",
                     "image_id": 1,
                     "image_size": {
-                        "width": 1280,
-                        "height": 900
+                        "width": canva_w,
+                        "height": canva_h
                     }
                 },
                 "words": []
@@ -26,9 +36,9 @@ class Sparrow:
 
             height = initial_rect['meta']['image_size']['width']
             width = initial_rect['meta']['image_size']['height']
-            with_org, height_org = img_file.size
+            width_org, height_org = img_file.size
 
-            proportion = self.map_proportion(with_org, height_org, width, height)
+            proportion = self.map_proportion(width_org, height_org, width, height)
 
             assign_labels = st.checkbox("Adicionar Campos", True)
             mode = "transform" if not assign_labels else "rect"
