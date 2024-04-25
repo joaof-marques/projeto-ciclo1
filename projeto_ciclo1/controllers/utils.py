@@ -1,7 +1,7 @@
 import re
 import streamlit as st
 from controllers.logs_controllers import Log
-from database.database import engine, User, LogUser, LogDocument, LogSystem, Document
+from database.database import engine, User, LogUser, LogDocument, LogSystem, OcrConfig
 from sqlalchemy.orm import Session
 import bcrypt
 
@@ -120,14 +120,18 @@ def update_password(email, new_password):
             session.rollback()
             return False, None
         
-def delete_user(email, cpf):
+def delete_user(email, cpf, logged_user_id):
     with Session(bind=engine) as session:
         try:
             user = session.query(User).filter_by(email = email).filter_by(cpf = cpf).first()
             user.deleted = True
+            
             session.commit()
+
+            Log.insert_user_log(logged_user_id, user.id, 'User Deleted.')
+
             return True, None
-        
+
         except Exception as error:
             Log.insert_system_log(error)
             session.rollback()
@@ -153,7 +157,7 @@ def get_log_documents():
             log_documents = [
                 {
                     'log_id': log.id,
-                    'modifier': f'{log.user.name}',
+                    'document_modifier_id': f'{log.user.name}',
                     'document_modified_id': f'{log.document.name}',
                     'log_date': f'{log.log_date.day}/{log.log_date.month}/{log.log_date.year} - {log.log_date.hour}:{log.log_date.minute}:{log.log_date.microsecond}',
                     'log_txt': log.log_txt,
@@ -236,7 +240,21 @@ def show_document_search_results(files):
         with detail_column:
             st.button("Detalhes", on_click=set_file_to_details_area, args=[file,] , key=file)
     
+def validate_unique_model(title):
+    with Session(bind=engine) as session:
+        model = session.query(OcrConfig).filter_by(name = title).first()
+        if model is not None:
+            if model.name == title:
+                st.warning('Nome de modelo já cadastrado')
+                return False
+        
+        return True
 
 def set_file_to_details_area(file):
     st.session_state.selected_file = file
-    
+
+def get_models():
+    with Session(bind=engine) as session:
+        configs = session.query(OcrConfig).slice(10 * (st.session_state.current_manage_models_page - 1), (10 * (st.session_state.current_manage_models_page - 1))+ 10).all()
+        
+        return True, configs

@@ -8,6 +8,15 @@ from sqlalchemy.orm import Session
 
 class LogHistory:
     @classmethod
+    def store_index_count(self):
+        if 'index_user_count' not in st.session_state:
+            st.session_state.index_user_count = 0
+        if 'index_system_count' not in st.session_state:
+            st.session_state.index_system_count = 0
+        if 'index_document_count' not in st.session_state:
+            st.session_state.index_document_count = 0
+
+    @classmethod
     def store_current_page(self):
         if 'current_document_page' not in st.session_state:
             st.session_state.current_document_page = 1
@@ -18,7 +27,7 @@ class LogHistory:
 
     @classmethod
     def log_history(self):
-        clm1, clm2, clm3 = st.columns([8, 1, 8])
+        clm1, clm2, clm3 = st.columns(spec=[8, 1, 8])
         with clm2:
             st.title('Logs')
             
@@ -37,6 +46,7 @@ class LogHistory:
         self.log_document_max_page()
         self.log_system_max_page()
         self.log_user_max_page()
+        self.store_index_count()
 
         if selected == 'Logs de Documentos':
             self.log_documents_tab()
@@ -50,15 +60,38 @@ class LogHistory:
     @classmethod
     def log_documents_tab(self):
         _, log_document = get_log_documents()
-        c1, c2, c3 = st.columns([1,2,1])
-        with c2:
-            if log_document is None or len(log_document) == 0:
-                st.title('Nenhum Log Disponível')
 
-            else:
-                document_dataframe = pd.DataFrame(log_document)
-                st.write(document_dataframe)
-        
+        st.markdown("""---""")
+        if log_document is None or len(log_document) == 0:
+            c1, c2, c3 = st.columns(spec=[3, 4, 2])
+            with c2:
+                st.title('Nenhum Log Disponível')
+            
+        else:
+            _, c2, c3, c4, c5 = st.columns(5)
+
+            with c2:
+                st.subheader('Modificante')
+            with c3:
+                st.subheader('Modificado')
+            with c4:
+                st.subheader('Date')
+            with c5:
+                st.subheader('Texto')
+
+            for index, log in enumerate(log_document):
+                c1, c2, c3, c4, c5= st.columns(5)
+                with c1:
+                    st.write((st.session_state.index_document_count * 10) + (index + 1))     
+                with c2:
+                    st.write(log['document_modifier_id'])
+                with c3:
+                    st.write(log['document_modified_id'])
+                with c4:
+                    st.write(log['log_date'])
+                with c5:
+                    st.write(log['log_txt'])
+    
         st.markdown("""---""")
         _, col1, col2, col3, _ = st.columns(spec=[.3, .06, .04, .06, .3])
 
@@ -74,14 +107,36 @@ class LogHistory:
     @classmethod
     def log_system_tab(self):
         _, log_system = get_log_system()
-        c1, c2, c3 = st.columns([1,2,1])
-        with c2:
-            if log_system is None  or len(log_system) == 0:
+
+        st.markdown("""---""")
+        if log_system is None  or len(log_system) == 0:
+            c1, c2, c3 = st.columns(spec=[3, 4, 2])
+            with c2:
                 st.title('Nenhum Log Disponível')
 
-            else:
-                system_dataframe = pd.DataFrame(log_system)
-                st.write(system_dataframe)
+
+        else:
+            _, c2, c3, c4 = st.columns(4)
+
+            with c2:
+                st.subheader('Erro')
+            with c3:
+                st.subheader('Data')
+            with c4:
+                st.subheader('texto')
+
+
+            for index, log in enumerate(log_system):
+                c1, c2, c3, c4 = st.columns(4)
+                with c1:
+                    st.write((st.session_state.index_system_count * 10) + (index + 1))     
+                with c2:
+                    st.write(log['error_type'])
+                with c3:
+                    st.write(log['log_date'])
+                with c4:
+                    st.write(log['log_txt'])
+
         st.markdown("""---""")
         _, col1, col2, col3, _ = st.columns(spec=[.3, .06, .04, .06, .3])
 
@@ -99,14 +154,36 @@ class LogHistory:
     def log_users_tab(self):
         _, log_user = get_log_user()
 
-        c1, c2, c3 = st.columns([1,2,1])
-        with c2:
-            if log_user is None  or len(log_user) == 0:
+        st.markdown("""---""")
+        if log_user is None  or len(log_user) == 0:
+            c1, c2, c3 = st.columns([3, 4, 2])
+            with c2:
                 st.title('Nenhum Log Disponível')
 
-            else:
-                user_dataframe = pd.DataFrame(log_user)
-                st.write(user_dataframe)
+        else:
+            _, c2, c3, c4, c5 = st.columns(5)
+
+            with c2:
+                st.subheader('Modificante')
+            with c3:
+                st.subheader('Modificado')
+            with c4:
+                st.subheader('Data')
+            with c5:
+                st.subheader('Texto')
+
+            for index, log in enumerate(log_user):
+                c1, c2, c3, c4, c5 = st.columns(5)
+                with c1:
+                    st.write((st.session_state.index_user_count * 10) + (index + 1))     
+                with c2:
+                    st.write(log['modifier_name'])
+                with c3:
+                    st.write(log['modified_name'])
+                with c4:
+                    st.write(log['log_date'])
+                with c5:
+                    st.write(log['log_txt'])
 
 
         st.markdown("""---""")
@@ -131,11 +208,14 @@ class LogHistory:
     def log_document_next(self):
         if st.session_state.current_document_page < st.session_state.log_document_max_page:
             st.session_state.current_document_page += 1
+            st.session_state.index_document_count += 1
 
     @classmethod
     def log_document_previous(self):
         if st.session_state.current_document_page > 1:
             st.session_state.current_document_page -= 1 
+            st.session_state.index_document_count -= 1
+
 
     @classmethod
     def log_system_max_page(self):
@@ -147,11 +227,13 @@ class LogHistory:
     def log_system_next(self):
         if st.session_state.current_system_page < st.session_state.log_system_max_page:
             st.session_state.current_system_page += 1
+            st.session_state.index_system_count += 1
 
     @classmethod
     def log_system_previous(self):
         if st.session_state.current_system_page > 1:
             st.session_state.current_system_page -= 1
+            st.session_state.index_system_count -= 1
 
     @classmethod
     def log_user_max_page(self):
@@ -163,11 +245,15 @@ class LogHistory:
     def log_user_next(self):
         if st.session_state.current_user_page < st.session_state.log_user_max_page:
             st.session_state.current_user_page += 1
+            st.session_state.index_user_count += 1
+
 
     @classmethod
     def log_user_previous(self):
         if st.session_state.current_user_page > 1:
             st.session_state.current_user_page -= 1
+            st.session_state.index_user_count -= 1
+
 
 
         

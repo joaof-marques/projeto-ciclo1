@@ -139,6 +139,7 @@ class Sparrow:
                                             roi.append(rect['label'])
                                             rois.append(roi)
 
+
                                         session.add(OcrConfig(name=model, img=img_bytes, rois=rois))
                                         session.commit()
                                         st.success('Modelo Salvo!')
@@ -150,6 +151,7 @@ class Sparrow:
                                 st.warning('Título Vazio!')
         except Exception as e:
             Log.insert_system_log(e)
+
 
     @classmethod
     def map_proportion(self, width_org, height_org, width_new, heigt_new):
