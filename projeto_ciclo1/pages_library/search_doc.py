@@ -8,7 +8,7 @@ from io import BytesIO
 
 
 class SearchPage:
-    def draw():
+    def draw(): 
         
         st.title("Localizar arquivo")
         file_name = st.text_input('Nome do arquivo:')
@@ -87,10 +87,10 @@ class SearchPage:
                 
 
             with img_col:
-                _, button, _ = st.columns([0.4,0.5,0.3])
+                _, button2, button1, _ = st.columns([0.4, 0.5, 0.5,0.3])
 
-                with button:                    
-                    delete_button = st.button("Deletar Documento")
+                with button1:                    
+                    delete_button = st.button("Deletar \nDocumento")
                     if delete_button:
                         delete_result = dc.soft_delete_document(st.session_state.selected_file['id'])
                         
@@ -98,6 +98,9 @@ class SearchPage:
                             st.success("Documento deletado com sucesso!")
                         else:
                             st.error("O documento não pôde ser deletado.")
-                        
+                
                 img = BytesIO(st.session_state.selected_file['img'])
+                with button2:
+                    download_button = st.download_button("Salvar o \ndocumento", img)
+                        
                 st.image(img)
