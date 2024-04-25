@@ -71,7 +71,7 @@ class RegisterPage:
                 'Excluir', type='primary', on_click=RegisterPage.delete_store_user_credentials)
 
             if delete_user_button:
-                delete_user(email, cpf)
+                delete_user(email, cpf, st.session_state.user_id)
                 st.success('Funcionário excluido com sucesso!')
 
     @classmethod
