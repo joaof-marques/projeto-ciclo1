@@ -16,8 +16,7 @@ This project is a file manager developed in Python that integrates the powerful 
 ## How To use 👩‍💻
 1. Install all dependencies on the file .toml (poetry install)
 2. Install PyTesseract -> [PyTesseract](https://pypi.org/project/pytesseract/#description)
-3. Install Poppler -> [Poppler](https://github.com/oschwartz10612/poppler-windows/releases/tag/v24.02.0-0)
-4. Run the app.py file on the main folder using Streamlit (streamlit run app.py)
+3. Run the app.py file on the main folder using Streamlit (streamlit run app.py)
 
 ## Contributing 🫂
 🪲**Report bugs:** If you encounter any bugs, please let us know. Open up an issue and let us know the problem.</br>
