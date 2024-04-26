@@ -148,7 +148,7 @@ class Attach:
             option = st.selectbox("Selecionar Modelo", tuple(models_name), key='select_model_1')
             filter = st.selectbox("Selecionar Filtro", ('Padrão', 'Tratamento de Ruido'), key='select_filter_1')
             st.markdown(body='Limiar', help='Ajusta o nível de sensibilidade da detecção de ruídos da imagem.')
-            threshold_value = st.slider('', value=127 ,min_value=0, max_value=255, key='normal_attach_slider')
+            threshold_value = st.slider(' ', value=127 ,min_value=0, max_value=255, key='normal_attach_slider')
             uploaded_file = st.file_uploader("Selecionar Arquivo", type=['png', 'jpg', 'jpeg', 'pdf', 'jfif'], key='uploader_file_1')
             st.markdown("---")
 
@@ -200,7 +200,7 @@ class Attach:
             tags = st.multiselect('Selecionar TAGs', ['Nota Fiscal', 'Contrato', 'RG', 'CPF', 'Passaporte'], key='insert_tags_b')
             filter = st.selectbox("Selecionar Filtro", ('Padrão', 'Tratamento de Ruido'), key='select_filter_2')
             st.markdown(body='Limiar', help='Ajusta o nível de sensibilidade da detecção de ruídos da imagem.')
-            threshold_value = st.slider('', value=127 ,min_value=0, max_value=255, key='faster_attach_slider')
+            threshold_value = st.slider(' ', value=127 ,min_value=0, max_value=255, key='faster_attach_slider')
             uploaded_file = st.file_uploader("Selecionar Arquivo", type=['png', 'jpg', 'jpeg', 'pdf', 'jfif'], key='uploader_file_2')
             st.markdown("---")
 
