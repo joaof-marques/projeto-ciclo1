@@ -14,15 +14,14 @@ This project is a file manager developed in Python that integrates the powerful 
 * Poppler
 
 ## How To use 👩‍💻
-1. Install all dependencies on the file .toml
+1. Install all dependencies on the file .toml (poetry install)
 2. Install PyTesseract -> [PyTesseract](https://pypi.org/project/pytesseract/#description)
-3. Install Poppler -> [Poppler](https://github.com/oschwartz10612/poppler-windows/releases/tag/v24.02.0-0)
-4. Run the app.py file on the main folder
+3. Run the app.py file on the main folder using Streamlit (streamlit run app.py)
 
 ## Contributing 🫂
 🪲**Report bugs:** If you encounter any bugs, please let us know. Open up an issue and let us know the problem.</br>
 👨‍💻**Contribute code:** If you are a developer and want to contribute, follow the instructions below to get started!</br>
-💡**Suggestions:** If you don't want to code but have some awesome ideas, open up an issue explaining some updates or imporvements you would like to see!</br>
+💡**Suggestions:** If you don't want to code but have some awesome ideas, open up an issue explaining some updates or improvements you would like to see!</br>
 📄**Documentation:** If you see the need for some additional documentation, feel free to add some!</br>
 
 ## Instructions 📝
