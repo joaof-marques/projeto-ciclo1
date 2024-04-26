@@ -21,6 +21,7 @@ streamlit-javascript = "^0.1.5"
 streamlit-sparrow-labeling = "^0.1.1"
 opencv-python = "^4.9.0.80"
 pytesseract = "^0.3.10"
+psycopg2 = "^2.9.9"
 
 
 [build-system]
