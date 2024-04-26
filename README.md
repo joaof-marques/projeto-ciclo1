@@ -1,5 +1,5 @@
 <h1 align='center'>
-  <img src='projeto_ciclo1/pages_library/Icons/rade_logo2.png'/>
+  <img src='rade/pages_library/Icons/rade_logo2.png'/>
 </h1>
 
 # File Manager with OCR 📄
