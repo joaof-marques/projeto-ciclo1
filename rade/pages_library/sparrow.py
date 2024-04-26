@@ -123,7 +123,7 @@ class Sparrow:
                             st.markdown("---")
                             data_processor.update_rect_data(result_rects.rects_data, i, [], label)
 
-                        if st.form_submit_button("Save", type="primary"):
+                        if st.form_submit_button("Salvar", type="primary"):
                             if model != '':
                                 with Session(bind=engine) as session:
                                     try:

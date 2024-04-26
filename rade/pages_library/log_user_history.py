@@ -75,7 +75,7 @@ class LogHistory:
             with c3:
                 st.subheader('Modificado')
             with c4:
-                st.subheader('Date')
+                st.subheader('Data')
             with c5:
                 st.subheader('Texto')
 

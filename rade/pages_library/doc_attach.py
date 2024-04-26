@@ -144,7 +144,7 @@ class Attach:
                 models_name.append(conf.name)
                         
             title = st.text_input("Título", key='title_a')
-            tags = st.multiselect('Selecionar TAGs', ['Nota Fiscal', 'Contrato', 'RG', 'CPF', 'Passaporte'], key='insert_tags_a')
+            tags = st.multiselect('Selecionar TAGs', ['Nota Fiscal', 'Contrato', 'RG', 'CPF', 'Passaporte', 'Recibo'], key='insert_tags_a')
             option = st.selectbox("Selecionar Modelo", tuple(models_name), key='select_model_1')
             filter = st.selectbox("Selecionar Filtro", ('Padrão', 'Tratamento de Ruido'), key='select_filter_1')
             st.markdown(body='Limiar', help='Ajusta o nível de sensibilidade da detecção de ruídos da imagem.')
@@ -197,7 +197,7 @@ class Attach:
     def fast_attach(self):
         try:
             title = st.text_input("Título", key='title_b')
-            tags = st.multiselect('Selecionar TAGs', ['Nota Fiscal', 'Contrato', 'RG', 'CPF', 'Passaporte'], key='insert_tags_b')
+            tags = st.multiselect('Selecionar TAGs', ['Nota Fiscal', 'Contrato', 'RG', 'CPF', 'Passaporte', 'Recibo'], key='insert_tags_b')
             filter = st.selectbox("Selecionar Filtro", ('Padrão', 'Tratamento de Ruido'), key='select_filter_2')
             st.markdown(body='Limiar', help='Ajusta o nível de sensibilidade da detecção de ruídos da imagem.')
             threshold_value = st.slider(' ', value=127 ,min_value=0, max_value=255, key='faster_attach_slider')

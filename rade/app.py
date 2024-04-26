@@ -6,4 +6,4 @@ st.set_page_config(page_title='RADE', page_icon=os.path.join(os.path.dirname(__f
 
 Login.run()
 
-# streamlit run projeto_ciclo1\app.py
+# streamlit run rade\app.py

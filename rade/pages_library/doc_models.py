@@ -69,7 +69,7 @@ class Models:
             self.manage_models_max_page()
             
             _, confs = get_models()
-                
+
             if len(confs) > 0:
                 for i, conf in enumerate(confs):
                     
@@ -98,7 +98,8 @@ class Models:
                             except Exception as e:
                                 session.rollback()
                                 print(e)
-        
+            else:
+                st.title('Nenhum modelo para gerenciar!')
 
             st.markdown('---')
             _, col1, col2, col3, _ = st.columns(spec=[.3, .06, .04, .06, .3])
