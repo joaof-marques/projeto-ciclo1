@@ -2,5 +2,5 @@ import streamlit as st
 
 class Home:
     def home():
-        st.title('Seja bem vinde S2!')
+        st.title('Seja bem vinde!')
 

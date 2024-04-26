@@ -71,8 +71,7 @@ class ProfilePage:
 
         st.subheader('CPF:')
         container_id = st.container(border=True)
-        cpf = f'{st.session_state.user_cpf[:3]}.{st.session_state.user_cpf[3:6]}.{
-            st.session_state.user_cpf[6:9]}-{st.session_state.user_cpf[9:]}'
+        cpf = f'{st.session_state.user_cpf[:3]}.{st.session_state.user_cpf[3:6]}.{st.session_state.user_cpf[6:9]}-{st.session_state.user_cpf[9:]}'
         container_id.write(cpf)
 
         st.subheader('E-mail:')
